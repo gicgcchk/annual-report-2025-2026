@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
+<title>GBS Yearbook · Annual Report 2025/26 · Interactive prototype</title>
+<style>
+:root{--blue:#003366;--pale:#ccd7e6;--accent:#00a6e3;--ink:#1d2934;--paper:#f8f6ef;--paper2:#f5f0e5;--dark:#0c1f35;--frame:#eaebdf;--red:#c34343;--yellow:#ffde5b;--flipTime:900ms}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:"Source Sans 3",Arial,sans-serif;background:#6f4934;color:#fff;overflow:hidden;-webkit-font-smoothing:antialiased}
+button,a{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.backdrop{position:fixed;inset:-16px;background:#805438;z-index:-2;overflow:hidden}
+.backdrop:before{content:"";position:absolute;inset:-18px;background-image:var(--wood);background-position:center center;background-size:cover;filter:blur(8px) saturate(.78) brightness(.82);transform:scale(1.04)}
+.backdrop:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(33,22,15,.19),rgba(48,30,17,.1) 48%,rgba(29,18,12,.25))}
+.backdrop-water{display:none}
+.topbar{position:relative;z-index:10;display:flex;justify-content:space-between;align-items:center;min-height:72px;padding:16px clamp(22px,5vw,85px);gap:18px}
+.brandline{display:flex;gap:14px;align-items:center}
+.brand-rule{width:5px;height:34px;background:var(--accent);border-radius:3px}
+.brandline strong{display:block;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.brandline span{display:block;font-size:10px;letter-spacing:.11em;opacity:.74;text-transform:uppercase;margin-top:3px}
+.topnote{font-size:11px;letter-spacing:.11em;font-weight:700;text-align:right;opacity:.8;text-transform:uppercase}
+.main{height:calc(100svh - 145px);min-height:440px;display:flex;align-items:center;justify-content:center;padding:0 24px}
+.book-space{position:relative;width:min(1190px,calc(100vw - 95px));height:min(685px,calc(100svh - 165px));min-height:400px;perspective:2400px;transform:translateZ(0)}
+.book-space:before{content:"";position:absolute;inset:-11px -10px -12px;border-radius:13px;background:#152b46;box-shadow:0 44px 66px rgba(0,0,0,.45),0 10px 16px rgba(0,0,0,.26);z-index:0}
+.book-space:after{content:"";position:absolute;left:50%;top:5px;bottom:5px;width:17px;transform:translateX(-50%);z-index:5;pointer-events:none;background:linear-gradient(90deg,rgba(4,21,38,.28),rgba(255,255,255,.22) 46%,rgba(2,15,29,.27));mix-blend-mode:multiply}
+.book-page{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;padding:30px clamp(28px,3vw,49px) 23px;background:var(--paper);color:var(--ink)}
+.book-page:after{content:"";position:absolute;inset:0;z-index:-1;opacity:.38;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(0,51,102,.022) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,rgba(0,51,102,.012) 0 1px,transparent 1px 7px)}
+.book-page.left-page{border-radius:5px 0 0 5px;box-shadow:inset -12px 0 22px -18px rgba(0,0,0,.62)}
+.book-page.right-page{border-radius:0 5px 5px 0;box-shadow:inset 12px 0 22px -18px rgba(0,0,0,.68)}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;flex-shrink:0;min-height:33px;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);font-weight:800;border-bottom:1px solid #ccd4d7}
+.head-mark{font-weight:700;font-size:9px;letter-spacing:.13em;color:#6e7b82}
+.chapter-line{display:flex;gap:9px;align-items:center;color:var(--blue);font-size:10px;letter-spacing:.16em;font-weight:800;margin:23px 0 0;text-transform:uppercase}
+.chapter-dot{width:8px;height:8px;background:var(--accent);transform:rotate(45deg)}
+.page-content{display:flex;flex:1;flex-direction:column;justify-content:center;min-height:0}
+.page-title{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(32px,3.6vw,59px);line-height:.98;letter-spacing:-.055em;font-weight:600;color:var(--blue);margin:4px 0 17px}
+.line-break{display:block}
+.page-subtitle{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:clamp(14px,1.4vw,19px);line-height:1.26;color:#5b6c78;margin-bottom:18px}
+.page-copy{font-size:clamp(12px,1.06vw,15px);line-height:1.57;max-width:410px;color:#283743}
+.page-copy p{margin:0 0 12px}
+.page-copy p:last-child{margin-bottom:0}
+.archive-stat{display:flex;align-items:center;gap:13px;margin-top:23px;border-top:1px solid #d3d9d8;padding-top:17px;color:var(--blue)}
+.archive-stat strong{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(25px,2.3vw,39px);font-weight:700;line-height:1;color:var(--blue)}
+.archive-stat span{font-size:10px;letter-spacing:.12em;font-weight:800;text-transform:uppercase;max-width:170px;line-height:1.3}
+.page-foot{flex-shrink:0;border-top:1px solid #ccd4d7;padding-top:12px;min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:9px;letter-spacing:.1em;font-weight:700;color:#70808b;text-transform:uppercase}
+.page-num{font-family:"Source Serif 4",Georgia,serif;color:var(--blue);font-size:22px;font-weight:600;line-height:1}
+.cover-page{background:var(--blue);color:#fff}
+.cover-page .page-title,.cover-page .cover-year{color:#fff}
+.cover-page .page-head,.cover-page .chapter-line{color:#fff}
+.cover-page .head-mark,.cover-page .page-foot{color:#b8cfdf}
+.cover-page .page-head,.cover-page .page-foot{border-color:rgba(255,255,255,.3)}
+.cover-page .page-num{color:#fff}
+.cover-page .page-subtitle{color:#ccd7e6}
+.cover-page .page-copy{color:#e8eff6}
+.cover-page .chapter-line{margin-top:38px}
+.cover-page .page-content{justify-content:center}
+.cover-page .page-title{margin-top:5px;font-weight:500;line-height:1.02}
+.cover-small{display:block;font-family:"Source Sans 3",Arial,sans-serif;font-size:11px;letter-spacing:.14em;font-weight:800;margin-bottom:16px}
+.cover-big{display:block;font-family:"Source Serif 4",Georgia,serif;font-size:clamp(39px,4.9vw,80px);line-height:.93;letter-spacing:-.07em}
+.cover-year{display:block;font-family:"Source Serif 4",Georgia,serif;font-size:clamp(41px,5.5vw,87px);letter-spacing:-.07em;font-weight:600;margin-top:6px;color:var(--blue)}
+.cover-year .dash{color:var(--accent);padding:0 .06em}
+.photo-page{padding:30px clamp(25px,3vw,42px) 23px;background:#f6f1e8}
+.photo-block{display:flex;flex:1;flex-direction:column;min-height:0;justify-content:center;position:relative}
+.photo-mat{background:#fff;box-shadow:0 11px 26px rgba(16,40,60,.11);padding:15px 15px 18px;transform:rotate(-1.1deg);border:1px solid #e4e0d7;max-width:100%;position:relative}
+.photo-mat:before{content:"";position:absolute;left:47%;top:-8px;width:76px;height:17px;background:rgba(204,215,230,.73);transform:rotate(1deg);z-index:3;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+.photo-frame{height:min(37vh,345px);min-height:188px;overflow:hidden;background:#e7edf0;position:relative}
+.photo-frame>img,.photo-link>img{height:100%;width:100%;object-fit:cover;transition:transform .65s ease}
+.photo-frame:hover img{transform:scale(1.035)}
+.photo-frame.contain{background:var(--blue);display:grid;place-items:center}
+.photo-link{display:block;width:100%;height:100%;position:relative;color:#fff}
+.photo-link img{object-fit:contain}
+.play-disc{position:absolute;left:50%;top:50%;width:68px;height:68px;border-radius:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.95);box-shadow:0 8px 25px rgba(0,0,0,.2);color:var(--blue);display:grid;place-items:center;padding-left:5px;font-size:21px}
+.photo-caption{padding:12px 4px 0;font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:clamp(11px,1.15vw,14px);color:#415663}
+.stamp{font-size:9px;letter-spacing:.14em;line-height:1.7;font-weight:800;align-self:flex-end;margin:15px 2px 0;color:#7790a0;transform:rotate(-8deg);border:2px solid rgba(0,51,102,.27);padding:6px 10px;text-align:center}
+.logo-card{margin:16px auto 0;width:min(155px,40%);padding:5px 15px;background:white;box-shadow:0 3px 16px rgba(0,0,0,.05);transform:rotate(3deg)}
+.logo-card img{width:100%;height:auto}
+.watch-line{text-align:center;color:var(--blue);letter-spacing:.12em;font-size:10px;font-weight:800;margin-top:21px}
+.watch-line span{font-size:17px}
+.watch-line a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:5px}.watch-line a:hover{text-decoration:underline;text-underline-offset:3px}
+
+.outlook-numbers{margin:19px 0 0;display:flex;justify-content:space-around;gap:8px;color:var(--blue);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.outlook-numbers span{display:flex;flex-direction:column;align-items:center;gap:2px}
+.outlook-numbers b{font-family:"Source Serif 4",Georgia,serif;font-size:27px;font-weight:700}
+/* underlying pages */
+.static-page{position:absolute;top:0;height:100%;width:50%;z-index:1}
+.static-page.left{left:0}.static-page.right{right:0}
+.flip-sheet{position:absolute;top:0;width:50%;height:100%;z-index:8;transform-style:preserve-3d;transition:transform var(--flipTime) cubic-bezier(.45,0,.25,1);will-change:transform;pointer-events:none}
+.flip-sheet.forward{left:50%;transform-origin:left center;transform:rotateY(0deg)}
+.flip-sheet.forward.turn{transform:rotateY(-180deg)}
+.flip-sheet.reverse{left:0;transform-origin:right center;transform:rotateY(0deg)}
+.flip-sheet.reverse.turn{transform:rotateY(180deg)}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:var(--paper);box-shadow:0 0 30px rgba(0,0,0,.08)}
+.flip-face.front{transform:translateZ(0.4px)}.flip-face.back{transform:rotateY(180deg) translateZ(0.6px)}
+.flip-face .book-page{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flip-sheet .flip-face.front:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.09) 97%,rgba(0,0,0,.15) 100%);pointer-events:none}
+.flip-sheet .flip-face.back:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.15),transparent 18%);pointer-events:none}
+/* Shadows on the page faces are GPU-friendly and remain unchanged. */
+.controls{position:relative;z-index:20;display:flex;align-items:center;justify-content:center;gap:24px;padding:15px 22px 15px;min-height:73px}
+.nav-btn{display:flex;gap:10px;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.46);color:#fff;padding:10px 15px;background:rgba(0,51,102,.54);border-radius:6px;font-size:12px;letter-spacing:.07em;font-weight:800;text-transform:uppercase;min-width:154px;transition:background .2s ease, transform .2s ease}
+.nav-btn:hover:not(:disabled){background:var(--blue);transform:translateY(-2px)}
+.nav-btn:disabled{opacity:.3;cursor:default}
+.nav-btn .arrow{font-size:20px;line-height:.6;font-weight:400}
+.book-counter{display:flex;flex-direction:column;gap:1px;align-items:center;min-width:220px;text-align:center;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.book-counter strong{font-family:"Source Serif 4",Georgia,serif;font-size:17px;letter-spacing:0;font-weight:500;text-transform:none;line-height:1.3;white-space:nowrap}
+.progress-track{height:3px;background:rgba(255,255,255,.3);width:175px;margin-top:7px;border-radius:5px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:var(--accent);transition:width .4s ease}
+.corner-hit{position:absolute;z-index:3;top:0;right:0;height:100%;width:37px;border:0;background:none;color:transparent;cursor:pointer}
+.corner-hit.left-hit{right:auto;left:0}
+.book-space.flipping .corner-hit{pointer-events:none}
+@media(max-height:790px){.topbar{min-height:58px;padding-top:12px;padding-bottom:10px}.main{height:calc(100svh - 120px)}.book-space{height:min(620px,calc(100svh - 145px))}.book-page{padding-top:21px;padding-bottom:16px}.chapter-line{margin-top:15px}.page-title{margin-bottom:12px}.page-subtitle{margin-bottom:13px}.archive-stat{margin-top:14px;padding-top:12px}.photo-frame{height:min(35vh,280px)}.controls{min-height:62px}}
+@media(max-width:1050px){.book-space{width:calc(100vw - 52px);height:min(620px,calc(100svh - 170px))}.book-page{padding-left:25px;padding-right:25px}.page-title{font-size:clamp(29px,4.25vw,45px)}.page-copy{font-size:12px}.cover-big{font-size:clamp(36px,6vw,62px)}.cover-year{font-size:clamp(43px,6vw,68px)}.photo-page{padding-left:20px;padding-right:20px}.photo-frame{min-height:175px}.topnote{display:none}}
+@media(max-width:650px){body{overflow:auto}.topbar{min-height:58px;padding:10px 18px}.main{height:auto;min-height:calc(100svh - 125px);padding:14px 9px;align-items:center}.book-space{width:calc(100vw - 22px);height:min(75vh,550px);min-height:420px}.book-page{padding:20px 13px 14px}.page-head{font-size:7px}.head-mark{font-size:7px}.chapter-line{font-size:8px;margin-top:18px}.page-title{font-size:clamp(24px,5.2vw,37px)}.page-copy{font-size:10px;line-height:1.47}.page-copy p{margin-bottom:7px}.page-subtitle{font-size:12px}.archive-stat{gap:6px;padding-top:10px;margin-top:10px}.archive-stat strong{font-size:22px}.archive-stat span{font-size:8px}.photo-page{padding:20px 11px 14px}.photo-mat{padding:7px 7px 12px}.photo-frame{height:23vh;min-height:115px}.photo-caption{font-size:10px}.stamp{font-size:7px}.logo-card{margin-top:9px}.cover-small{font-size:8px}.cover-big{font-size:clamp(23px,5.2vw,37px)}.cover-year{font-size:clamp(26px,5.9vw,45px)}.page-foot{font-size:7px}.page-num{font-size:17px}.controls{gap:8px;flex-wrap:wrap;padding:5px 6px 18px}.nav-btn{min-width:105px;font-size:9px;padding:10px 7px}.book-counter{min-width:120px;font-size:8px}.book-counter strong{font-size:12px;max-width:145px;overflow:hidden;text-overflow:ellipsis}.progress-track{width:110px}.outlook-numbers{font-size:7px}.outlook-numbers b{font-size:16px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Keep the full, official pathway names clear and readable. */
+.programme-title{font-size:clamp(28px,3vw,46px);line-height:1.06;letter-spacing:-.035em}
+
+/* AHK-aligned training partner index, in keeping with the yearbook aesthetic. */
+.archive-stat{flex-wrap:wrap;row-gap:9px}
+.company-button{margin-left:auto;border:1px solid #003366;background:#003366;color:#fff;padding:10px 13px;border-radius:2px;font-family:"Source Sans 3",Arial,sans-serif;font-size:10px;font-weight:800;letter-spacing:.045em;line-height:1.25;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s}
+.company-button:hover{background:#00508d;transform:translateY(-2px);box-shadow:0 5px 14px rgba(0,51,102,.2)}
+.company-button:focus-visible{outline:3px solid #00A6E3;outline-offset:3px}
+.company-button span{font-size:14px;margin-left:4px}
+.training-companies-dialog{color:#193147;background:#f9f6ee;border:2px solid #003366;border-radius:4px;box-shadow:0 26px 85px rgba(0,15,36,.43);width:min(760px,calc(100vw - 32px));max-height:min(82vh,760px);padding:0;overflow:auto}
+.training-companies-dialog::backdrop{background:rgba(0,22,50,.67);backdrop-filter:blur(5px)}
+.training-companies-header{background:#003366;color:#fff;padding:22px 30px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.training-companies-header small{display:block;color:#ccd7e6;font-size:10px;letter-spacing:.14em;font-weight:800}
+.training-companies-header h2{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(24px,3vw,39px);font-weight:600;line-height:1.05;margin:7px 0 0}
+.company-close{flex-shrink:0;display:grid;place-items:center;background:transparent;border:1px solid #ccd7e6;border-radius:50%;height:36px;width:36px;color:#fff;font-size:24px;cursor:pointer}
+.company-close:hover{background:rgba(255,255,255,.14)}
+.training-companies-inner{padding:23px 30px 29px}
+.company-intro{font-size:13px;line-height:1.5;margin:0 0 18px;color:#43505b}
+.company-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 20px;list-style:none;padding:0;margin:0}
+.company-grid li{position:relative;background:#fff;border-left:3px solid #00A6E3;padding:9px 11px;font-size:12px;line-height:1.3;box-shadow:0 2px 8px rgba(0,51,102,.035)}
+.company-note{font-size:11px;line-height:1.45;color:#677685;border-top:1px solid #d5dcd9;margin:20px 0 0;padding-top:12px}
+
+/* Training-company logo walls for the three pathways */
+.archive-stat.archive-logo-wall{display:block;margin-top:12px;padding-top:10px;border-top:1px solid #d5dcd9}
+.archive-stat.archive-logo-wall>strong,.archive-stat.archive-logo-wall>span{display:none}
+.programme-logo-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:0 0 6px}
+.programme-logo-kicker{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#003366;line-height:1.2}
+.programme-logo-count{font-size:11px;line-height:1.25;color:#6d7985;text-align:right}
+.programme-logo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.programme-logo-card{background:#fff;border:1px solid #d5dcd9;border-radius:4px;min-height:58px;padding:5px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 10px rgba(0,51,102,.05)}
+.programme-logo-card img{max-width:100%;max-height:30px;object-fit:contain;display:block}
+.programme-logo-card.logo-card-dark{background:#0b3255}
+.programme-logo-card .logo-fallback{display:flex;align-items:center;justify-content:center;min-height:30px;font-size:10px;font-weight:800;line-height:1.15;text-align:center;color:#193147}
+.programme-logo-card .logo-company-name{font-size:8px;line-height:1.15;text-align:center;color:#5b6975}
+.programme-logo-card.logo-more-card{justify-content:center;background:#edf4fb;border-style:dashed}
+.programme-logo-card.logo-more-card .logo-fallback{color:#003366;font-size:11px}
+.programme-logo-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.programme-logo-footer-note{font-size:11px;line-height:1.35;color:#6d7985}
+.programme-logo-footer .company-button{margin-left:0;padding:7px 10px;white-space:nowrap}
+.company-grid.company-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;list-style:none;padding:0;margin:0}
+.company-grid.company-logo-grid li{background:transparent;border-left:none;padding:0;box-shadow:none}
+.company-grid.company-logo-grid .programme-logo-card{min-height:94px;padding:10px 8px}
+.company-grid.company-logo-grid .programme-logo-card img{max-height:42px}
+@media(max-width:650px){.programme-logo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.programme-logo-card{min-height:66px;padding:7px 5px}.programme-logo-card img{max-height:26px}.programme-logo-kicker{font-size:9px}.programme-logo-count,.programme-logo-footer-note{font-size:10px}.company-grid.company-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+
+@media(max-width:650px){.archive-stat{margin-top:11px;padding-top:9px}.company-button{font-size:8px;padding:7px 9px}.training-companies-header{padding:18px 20px}.training-companies-inner{padding:18px 20px}.company-grid{grid-template-columns:1fr}}
+
+
+
+/* Hong Kong details: collectible tram-ticket markers and a moving ding ding on the chapter line. */
+.chapter-track{overflow:visible}
+.track-tram{position:absolute;left:0;top:-3px;z-index:2;width:44px;height:24px;pointer-events:none;transform:translateX(0);transition:transform .78s cubic-bezier(.33,.08,.19,1);filter:drop-shadow(0 3px 5px rgba(0,0,0,.24));animation:tramBob 2.6s ease-in-out infinite}
+.track-tram .tram-pole{position:absolute;left:21px;top:0;width:2px;height:8px;background:#f2efe5;border-radius:2px;transform:skewX(-12deg)}
+.track-tram .tram-pole:after{content:"";position:absolute;left:-5px;top:-1px;width:12px;height:2px;background:#f2efe5;border-radius:2px;transform:rotate(-28deg)}
+.track-tram .tram-body{position:absolute;left:2px;top:7px;width:40px;height:14px;border-radius:5px;background:linear-gradient(180deg,#f2e8c1 0 4px,#2a8a6e 4px 100%);border:1px solid rgba(8,44,35,.4)}
+.track-tram .tram-body:before{content:"";position:absolute;left:5px;top:5px;width:30px;height:4px;border-radius:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.88) 0 5px,rgba(255,255,255,.15) 5px 7px)}
+.track-tram .tram-wheel{position:absolute;bottom:1px;width:6px;height:6px;border-radius:50%;background:#1e2630;border:1px solid rgba(255,255,255,.18)}
+.track-tram .tram-wheel.left{left:10px}.track-tram .tram-wheel.right{right:10px}
+.track-tram .tram-bell{position:absolute;left:4px;top:10px;font-size:8px;line-height:1;color:#f9f1cf;font-weight:800}
+.track-tram .tram-bell:before{content:"丁"}
+@keyframes tramBob{0%,100%{margin-top:0}50%{margin-top:-1px}}
+@media(max-width:650px){.track-tram{width:36px;height:20px;top:-1px}.track-tram .tram-body{width:33px;height:12px}.track-tram .tram-body:before{left:4px;width:24px;top:4px;height:4px}.track-tram .tram-pole{left:16px;height:7px}.track-tram .tram-wheel.left{left:8px}.track-tram .tram-wheel.right{right:8px}}
+@media(prefers-reduced-motion:reduce){.track-tram{animation:none;transition:none}}
+
+/* A restrained, book-like chapter index beneath the open yearbook. */
+.chapter-navigation{position:relative;z-index:21;display:flex;align-items:center;justify-content:center;gap:22px;height:48px;padding:3px 24px;color:#f7f2e9}
+.back-to-start{height:32px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:6px 12px;background:rgba(0,51,102,.7);color:#fff;border:1px solid rgba(255,255,255,.56);border-radius:3px;font-size:14px;font-weight:800;white-space:nowrap;letter-spacing:.02em;transition:background .22s,transform .22s}
+.back-to-start span{font-size:10px;text-transform:uppercase;letter-spacing:.10em}
+.back-to-start:hover{background:var(--blue);transform:translateY(-2px)}
+.back-to-start:disabled{opacity:.55;cursor:default;transform:none}
+.chapter-track-window{flex:0 1 630px;max-width:630px;min-width:0}
+.chapter-track{position:relative;width:100%;height:40px;display:flex;align-items:center}
+.chapter-track-line,.chapter-track-fill{position:absolute;top:14px;left:12px;width:calc(100% - 24px);height:2px;border-radius:2px;pointer-events:none}
+.chapter-track-line{background:rgba(255,255,255,.58)}
+.chapter-track-fill{background:#b9dfef;transform-origin:left center;transform:scaleX(0);transition:transform .64s ease}
+.chapter-dots{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;width:100%;height:100%;gap:0}
+.chapter-stop{position:relative;flex:0 0 24px;height:40px;margin:0;padding:2px 0 0;background:transparent;border:0;color:#f6efe3;display:flex;align-items:center;flex-direction:column;gap:3px;cursor:pointer;transition:transform .2s ease}
+.chapter-stop .stop-ring{height:20px;width:20px;border-radius:50%;display:grid;place-items:center;border:2px solid rgba(255,255,255,.75);background:#254a6b;box-shadow:0 1px 7px rgba(0,0,0,.22);transition:background .22s,border-color .22s,box-shadow .22s,transform .22s}
+.chapter-stop .stop-page{font-size:9px;font-family:"Source Sans 3",Arial,sans-serif;font-weight:800;letter-spacing:.07em;line-height:1}
+.chapter-stop:hover .stop-ring{transform:scale(1.15);background:#2c729b;border-color:#fff}
+.chapter-stop.active .stop-ring{background:#00a6e3;border-color:#fff;box-shadow:0 0 0 4px rgba(0,166,227,.18),0 3px 10px rgba(0,0,0,.2);transform:scale(1.1)}
+.chapter-stop.visited:not(.active) .stop-ring{background:#b9dfef;border-color:#fff}
+.chapter-stop.active .stop-page{color:#fff}
+.chapter-nav-caption{font-size:10px;text-transform:uppercase;letter-spacing:.11em;font-weight:800;color:#fff;white-space:nowrap;opacity:.88}
+.archive-stat strong,.outlook-numbers b{font-variant-numeric:tabular-nums;display:inline-block}
+.number-done{animation:numberArrive .38s ease-out}
+@keyframes numberArrive{0%{transform:translateY(2px);opacity:.83}100%{transform:translateY(0);opacity:1}}
+/* Give the chapter index its own space without obscuring the book or controls. */
+@media(min-width:651px){.main{height:calc(100svh - 195px);min-height:360px}.book-space{height:min(685px,calc(100svh - 207px));min-height:350px}}
+@media(max-height:790px) and (min-width:651px){.main{height:calc(100svh - 178px)}.book-space{height:min(620px,calc(100svh - 191px))}.chapter-navigation{height:43px}}
+@media(max-width:800px){.chapter-navigation{gap:12px;padding-left:13px;padding-right:13px}.chapter-nav-caption{display:none}.back-to-start{padding:6px 9px}.chapter-track-line,.chapter-track-fill{left:11px;width:calc(100% - 22px)}}
+@media(max-width:650px){.chapter-navigation{height:46px;gap:6px}.chapter-track-window{flex:1 1 auto;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}.chapter-track{min-width:405px}.chapter-stop{flex-basis:24px}.back-to-start span{font-size:8px}.back-to-start{font-size:13px;padding:5px 8px}}
+@media(prefers-reduced-motion:reduce){.chapter-track-fill,.chapter-stop,.stop-ring,.back-to-start{transition:none!important}.number-done{animation:none!important}}
+
+
+/* Farewell & welcome: an embedded Instagram video instead of a photograph. */
+.video-page .video-block{gap:9px}
+.video-page .video-mat{transform:rotate(-.6deg);padding:12px 12px 15px}
+.video-page .video-mat:before{background:rgba(204,215,230,.74)}
+.instagram-frame{width:100%;height:min(52vh,405px);min-height:270px;background:#e7edf0;overflow:hidden;border:1px solid #dce4e9;position:relative}
+.instagram-frame iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+.instagram-frame iframe[hidden]{display:none!important}
+.instagram-cover{height:100%;padding:20px 24px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;color:var(--blue);background:linear-gradient(140deg,rgba(0,51,102,.06),transparent 44%),repeating-linear-gradient(0deg,#f3f0e7 0,#f3f0e7 12px,#ede8de 13px);}
+.instagram-cover-top{font-size:9px;font-weight:800;letter-spacing:.13em;opacity:.65}
+.instagram-cover-centre{display:flex;flex-direction:column;align-items:center;gap:7px}
+.instagram-play-icon{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;padding-left:5px;background:var(--blue);color:white;font-size:24px;box-shadow:0 8px 24px rgba(0,51,102,.2)}
+.instagram-cover-centre strong{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(20px,2.15vw,30px);font-weight:600;line-height:1.05}
+.instagram-cover-centre small{font-size:11px;color:#526a78;font-style:italic}
+.instagram-activate{min-height:34px;padding:7px 12px;border:1px solid var(--blue);background:transparent;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:2px}
+.instagram-activate:hover{background:var(--blue);color:white}
+
+.video-page .photo-caption{padding-top:10px}
+.instagram-open{display:inline-flex;align-items:center;justify-content:center;gap:4px;align-self:center;min-height:38px;padding:8px 17px;border-radius:2px;background:var(--blue);color:#fff;border:1px solid var(--blue);font-family:"Source Sans 3",Arial,sans-serif;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:background .2s ease,transform .2s ease}
+.instagram-open:hover{background:#064c84;transform:translateY(-2px)}
+.instagram-note{margin:0;text-align:center;color:#687984;font-size:9px;letter-spacing:.02em;line-height:1.3}
+@media(max-width:1050px){.instagram-frame{height:min(48vh,355px);min-height:210px}.video-page .video-mat{padding:9px}}
+@media(max-width:650px){.instagram-frame{height:min(39vh,285px);min-height:170px}.instagram-open{font-size:9px;min-height:33px}.instagram-note{font-size:8px}}
+
+/* Portrait Reel: the full 9:16 frame is visible without cropping. Other photographs unchanged. */
+.video-page .video-block{gap:7px}
+.video-page .video-mat{width:min(100%, 272px, 30vh);margin:0 auto;padding:7px 7px 9px;transform:rotate(-.45deg)}
+.video-page .instagram-frame{width:100%;height:auto;min-height:0;aspect-ratio:9 / 16;margin:0 auto;overflow:hidden;border:1px solid #dce4e9;background:#f7f4eb}
+.video-page .instagram-frame iframe{width:100%;height:100%;border:0;display:block}
+.video-page .instagram-cover{padding:14px 10px}
+.video-page .instagram-cover-centre strong{font-size:clamp(17px,1.65vw,23px)}
+.video-page .instagram-play-icon{width:48px;height:48px;font-size:18px}
+.video-page .photo-caption{text-align:center;font-size:11px;padding:8px 2px 0}
+.video-page .instagram-open{min-height:33px;padding:6px 13px}
+.video-page .instagram-note{font-size:8px}
+/* AHK website references, visually restrained to suit the printed-yearbook style. */
+.programme-online{margin:12px 0 0;font-size:11px;line-height:1.35;font-weight:700}
+.programme-online a{display:inline-flex;align-items:center;gap:5px;color:#003366;text-decoration:underline;text-decoration-color:#00a6e3;text-underline-offset:3px}
+.programme-online a:hover{color:#007aab}
+.programme-online a:focus-visible,.header-site-links a:focus-visible{outline:2px solid #00a6e3;outline-offset:3px}
+.programme-online a span{font-size:14px}
+.header-site-links{display:flex;justify-content:flex-end;gap:15px;align-items:center;flex-wrap:wrap;font-size:11px;letter-spacing:.05em;font-weight:700}
+.header-site-links a{color:#fff;border-bottom:1px solid rgba(255,255,255,.55);padding:3px 0;text-decoration:none;transition:opacity .2s}
+.header-site-links a:hover{opacity:.72}
+@media(max-width:1050px){.video-page .video-mat{width:min(100%, 250px, 30vh)}}
+@media(max-width:650px){.video-page .video-mat{width:min(100%, 175px, 23vh);padding:5px}.video-page .instagram-cover{padding:6px}.video-page .instagram-play-icon{width:30px;height:30px;font-size:12px}.video-page .instagram-cover-centre strong{font-size:14px}.video-page .instagram-activate{padding:5px;font-size:8px;min-height:25px}.header-site-links{gap:8px;font-size:9px}.programme-online{font-size:9px;margin-top:8px}}
+
+/* Contextual links to verified official AHK Hong Kong pages. */
+.yearbook-web-link{margin:15px 0 0;flex-shrink:0;max-width:100%}
+.yearbook-web-link a{
+  color:var(--blue);display:inline-flex;align-items:center;gap:8px;
+  padding:9px 11px 9px 9px;max-width:100%;border:1px solid rgba(0,51,102,.23);
+  background:rgba(255,255,255,.62);border-radius:4px;text-decoration:none;
+  font-size:11px;line-height:1.3;font-weight:800;letter-spacing:.005em;
+  transition:background .18s ease,transform .18s ease,border-color .18s ease
+}
+.yearbook-web-link a:hover{background:#eff8fc;border-color:var(--accent);transform:translateY(-1px)}
+.yearbook-link-mark{background:var(--blue);color:#fff;display:grid;place-items:center;
+  width:23px;height:23px;min-width:23px;border-radius:3px;font-size:16px;font-weight:500}
+.yearbook-link-source{font-size:9px;color:#667f91;font-weight:700;border-left:1px solid #c5d0d7;
+  padding-left:8px;margin-left:2px;white-space:nowrap}
+.cover-page .yearbook-web-link a{color:#fff;border-color:rgba(255,255,255,.4);
+  background:rgba(255,255,255,.09)}
+.cover-page .yearbook-web-link a:hover{background:rgba(255,255,255,.2)}
+.cover-page .yearbook-link-mark{background:#fff;color:var(--blue)}
+.cover-page .yearbook-link-source{color:#dae7f0;border-left-color:rgba(255,255,255,.3)}
+@media(max-width:1050px){
+ .yearbook-web-link{margin-top:10px}
+ .yearbook-web-link a{font-size:10px;padding:7px 8px 7px 7px;gap:5px}
+ .yearbook-link-source{font-size:8px;padding-left:6px}
+}
+.cover-page .yearbook-web-link{margin-top:0}
+@media(max-width:650px){
+ .yearbook-web-link{margin-top:7px}
+ .yearbook-web-link a{font-size:8px;padding:5px 6px 5px 5px;gap:4px;line-height:1.15}
+ .yearbook-link-mark{width:17px;height:17px;min-width:17px;font-size:11px}
+ .yearbook-link-source{display:none}
+ .programme-title{margin-bottom:3px}
+}
+
+/* Original farewell Reel screenshot as cover; the portrait book layout is unchanged. */
+.video-page .instagram-cover-poster{display:block;padding:0;background:#24282c;position:relative;overflow:hidden}
+.video-page .instagram-poster-button{display:block;width:100%;height:100%;position:relative;padding:0;margin:0;border:0;border-radius:0;background:#24282c;cursor:pointer;overflow:hidden}
+.video-page .instagram-poster-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;pointer-events:none;user-select:none}
+.video-page .instagram-poster-button:focus-visible{outline:3px solid #00a6e3;outline-offset:-4px}
+.video-page .instagram-poster-button:hover .instagram-poster-image{filter:brightness(.94)}
+
+/* Logo stays anchored in the header while the book pages change. */
+.topbar{position:relative;z-index:30;padding-top:7px;padding-bottom:7px;min-height:78px}
+.brandline{gap:13px}
+.gbs-header-logo{display:block;flex:0 0 auto;width:70px;height:67px;object-fit:contain;background:#fff;border:1px solid rgba(255,255,255,.8);border-radius:3px;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.brand-text{min-width:0}
+.brand-text strong{font-size:11px;letter-spacing:.12em}
+.brand-text span{font-size:9px}
+/* Clickable table of contents on the opening right-hand page. */
+.toc-page{background:#f6f1e8;padding-left:clamp(25px,3vw,42px);padding-right:clamp(25px,3vw,42px)}
+.toc-content{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#c3c9c4 transparent;padding:12px 6px 5px 0}
+.toc-heading{padding-bottom:8px;border-bottom:1px solid #d6d8d2}
+.toc-eyebrow{display:flex;align-items:center;gap:8px;font-size:9px;line-height:1.2;font-weight:800;letter-spacing:.14em;color:#6e7a7f}
+.toc-eyebrow .chapter-dot{width:7px;height:7px}
+.toc-title{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(27px,2.9vw,40px);line-height:1;letter-spacing:-.045em;color:var(--blue);margin:7px 0 4px;font-weight:600}
+.toc-subtitle{margin:0;color:#6b7882;font-family:"Source Serif 4",Georgia,serif;font-size:12px;line-height:1.3;font-style:italic}
+.toc-groups{padding-top:5px;display:flex;flex-direction:column;gap:3px}
+.toc-group{margin:0;padding:4px 0 5px;border-bottom:1px solid #e0e0d9}
+.toc-group:last-child{border-bottom:none}
+.toc-group-title{display:flex;align-items:baseline;gap:11px;margin:1px 0 5px;font-size:12px;line-height:1.2;font-weight:800;letter-spacing:.035em;color:var(--blue)}
+.toc-category-number{color:#008cbb;font-size:9px;letter-spacing:.12em;min-width:17px;font-variant-numeric:tabular-nums}
+.toc-entry{display:flex;align-items:baseline;gap:11px;width:100%;min-height:20px;padding:3px 7px 3px 28px;background:transparent;border:0;border-radius:3px;color:#304350;text-align:left;transition:background-color .18s ease,transform .18s ease,color .18s ease}
+.toc-entry-label{flex:1;min-width:0;font-size:10.6px;line-height:1.3}
+.toc-entry-page{flex:0 0 auto;font-size:10px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.08em;color:#657783}
+.toc-entry:hover{background:rgba(0,166,227,.11);color:#003366;transform:translateX(3px)}
+.toc-entry:hover .toc-entry-page{color:#003366}
+.toc-entry:focus-visible{outline:2px solid #00a6e3;outline-offset:-2px}
+@media(max-height:790px){.topbar{min-height:64px;padding-top:5px;padding-bottom:5px}.gbs-header-logo{width:60px;height:56px}.toc-content{padding-top:8px}.toc-title{font-size:30px;margin-top:4px}.toc-heading{padding-bottom:5px}.toc-group{padding:3px 0}.toc-group-title{margin-bottom:3px;font-size:11px}.toc-entry{min-height:18px;padding-top:2px;padding-bottom:2px}.toc-entry-label{font-size:10px}}
+@media(max-width:650px){.topbar{padding:5px 12px;min-height:55px}.gbs-header-logo{width:45px;height:45px}.brandline{gap:8px}.brand-text strong{font-size:9px;letter-spacing:.07em}.brand-text span{font-size:7px;letter-spacing:.05em}.toc-page{padding-left:13px;padding-right:12px}.toc-content{padding-right:2px;padding-top:6px}.toc-title{font-size:22px}.toc-eyebrow{font-size:7px}.toc-subtitle{font-size:9px}.toc-group-title{font-size:9px;gap:5px;margin:0 0 3px}.toc-category-number{font-size:7px;min-width:12px}.toc-entry{gap:4px;padding:2px 0 2px 16px;min-height:16px}.toc-entry-label{font-size:8px}.toc-entry-page{font-size:8px}}
+
+
+/* Larger training-company logos and text — confined to the pop-up logowalls. */
+.training-companies-dialog{
+  width:min(860px,calc(100vw - 32px));
+  max-height:min(88vh,840px);
+}
+.training-companies-inner{padding:26px 32px 30px}
+.company-intro{font-size:14px;line-height:1.55}
+.company-grid.company-logo-grid{gap:16px 18px}
+.company-grid.company-logo-grid .programme-logo-card{
+  min-height:126px;
+  padding:14px 11px;
+  gap:9px;
+}
+.company-grid.company-logo-grid .programme-logo-card img{
+  max-height:64px;
+  max-width:94%;
+}
+.company-grid.company-logo-grid .programme-logo-card .logo-company-name{
+  font-size:11.5px;
+  line-height:1.3;
+  font-weight:600;
+}
+.company-grid.company-logo-grid .programme-logo-card .logo-fallback{
+  font-size:13px;
+  line-height:1.25;
+  min-height:56px;
+}
+.company-grid.company-logo-grid .programme-logo-card.logo-card-dark .logo-company-name{color:#f4f6fb}
+@media(max-width:650px){
+  .training-companies-dialog{width:calc(100vw - 20px);max-height:90vh}
+  .training-companies-inner{padding:18px 16px 24px}
+  .company-grid.company-logo-grid{gap:10px}
+  .company-grid.company-logo-grid .programme-logo-card{min-height:112px;padding:10px 7px;gap:7px}
+  .company-grid.company-logo-grid .programme-logo-card img{max-height:52px;max-width:96%}
+  .company-grid.company-logo-grid .programme-logo-card .logo-company-name{font-size:10.5px;line-height:1.25}
+  .company-grid.company-logo-grid .programme-logo-card .logo-fallback{min-height:46px;font-size:11px}
+}
+
+/* Page 13: the provided DACHSER company logo replaces the typographic archive label. */
+.archive-stat .dachser-archive-logo{display:block;width:clamp(136px,15vw,172px);max-width:52%;height:auto;max-height:74px;object-fit:contain;object-position:left center;flex:0 0 auto}
+@media(max-width:650px){.archive-stat .dachser-archive-logo{width:120px;max-height:58px}}
+
+/* Page 12: two photographs in the existing Polaroid frame. */
+.charity-gallery{isolation:isolate}
+.charity-gallery>.charity-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;opacity:0;visibility:hidden;transform:scale(1);transition:opacity .34s ease,visibility .34s ease;pointer-events:none}
+.charity-gallery>.charity-slide.is-active{opacity:1;visibility:visible}
+.charity-gallery:hover>.charity-slide{transform:none}
+.charity-gallery-arrow{position:absolute;z-index:2;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:36px;height:44px;padding:0;border:1px solid rgba(255,255,255,.7);border-radius:4px;background:rgba(0,38,75,.72);color:#fff;font:normal 35px/1 Georgia,serif;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.16);transition:background .2s ease}
+.charity-gallery-previous{left:10px}.charity-gallery-next{right:10px}
+.charity-gallery-arrow:hover{background:rgba(0,51,102,.94)}
+.charity-gallery-arrow:focus-visible{outline:3px solid #00a6e3;outline-offset:2px}
+.charity-gallery-index{position:absolute;z-index:2;bottom:9px;left:50%;transform:translateX(-50%);background:rgba(0,38,75,.75);color:#fff;font:700 10px/1.2 "Source Sans 3",Arial,sans-serif;letter-spacing:.11em;border-radius:20px;padding:6px 11px;pointer-events:none;white-space:nowrap}
+@media(max-width:650px){.charity-gallery-arrow{width:25px;height:34px;font-size:27px}.charity-gallery-previous{left:5px}.charity-gallery-next{right:5px}.charity-gallery-index{bottom:5px;padding:4px 8px;font-size:9px}}
+@media(prefers-reduced-motion:reduce){.charity-gallery>.charity-slide{transition:none}}
+
+</style>
+<style>@font-face{font-family:'Source Sans 3';font-weight:400;src:url('assets/33dbe787803871ede527.woff') format('woff')}@font-face{font-family:'Source Sans 3';font-weight:600;src:url('assets/7d268b7f19b1214f7b47.woff') format('woff')}@font-face{font-family:'Source Sans 3';font-weight:700;src:url('assets/9765d07ded731e7bccbe.woff') format('woff')}@font-face{font-family:'Source Serif 4';font-weight:400;src:url('assets/235cc6579c84a2831eae.woff') format('woff')}@font-face{font-family:'Source Serif 4';font-weight:700;src:url('assets/49ccdb0f099460bae601.woff') format('woff')}html,body{height:100%;margin:0;overflow:hidden}.topbar{display:none}
+.main{position:absolute;inset:130px 34px 28px;height:auto!important;min-height:0!important;padding:10px 18px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .7s ease}
+.book-space{width:100%;height:100%;max-height:none;min-height:0;perspective:2600px;transform-origin:center;transition:transform 1.8s cubic-bezier(.22,.6,.2,1)}
+.book-page{padding:30px 45px 24px}.page-head{font-size:12px;min-height:38px}.head-mark{font-size:10px}.chapter-line{font-size:12px;margin-top:24px}.page-title{font-size:clamp(34px,3.15vw,61px);line-height:1.04;margin:7px 0 18px}.page-copy{font-size:clamp(17px,1.05vw,20px);line-height:1.48;max-width:none}.page-subtitle{font-size:22px;line-height:1.3}.cover-small{font-size:14px}.cover-big{font-size:clamp(45px,4.3vw,82px)}.cover-year{font-size:clamp(44px,4.4vw,83px)}.page-foot{font-size:11px;min-height:34px}.page-num{font-size:24px}
+.page-content{min-height:0;overflow:auto;justify-content:flex-start;overscroll-behavior:contain;scrollbar-width:thin;padding-top:14px}.cover-page .page-content,.photo-page .page-content{justify-content:center}.photo-frame{height:min(43vh,440px);min-height:180px;max-height:none}.photo-caption{font-size:17px}.photo-page{padding:30px 40px 24px}.archive-stat span{font-size:12px;max-width:240px}.company-button{font-size:14px;padding:12px 16px}.photo-mat{padding:14px 14px 18px}
+.corner-hit{top:auto;bottom:0;right:0;width:106px;height:98px;color:#003366;font:600 25px 'Source Sans 3',sans-serif;z-index:14;background:none;border:0;padding:35px 13px 6px 47px;filter:drop-shadow(-3px -2px 5px #00336625);transition:filter .2s;overflow:visible}
+.corner-hit:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 49%,#FFFFFF 50%,#CCD7E6 72%,#89A3BC 100%);transform-origin:right bottom;animation:page-corner-curl 3.5s ease-in-out infinite;z-index:-1}.corner-hit:hover:before,.corner-hit:focus-visible:before{transform:rotate(-3deg) scale(1.12);animation:none}.corner-hit.left-hit{left:0;right:auto;width:62px;height:68px;padding:24px 27px 3px 5px;font-size:22px}.corner-hit.left-hit:before{background:linear-gradient(225deg,transparent 49%,#FFFFFF 50%,#CCD7E6 80%);transform-origin:left bottom;animation:none}.corner-hit:disabled{opacity:0;pointer-events:none}.book-space.flipping .corner-hit{pointer-events:none}
+@keyframes page-corner-curl{0%,65%,100%{transform:scale(1)}78%{transform:scale(1.09) rotate(-2deg)}}
+.book-intro-cover{position:absolute;left:50%;top:0;width:50%;height:100%;z-index:22;transform-origin:left center;transform-style:preserve-3d;transform:rotateY(0);transition:transform 1.7s cubic-bezier(.4,0,.2,1),opacity .35s}
+.book-cover-front,.book-cover-back{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px;border-radius:0 6px 6px 0;box-shadow:12px 16px 30px #0006;background:#003366}
+.book-cover-front{border-left:12px solid #001E3C;color:#FFFFFF;background:linear-gradient(115deg,#003366,#003366 70%,#124979);transform:translateZ(2px)}.book-cover-front:before{content:'';position:absolute;inset:15px;border:1px solid #CCD7E680;pointer-events:none}.book-cover-front img{width:65%;max-width:290px;max-height:245px;object-fit:contain;background:white;padding:14px;margin-bottom:38px}.book-cover-front p{font:400 clamp(27px,2.3vw,44px)/1.2 'Source Serif 4',serif;max-width:540px;margin:0 0 24px}.book-cover-front small{font:600 15px/1.4 'Source Sans 3',sans-serif;letter-spacing:.16em;color:#CCD7E6;text-transform:uppercase}.book-cover-back{transform:rotateY(180deg);background:#F8F6EF;box-shadow:inset -12px 0 24px -20px #003366}
+body.book-closed .main,body.book-opening .main,body.book-open .main{opacity:1}body.book-closed .book-space{transform:translateX(-25%) scale(.88)}body.book-opening .book-space,body.book-open .book-space{transform:translateX(0) scale(1)}body.book-closed .static-page,body.book-closed #flipLayer{opacity:0}body.book-opening .static-page.right{opacity:1}body.book-opening .static-page.left{opacity:0}body.book-open .static-page{opacity:1;transition:opacity .3s}body.book-opening .book-intro-cover,body.book-open .book-intro-cover{transform:rotateY(-180deg)}body.book-open .book-intro-cover{opacity:0;pointer-events:none}body:not(.book-open) .corner-hit{visibility:hidden}body.book-closed .book-space:before,body.book-closed .book-space:after{opacity:0}
+@media(max-width:1050px){.main{inset:125px 18px 22px;padding:8px}.book-page,.photo-page{padding:24px}.page-title{font-size:38px}.page-copy{font-size:15px}.page-subtitle{font-size:18px}.photo-caption{font-size:14px}.cover-big,.cover-year{font-size:52px}.book-cover-front{padding:30px}.book-cover-front p{font-size:30px}}
+@media(max-width:650px){.main{inset:128px 14px 22px;padding:6px}.book-page,.photo-page{padding:18px 12px 16px}.page-head{font-size:8px;min-height:28px}.head-mark{font-size:7px}.chapter-line{font-size:9px;margin-top:12px}.page-title{font-size:27px}.page-copy{font-size:12px;line-height:1.4}.page-subtitle{font-size:14px}.page-foot{font-size:8px}.photo-frame{min-height:140px;height:32vh}.photo-caption{font-size:12px}.cover-big,.cover-year{font-size:34px}.book-cover-front{padding:18px;border-left-width:7px}.book-cover-front img{width:85%;padding:8px;margin-bottom:22px}.book-cover-front p{font-size:22px}.book-cover-front small{font-size:10px}.corner-hit{width:70px;height:70px;font-size:20px;padding:27px 7px 2px 33px}.corner-hit.left-hit{width:44px;height:53px;padding:22px 19px 1px 3px}}
+@media(prefers-reduced-motion:reduce){.book-space,.book-intro-cover,.main{transition:none!important}.corner-hit:before{animation:none!important}}
+
+.yearbook-hidden *{animation-play-state:paused!important}
+/* Equal desk margins around a slightly smaller, readable book. */
+.main{inset:0!important;padding:0!important;display:flex;align-items:center;justify-content:center}.book-space{width:92%;height:88%;max-height:none;min-height:0}.book-page{padding:25px 37px 21px}.page-title{font-size:clamp(33px,3.05vw,57px)}.page-copy{font-size:clamp(17px,1.1vw,21px);line-height:1.48}.photo-page{padding:25px 34px 21px}.photo-frame{height:min(39vh,365px)}.page-subtitle{font-size:21px}.book-cover-front p{font-size:clamp(26px,2.4vw,43px)}
+@media(max-width:1050px){.main{inset:0!important;padding:0!important}.book-space{width:94%;height:88%}.book-page,.photo-page{padding:22px}.page-title{font-size:37px}.page-copy{font-size:15px}}
+@media(max-width:650px){.book-space{width:95%;height:89%}.book-page,.photo-page{padding:17px 11px}.page-title{font-size:26px}.page-copy{font-size:12px}.page-subtitle{font-size:14px}.photo-frame{height:28vh}}
+/* Larger, readable contents type within the existing paper. */
+.toc-eyebrow{display:none}.toc-title{font-size:48px;margin:3px 0 7px}.toc-subtitle{font-size:17px;line-height:1.3}.toc-content{padding-top:9px}.toc-groups{gap:4px;padding-top:7px}.toc-group{padding:4px 0 5px}.toc-group-title{font-size:18px;line-height:1.2;margin:0 0 4px}.toc-category-number{font-size:12px;min-width:20px}.toc-entry{min-height:27px;padding:3px 5px 3px 31px;gap:14px}.toc-entry-label{font-size:18px;line-height:1.2}.toc-entry-page{font-size:16px}
+/* A clear callout remains attached to the turning corner. */
+#rightHit{width:245px;height:112px;padding:0;color:#003366;filter:none}
+#rightHit:before{inset:auto 0 0 auto;width:78px;height:78px;filter:drop-shadow(-3px -2px 5px #00336630)}
+.turn-label{position:absolute;right:64px;bottom:66px;padding:9px 14px;border:1px solid #9EB7CA;border-radius:4px;background:#FFFFFFF5;box-shadow:0 3px 10px #00336618;font:600 17px/1.2 'Source Sans 3',sans-serif;white-space:nowrap;letter-spacing:0;text-transform:none}
+.turn-arrow{position:absolute;right:13px;bottom:13px;font:600 32px/1 'Source Sans 3',sans-serif}
+#rightHit:hover .turn-label,#rightHit:focus-visible .turn-label{background:#003366;color:#FFFFFF;border-color:#003366}.right-page .page-foot{padding-right:73px}.page-foot{letter-spacing:.02em}
+/* Original image canvases are contained, without crop or scale transforms. */
+.training-companies-dialog{width:min(1120px,calc(100vw - 64px));max-height:calc(100vh - 54px)}
+.training-companies-header{padding:24px 30px}.training-companies-inner{padding:25px 30px 30px}.company-grid.company-logo-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.company-grid.company-logo-grid .programme-logo-card{height:114px;min-height:114px;padding:18px;box-sizing:border-box;gap:0;background:#FFFFFF;overflow:visible}
+.company-grid.company-logo-grid .programme-logo-card img{display:block;width:100%;height:100%;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center;transform:none!important;clip-path:none!important;border:0}
+.logo-company-name,.company-note,.company-intro{display:none!important}
+/* Both charity photographs remain visible in their taped photo mats. */
+.charity-photo-stack{gap:19px;justify-content:center;align-items:center}.charity-photo-stack .photo-mat{width:min(100%,410px);box-sizing:border-box;margin:0;padding:11px 12px 13px;flex:none}.charity-photo-stack .photo-mat:nth-child(2){transform:rotate(.8deg)}.charity-photo-stack .charity-photo-frame{height:clamp(145px,21vh,190px);min-height:0;background:#F3F1EB}.charity-photo-frame>img{object-fit:contain;transform:none!important}.charity-photo-stack .photo-caption{font-size:15px;line-height:1.2;padding-top:9px}
+.outlook-numbers{font-size:15px;line-height:1.2;gap:14px;margin-top:19px}.outlook-numbers b{font-size:64px;line-height:1.05}.outlook-numbers span{flex:1;text-align:center}
+@media(max-width:1050px){.toc-title{font-size:37px}.toc-subtitle{font-size:15px}.toc-group-title{font-size:16px}.toc-entry-label{font-size:16px}.toc-entry-page{font-size:14px}.toc-entry{min-height:25px}.company-grid.company-logo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.outlook-numbers b{font-size:48px}.outlook-numbers{font-size:12px}}
+@media(max-width:650px){.toc-title{font-size:29px}.toc-subtitle{font-size:12px}.toc-group-title{font-size:13px;gap:6px}.toc-category-number{font-size:10px;min-width:14px}.toc-entry{min-height:25px;padding:3px 1px 3px 19px;gap:5px}.toc-entry-label{font-size:13px;line-height:1.25}.toc-entry-page{font-size:12px}.toc-groups{gap:3px}.training-companies-dialog{width:calc(100vw - 20px);max-height:calc(100vh - 24px)}.company-grid.company-logo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.company-grid.company-logo-grid .programme-logo-card{height:108px;min-height:108px;padding:13px}.training-companies-inner{padding:18px 16px}.charity-photo-stack{gap:15px}.charity-photo-stack .charity-photo-frame{height:clamp(120px,19vh,170px)}.charity-photo-stack .photo-mat{padding:8px}.charity-photo-stack .photo-caption{font-size:11px}.outlook-numbers b{font-size:36px}.outlook-numbers{font-size:10px;gap:6px}.turn-label{font-size:12px;right:40px;bottom:54px;padding:6px 8px}#rightHit{width:175px;height:90px}#rightHit:before{width:54px;height:54px}.turn-arrow{font-size:25px;bottom:9px;right:8px}.right-page .page-foot{padding-right:48px}}
+/* Compact, readable contents; the fit helper handles shorter viewport heights. */
+.toc-content{overflow:hidden!important;scrollbar-width:none!important;padding:5px 1px 0 0!important;min-height:0}
+.toc-fit{display:flow-root;transform-origin:top left;width:100%}
+.toc-heading{padding-bottom:6px}.toc-title{font-size:39px!important;line-height:1!important;margin:2px 0 5px!important}.toc-subtitle{font-size:15px!important;line-height:1.2!important}
+.toc-groups{padding-top:5px!important;gap:2px!important}.toc-group{padding:3px 0 4px!important}.toc-group-title{font-size:16px!important;line-height:1.2!important;margin:0 0 3px!important;gap:9px}
+.toc-category-number{font-size:11px!important;min-width:18px!important}.toc-entry{min-height:24px!important;padding:2px 4px 2px 28px!important;gap:10px!important}.toc-entry-label{font-size:17px!important;line-height:1.15!important}.toc-entry-page{font-size:15px!important}
+/* The corner itself signals the next page, with no static text box or arrow label. */
+#rightHit{width:155px!important;height:148px!important;padding:0!important;filter:drop-shadow(0 0 9px #FFDE5B90)!important;transition:filter .2s ease}
+#rightHit:before{inset:auto 0 0 auto!important;width:112px!important;height:112px!important;background:linear-gradient(135deg,transparent 48%,#FFFFFF 49%,#E4ECF4 68%,#8CA8C2 100%)!important;filter:drop-shadow(-3px -2px 6px #00336640)}
+#rightHit:hover,#rightHit:focus-visible{filter:drop-shadow(0 0 15px #FFDE5BD0)!important}
+.turn-label,.turn-arrow{display:none!important}.right-page .page-foot{padding-right:110px!important}
+@media(max-width:1050px){.toc-title{font-size:32px!important}.toc-subtitle{font-size:13px!important}.toc-group-title{font-size:14px!important}.toc-entry-label{font-size:15px!important}.toc-entry-page{font-size:13px!important}.toc-entry{min-height:22px!important;padding-top:2px!important;padding-bottom:2px!important}}
+@media(max-width:650px){.toc-title{font-size:26px!important}.toc-subtitle{font-size:11px!important}.toc-group-title{font-size:12px!important;gap:5px}.toc-entry-label{font-size:12px!important}.toc-entry-page{font-size:11px!important}.toc-entry{min-height:21px!important;padding-left:18px!important;gap:6px!important}.toc-category-number{font-size:9px!important;min-width:12px!important}#rightHit{width:108px!important;height:105px!important}#rightHit:before{width:80px!important;height:80px!important}.right-page .page-foot{padding-right:76px!important}}
+@media(prefers-reduced-motion:reduce){#rightHit:before{animation:none!important}#rightHit{transition:none!important}}
+</style></head>
+<body>
+<div class="backdrop" style="--wood:url('assets/0fcc0035a8cefbd936eb.jpg')"></div><div class="backdrop-water"></div>
+<header class="topbar"><div class="brandline"><img class="gbs-header-logo" alt="German Business School Hong Kong logo" src="assets/2e390fbb6dd92d485ffa.png" draggable="false"><div class="brand-text"><strong>German Business School Hong Kong</strong><span>Annual Report 2025/26 · Digital Yearbook</span></div></div></header>
+<main class="main">
+ <div class="book-space" id="book" aria-label="Interactive German Business School yearbook">
+   <div class="static-page left" id="staticLeft"></div><div class="static-page right" id="staticRight"></div>
+   <div id="flipLayer"></div><div class="book-intro-cover" aria-hidden="true"><div class="book-cover-front"><img class="book-cover-logo" alt="German Business School Hong Kong logo" src="assets/2e390fbb6dd92d485ffa.png" draggable="false"><p>A Year of Learning, Growth &amp; New Beginnings</p><small>Yearbook 2024 / 2026</small></div><div class="book-cover-back"></div></div>
+   <button type="button" class="corner-hit left-hit" id="leftHit" title="Previous double-spread" aria-label="Previous double-spread">‹</button>
+   <button type="button" class="corner-hit" id="rightHit" title="Turn the page" aria-label="Next double-spread"></button>
+ </div>
+</main>
+
+
+
+<dialog id="trainingCompaniesDialog" class="training-companies-dialog" aria-labelledby="companyDialogTitle">
+  <div class="training-companies-header">
+    <div><small>Training Companies</small><h2 id="companyDialogTitle">Training companies</h2></div>
+    <button type="button" id="closeCompanyDialog" class="company-close" aria-label="Close training company list">×</button>
+  </div>
+  <div class="training-companies-inner">
+    <ul class="company-grid" id="companyDialogList"></ul>
+    </div>
+</dialog>
+<script>
+const spreads=[{"name":"A Year of Learning, Growth & New Beginnings","tag":"FOREWORD","left":"<article class=\"book-page left-page cover-page\">\n       <div class=\"page-head\"><span class=\"page-date\">2025 / 2026</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>FOREWORD</div>\n       <div class=\"page-content\"><h2 class=\"page-title\"><span class=\"cover-small\">THE GERMAN BUSINESS SCHOOL</span><span class=\"cover-big\">YEARBOOK</span><span class=\"cover-year\" style=\"font-size:clamp(30px,4.1vw,65px);letter-spacing:-.055em\">2024/2026</span></h2><div class=\"page-subtitle\">A Year of Learning, Growth &amp; New Beginnings</div><div class=\"page-copy\"><p>From classrooms in Sai Wan Ho to training companies, community projects and new opportunities, the 2025/26 academic year brought the German dual training model to life in Hong Kong.</p><p>Turn the pages to revisit a selection of the moments that defined the year.</p></div><div class=\"yearbook-web-link\"><a href=\"https://hongkong.ahk.de/en/talent-trainings/dual-system-professional-training\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Learn About the Dual System\"><span class=\"yearbook-link-mark\" aria-hidden=\"true\">↗</span><span>Learn About the Dual System</span></a></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">01</span></div>\n    </article>","right":"<article class=\"book-page right-page toc-page\">\n  <div class=\"page-head\"><span class=\"page-date\">2025 / 2026</span><span class=\"head-mark\">GBS / HK</span></div>\n  <div class=\"toc-content\">\n    <div class=\"toc-heading\"><h2 class=\"toc-title\">Contents</h2>\n      <p class=\"toc-subtitle\">Select a chapter to turn to its pages.</p>\n    </div>\n    <div class=\"toc-groups\">\n<section class=\"toc-group\"><h3 class=\"toc-group-title\"><span class=\"toc-category-number\">01</span>The School</h3>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"1\" aria-label=\"Open A New Home for the GBS, page 03\"><span class=\"toc-entry-label\">A New Home for the GBS</span><span class=\"toc-entry-page\">03</span></button>\n</section>\n<section class=\"toc-group\"><h3 class=\"toc-group-title\"><span class=\"toc-category-number\">02</span>Training Pathways</h3>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"2\" aria-label=\"Open Wholesale and Foreign Trade Management, page 05\"><span class=\"toc-entry-label\">Wholesale and Foreign Trade Management</span><span class=\"toc-entry-page\">05</span></button>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"3\" aria-label=\"Open Transport and Logistics Management, page 07\"><span class=\"toc-entry-label\">Transport and Logistics Management</span><span class=\"toc-entry-page\">07</span></button>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"4\" aria-label=\"Open Digitalisation Management, page 09\"><span class=\"toc-entry-label\">Digitalisation Management</span><span class=\"toc-entry-page\">09</span></button>\n</section>\n<section class=\"toc-group\"><h3 class=\"toc-group-title\"><span class=\"toc-category-number\">03</span>Learning in Action</h3>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"5\" aria-label=\"Open Learning to Give Back, page 11\"><span class=\"toc-entry-label\">Learning to Give Back</span><span class=\"toc-entry-page\">11</span></button>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"6\" aria-label=\"Open Inside the Supply Chain, page 13\"><span class=\"toc-entry-label\">Inside the Supply Chain</span><span class=\"toc-entry-page\">13</span></button>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"7\" aria-label=\"Open Meeting the Next Generation, page 15\"><span class=\"toc-entry-label\">Meeting the Next Generation</span><span class=\"toc-entry-page\">15</span></button>\n</section>\n<section class=\"toc-group\"><h3 class=\"toc-group-title\"><span class=\"toc-category-number\">04</span>People &amp; Milestones</h3>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"8\" aria-label=\"Open The Class of GBS24, page 17\"><span class=\"toc-entry-label\">The Class of GBS24</span><span class=\"toc-entry-page\">17</span></button>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"9\" aria-label=\"Open GBS on German Television, page 19\"><span class=\"toc-entry-label\">GBS on German Television</span><span class=\"toc-entry-page\">19</span></button>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"10\" aria-label=\"Open Farewell &amp; New Leadership, page 21\"><span class=\"toc-entry-label\">Farewell &amp; New Leadership</span><span class=\"toc-entry-page\">21</span></button>\n</section>\n<section class=\"toc-group\"><h3 class=\"toc-group-title\"><span class=\"toc-category-number\">05</span>Looking Ahead</h3>\n<button type=\"button\" class=\"toc-entry\" data-toc-spread=\"11\" aria-label=\"Open What Comes Next?, page 23\"><span class=\"toc-entry-label\">What Comes Next?</span><span class=\"toc-entry-page\">23</span></button>\n</section>\n</div></div>\n  <div class=\"page-foot\"><span>GBS HONG KONG</span><span class=\"page-num\">02</span></div>\n</article>"},{"name":"A Milestone in Sai Wan Ho","tag":"01 · THE SCHOOL","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">AUG – SEP 2025</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>01 · THE SCHOOL</div>\n       <div class=\"page-content\"><h2 class=\"page-title\">A New Home for the GBS</h2><div class=\"page-subtitle\">A Milestone in Sai Wan Ho</div><div class=\"page-copy\"><p>The German Business School began the school year at its new campus in Sai Wan Ho, following its establishment as an independent German school abroad in 2025.</p><p>In September 2025, 42 new trainees were set to begin their training, while the school entered a new chapter of its long-standing vocational education mission.</p></div><div class=\"archive-stat\"><strong>42</strong><span>trainees in the 2025 intake</span></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">03</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">AUG – SEP 2025</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/a52a0e762f9959a4f3a0.jpg\" alt=\"GBS students at the new campus\" draggable=\"false\"></div><div class=\"photo-caption\">GBS students at the new campus</div></div><div class=\"stamp\">FILED<br>2025 / 26</div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">04</span></div>\n    </article>"},{"name":"Wholesale and Foreign Trade Management","tag":"02 · THE THREE PATHWAYS","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">ACADEMIC YEAR 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>02 · THE THREE PATHWAYS</div>\n       <div class=\"page-content\"><h2 class=\"page-title programme-title\">Wholesale and Foreign Trade Management</h2><div class=\"page-subtitle\">Dual System Professional Training · 2025/26</div><div class=\"page-copy\"><p>This pathway introduces apprentices to international purchasing, sales, supplier relations and import–export processes.</p><p>Classroom learning and work placements allow trainees to apply commercial knowledge in a practical, international environment.</p></div><div class=\"yearbook-web-link\"><a href=\"https://hongkong.ahk.de/en/talent-trainings/dual-system-professional-training/wholesale-and-foreign-trade-management\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Explore Foreign Trade Management\"><span class=\"yearbook-link-mark\" aria-hidden=\"true\">↗</span><span>Explore Foreign Trade Management</span></a></div><div class=\"archive-stat\"><strong>01</strong><span>apprenticeship pathway</span><button type=\"button\" class=\"company-button\" data-pathway=\"trade\" aria-label=\"View training companies for Wholesale and Foreign Trade Management\">Training companies <span aria-hidden=\"true\">↗</span></button></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">05</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">ACADEMIC YEAR 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/99580e740f39b03d4e95.jpg\" alt=\"GBS classroom — programme life\" draggable=\"false\"></div><div class=\"photo-caption\">GBS classroom — programme life</div></div><div class=\"stamp\">FILED<br>2025 / 26</div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">06</span></div>\n    </article>"},{"name":"Transport and Logistics Management","tag":"03 · THE THREE PATHWAYS","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">ACADEMIC YEAR 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>03 · THE THREE PATHWAYS</div>\n       <div class=\"page-content\"><h2 class=\"page-title programme-title\">Transport and Logistics Management</h2><div class=\"page-subtitle\">Dual System Professional Training · 2025/26</div><div class=\"page-copy\"><p>From supply chains to freight transport, logistics trainees explore how goods move efficiently across markets.</p><p>The dual training model combines the fundamentals taught at school with day-to-day exposure in the industry.</p></div><div class=\"yearbook-web-link\"><a href=\"https://hongkong.ahk.de/en/talent-trainings/dual-system-professional-training/logistics-and-transport-services\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Explore Logistics &amp; Transport\"><span class=\"yearbook-link-mark\" aria-hidden=\"true\">↗</span><span>Explore Logistics &amp; Transport</span></a></div><div class=\"archive-stat\"><strong>02</strong><span>apprenticeship pathway</span><button type=\"button\" class=\"company-button\" data-pathway=\"logistics\" aria-label=\"View training companies for Transport and Logistics Management\">Training companies <span aria-hidden=\"true\">↗</span></button></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">07</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">ACADEMIC YEAR 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/59d9a8e7488f265e813a.jpg\" alt=\"GBS classroom — programme life\" draggable=\"false\"></div><div class=\"photo-caption\">GBS classroom — programme life</div></div><div class=\"stamp\">FILED<br>2025 / 26</div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">08</span></div>\n    </article>"},{"name":"Digitalisation Management","tag":"04 · THE THREE PATHWAYS","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">ACADEMIC YEAR 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>04 · THE THREE PATHWAYS</div>\n       <div class=\"page-content\"><h2 class=\"page-title programme-title\">Digitalisation Management</h2><div class=\"page-subtitle\">Dual System Professional Training · 2025/26</div><div class=\"page-copy\"><p>Digitalisation Management focuses on the intersection of technology, business processes and organisational change.</p><p>The programme gives apprentices opportunities to link digital thinking with practical experience in their training companies.</p></div><div class=\"yearbook-web-link\"><a href=\"https://hongkong.ahk.de/en/talent-trainings/dual-system-professional-training/digitalisation-management\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Explore Digitalisation Management\"><span class=\"yearbook-link-mark\" aria-hidden=\"true\">↗</span><span>Explore Digitalisation Management</span></a></div><div class=\"archive-stat\"><strong>03</strong><span>apprenticeship pathway</span><button type=\"button\" class=\"company-button\" data-pathway=\"digital\" aria-label=\"View training companies for Digitalisation Management\">Training companies <span aria-hidden=\"true\">↗</span></button></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">09</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">ACADEMIC YEAR 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/78d5fbcbcf9c0a77a941.jpg\" alt=\"GBS classroom — programme life\" draggable=\"false\"></div><div class=\"photo-caption\">GBS classroom — programme life</div></div><div class=\"stamp\">FILED<br>2025 / 26</div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">10</span></div>\n    </article>"},{"name":"GBS24F Charity Gala for Mother’s Choice","tag":"05 · COMMUNITY","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">13 NOV 2025</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>05 · COMMUNITY</div>\n       <div class=\"page-content\"><h2 class=\"page-title\">Learning to Give Back</h2><div class=\"page-subtitle\">GBS24F Charity Gala for Mother’s Choice</div><div class=\"page-copy\"><p>As part of their training, GBS24F students organised a charity gala in support of Mother’s Choice.</p><p>The initiative brought project management and community engagement together in support of children, young people and families in Hong Kong.</p></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">11</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">13 NOV 2025</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block charity-photo-stack\"><figure class=\"photo-mat\"><div class=\"photo-frame charity-photo-frame\"><img src=\"assets/ec49fc68b45edca39169.jpg\" alt=\"GBS charity gala group photograph\" draggable=\"false\"></div><figcaption class=\"photo-caption\">GBS24F charity gala for Mother’s Choice</figcaption></figure><figure class=\"photo-mat\"><div class=\"photo-frame charity-photo-frame\"><img src=\"assets/317da4cb1b76069dbe21.jpg\" alt=\"GBS students and partners presenting the donation to Mother’s Choice\" draggable=\"false\"></div><figcaption class=\"photo-caption\">Donation handover to Mother’s Choice</figcaption></figure></div><div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">12</span></div>\n    </article>"},{"name":"GBS Excursion to DACHSER China","tag":"06 · INDUSTRY INSIGHT","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">21 NOV 2025</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>06 · INDUSTRY INSIGHT</div>\n       <div class=\"page-content\"><h2 class=\"page-title\">Inside the Supply Chain</h2><div class=\"page-subtitle\">GBS Excursion to DACHSER China</div><div class=\"page-copy\"><p>Students visited DACHSER China in Kunshan to gain a closer look at modern warehousing and logistics operations.</p><p>It was an opportunity to connect classroom concepts with the processes, technology and people behind international supply chains.</p></div><div class=\"archive-stat\"><img class=\"dachser-archive-logo\" src=\"assets/fc8b2dbbe2f50aea37cf.png\" alt=\"DACHSER logo\" draggable=\"false\"><span>company excursion</span></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">13</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">21 NOV 2025</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/ebbbc8cbb170cc88bfc2.jpg\" alt=\"GBS group visiting DACHSER China, Kunshan\" draggable=\"false\"></div><div class=\"photo-caption\">GBS group visiting DACHSER China, Kunshan</div></div><div class=\"stamp\">FILED<br>2025 / 26</div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">14</span></div>\n    </article>"},{"name":"HKBU German Business & Career Expo","tag":"07 · NEW CONNECTIONS","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">22 APR 2026</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>07 · NEW CONNECTIONS</div>\n       <div class=\"page-content\"><h2 class=\"page-title\">Meeting the Next Generation</h2><div class=\"page-subtitle\">HKBU German Business &amp; Career Expo</div><div class=\"page-copy\"><p>GIC and GBS joined the German Business and Career Expo 2026 at Hong Kong Baptist University.</p><p>The event created an opportunity to introduce students to career pathways in the German business community and the distinctive combination of work and study offered through DSPT.</p></div><div class=\"archive-stat\"><strong>2026</strong><span>career expo</span></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">15</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">22 APR 2026</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/e6d688f905fce5e35c8f.jpg\" alt=\"German Business &amp; Career Expo 2026 at HKBU\" draggable=\"false\"></div><div class=\"photo-caption\">German Business &amp; Career Expo 2026 at HKBU</div></div><div class=\"stamp\">FILED<br>2025 / 26</div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">16</span></div>\n    </article>"},{"name":"22 Months. One Important Achievement.","tag":"08 · MILESTONE","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">18 JUN 2026</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>08 · MILESTONE</div>\n       <div class=\"page-content\"><h2 class=\"page-title\">The Class of GBS24</h2><div class=\"page-subtitle\">22 Months. One Important Achievement.</div><div class=\"page-copy\"><p>Class GBS24 celebrated graduation after completing 22 months of classroom learning and practical training with international companies.</p><p>This was the first graduating class in the era of the newly established German Business School.</p></div><div class=\"archive-stat\"><strong>22</strong><span>months completed</span></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">17</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">18 JUN 2026</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/077623049c337c5f3b63.jpg\" alt=\"Graduation Class 2024 · Celebrating the class graduating in 2026\" draggable=\"false\"></div><div class=\"photo-caption\">Graduation Class 2024 · Celebrating the class graduating in 2026</div></div><div class=\"stamp\">FILED<br>2025 / 26</div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">18</span></div>\n    </article>"},{"name":"SAT.1 Frühstücksfernsehen","tag":"09 · IN THE SPOTLIGHT","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">FEATURED DURING 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>09 · IN THE SPOTLIGHT</div>\n       <div class=\"page-content\"><h2 class=\"page-title\">GBS on German Television</h2><div class=\"page-subtitle\">SAT.1 Frühstücksfernsehen</div><div class=\"page-copy\"><p>A SAT.1 Frühstücksfernsehen feature followed GBS teacher Daniel Backenhaus in Hong Kong and introduced viewers to the school and its dual training programme.</p><p>The report also included perspectives from apprentices. Click the image to open the clip on Joyn.</p></div><div class=\"archive-stat\"><strong>SAT.1</strong><span>national TV feature</span></div></div>\n       <div class=\"page-foot\"><span class=\"page-num\">19</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">FEATURED DURING 2025 / 26</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame contain\"><a class=\"photo-link\" href=\"https://www.joyn.de/play/clip/olcay-unterwegs-hongkong\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Watch the SAT.1 feature on Joyn\"><img src=\"assets/eb7cb4a8e84f08b9710c.png\" alt=\"SAT.1 Frühstücksfernsehen — video preview\" draggable=\"false\"><span class=\"play-disc\">▶</span></a></div><div class=\"photo-caption\">SAT.1 Frühstücksfernsehen — video preview</div></div><div class=\"watch-line\"><a href=\"https://www.joyn.de/play/clip/olcay-unterwegs-hongkong\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Watch the SAT.1 feature on Joyn\">WATCH THE REPORT ON JOYN <span>↗</span></a></div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">20</span></div>\n    </article>"},{"name":"Farewell to Thorsten Rauhut · Welcome to Christian Neumeier","tag":"10 · FAREWELL & WELCOME","left":"<article class=\"book-page left-page farewell-page\">\n    <div class=\"page-head\"><span class=\"page-date\">JUN 2026 · 2026/27</span><span class=\"head-mark\">GBS / HK</span></div>\n    <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>10 · FAREWELL &amp; WELCOME</div>\n    <div class=\"page-content\">\n      <h2 class=\"page-title\">Thank You, Thorsten</h2>\n      <div class=\"page-subtitle\">Farewell to Thorsten Rauhut · Welcome to Christian Neumeier</div>\n      <div class=\"page-copy\">\n        <p>At the graduation of Class GBS24 in June 2026, the German Business School also said farewell to Principal Thorsten Rauhut after nine years at the school.</p>\n        <p>We thank him for his commitment to German dual vocational training in Hong Kong. Looking ahead to the 2026/27 school year, Christian Neumeier succeeds him as Principal of GBS.</p>\n      </div>\n      <div class=\"archive-stat\"><strong>9</strong><span>years at GBS</span></div>\n    </div>\n    <div class=\"page-foot\"><span>FAREWELL · 2025/26 / WELCOME · 2026/27</span><span class=\"page-num\">21</span></div>\n  </article>","right":"<article class=\"book-page right-page photo-page video-page\">\n    <div class=\"page-head\"><span class=\"page-date\">FAREWELL &amp; A NEW CHAPTER</span><span class=\"head-mark\">GBS / HK</span></div>\n    <div class=\"photo-block video-block\">\n      <div class=\"photo-mat video-mat\">\n        <div class=\"instagram-frame\" aria-label=\"Portrait-format Instagram Reel\">\n          <div class=\"instagram-cover instagram-cover-poster\">\n            <button type=\"button\" class=\"instagram-poster-button\" data-play-instagram aria-label=\"Play Thorsten Rauhut farewell Reel\" title=\"Play Instagram Reel\">\n              <img class=\"instagram-poster-image\" src=\"assets/2b6800101006bd1f487a.png\" alt=\"Farewell Thorsten Rauhut: original Instagram Reel screenshot showing the farewell gathering\" draggable=\"false\">\n            </button>\n          </div>\n          <iframe hidden title=\"Instagram video · GBS farewell and welcome\" data-embed-url=\"https://www.instagram.com/p/DahjOf1J3Tp/embed/\" loading=\"lazy\" allow=\"autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>\n        </div>\n        <div class=\"photo-caption\">Farewell &amp; a new beginning · Video on Instagram</div>\n      </div>\n      <a class=\"instagram-open\" href=\"https://www.instagram.com/p/DahjOf1J3Tp/\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Open the supplied Instagram video in a new tab\">▶   Watch on Instagram <span aria-hidden=\"true\">↗</span></a>\n      <p class=\"instagram-note\">An internet connection may be required to play the video here.</p>\n    </div>\n    <div class=\"page-foot\"><span>GBS HONG KONG · PEOPLE &amp; MILESTONES</span><span class=\"page-num\">22</span></div>\n  </article>"},{"name":"The 2026/27 School Year","tag":"11 · THE NEXT CHAPTER","left":"<article class=\"book-page left-page \">\n       <div class=\"page-head\"><span class=\"page-date\">FROM SEP 2026 · OUTLOOK</span><span class=\"head-mark\">GBS / HK</span></div>\n       <div class=\"chapter-line\"><span class=\"chapter-dot\"></span>11 · THE NEXT CHAPTER</div>\n       <div class=\"page-content\"><h2 class=\"page-title\">What Comes Next?</h2><div class=\"page-subtitle\">The 2026/27 School Year</div><div class=\"page-copy\"><p>Looking beyond the reporting period, the next school year is set to welcome 47 new trainees, with 88 students across the two years of DSPT and 55 active training companies.</p><p>Christian Neumeier takes over as the new Principal as GBS continues building its future as an independent school.</p></div><div class=\"archive-stat\"><strong>47</strong><span>new trainees · 2026/27</span></div></div>\n       <div class=\"page-foot\"><span>LOOKING AHEAD · 2026/27</span><span class=\"page-num\">23</span></div>\n    </article>","right":"<article class=\"book-page right-page photo-page \">\n      <div class=\"page-head\"><span class=\"page-date\">FROM SEP 2026 · OUTLOOK</span><span class=\"head-mark\">GBS / HK</span></div>\n      <div class=\"photo-block\"><div class=\"photo-mat\"><div class=\"photo-frame\"><img src=\"assets/7c84da2fb9f9f3d7c740.jpg\" alt=\"GBS reception, September 2026 — beyond the reporting period\" draggable=\"false\"></div><div class=\"photo-caption\">GBS reception, September 2026 — beyond the reporting period</div></div><div class=\"outlook-numbers\"><span><b>47</b> new trainees</span><span><b>88</b> students</span><span><b>55</b> companies</span></div></div>\n      <div class=\"page-foot\"><span>Dual System Professional Training in Hong Kong</span><span class=\"page-num\">24</span></div>\n    </article>"}];
+
+
+// Performance-only: convert each embedded image once into a local blob URL.
+// This is fully self-contained/offline, retains the original pixels and
+// avoids repeatedly parsing megabytes of base64 during a page turn.
+(function compactEmbeddedImages(){
+  const known = new Map();
+  const pattern = /data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)/g;
+  function assetUrl(original, mime, b64) {
+    if (known.has(original)) return known.get(original);
+    const binary = atob(b64);
+    const pixels = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; ++i) pixels[i] = binary.charCodeAt(i);
+    const url = URL.createObjectURL(new Blob([pixels], {type:'image/'+mime}));
+    known.set(original,url);
+    return url;
+  }
+  for (const spread of spreads) {
+    spread.left = spread.left.replace(pattern,assetUrl);
+    spread.right = spread.right.replace(pattern,assetUrl);
+  }
+})();
+
+// Hold only the current/adjacent illustrations decoded in browser memory.
+// They are prepared outside the animation, so turning a page stays responsive.
+const warmImages = new Map();
+function prewarmNearbyImages(pageIndex){
+  const needed = new Set();
+  for (let n=Math.max(0,pageIndex-1); n<=Math.min(spreads.length-1,pageIndex+1); ++n) {
+    for (const side of ['left','right']) {
+      for (const [,url] of spreads[n][side].matchAll(/<img\b[^>]*\bsrc=["'](blob:[^"']+)["']/g)) needed.add(url);
+    }
+  }
+  for (const [url] of warmImages) if (!needed.has(url)) warmImages.delete(url);
+  for (const url of needed) {
+    if (warmImages.has(url)) continue;
+    const img = new Image();
+    img.decoding='async';
+    img.src=url;
+    warmImages.set(url,img);
+    if (img.decode) img.decode().catch(()=>{});
+  }
+}
+
+const companyLists={"trade":["ALDI Sourcing Asia Ltd.","Awesome Foods","Azur","Blue Concept Asia","Eurogroup Far East Ltd.","Freudenberg & Vilene International Ltd.","Giesecke & Devrient Asia Pacific Ltd.","Hornbach Asia Ltd.","Imtron Asia Hong Kong Ltd.","Lidl & Kaufland Asia Pte. Limited (Hong Kong Branch)","METRO Sourcing International Ltd.","Migros","MVKM Group Ltd.","REWE Far East Ltd.","Schwarz Asia Pacific Sourcing Ltd.","Schütte & Co.","Simba Dickie HK Ltd.","STARTEAM Global Ltd.","Tchibo Merchandising Hong Kong LP","Techtronic Industries Co. Ltd.","TGI Technology Limited","TÜV SÜD Hong Kong Ltd."],"logistics":["Lufthansa Cargo AG","Asian Tigers Group","Cargo Partner","Dachser","GW","GD","Hellmann","Kuehne + Nagel","Lotus Fine Arts","Rohlig","Shypple Asia Ltd.","Woodland Group (HK) Ltd.","ZAMA"],"digital":["1291 Group","ALDI","BASF","DZ Bank","EuroGroup","GIC","Siemens Ltd.","TGI","Swiss Chamber HK"]};
+const companyNames={
+  trade:'Wholesale and Foreign Trade Management',
+  logistics:'Transport and Logistics Management',
+  digital:'Digitalisation Management'
+};
+const companyDialog=document.getElementById('trainingCompaniesDialog');
+const companyDialogTitle=document.getElementById('companyDialogTitle');
+const companyDialogList=document.getElementById('companyDialogList');
+const companyLogos={"ALDI Sourcing Asia Ltd.":"assets/6f676b0d7f9a3da567d7.png","Awesome Foods":"assets/adee7d3d0f26d728e776.png","Azur":"assets/893cbae8740728a0b137.jpg","Blue Concept Asia":"assets/a6683c40f0a9f7264b40.png","Eurogroup Far East Ltd.":"assets/c1000c0638790ec93148.png","Freudenberg & Vilene International Ltd.":"assets/7589f9002427bfa2e99c.png","Giesecke & Devrient Asia Pacific Ltd.":"assets/e4e56376dbe624b70cf1.jpg","Hornbach Asia Ltd.":"assets/865110441b75633782d1.jpg","Imtron Asia Hong Kong Ltd.":"assets/2db2ffd56c1db4ce5578.jpg","Lidl & Kaufland Asia Pte. Limited (Hong Kong Branch)":"assets/9c882912096516637c09.png","METRO Sourcing International Ltd.":"assets/ab13113cbf9ecfafc590.jpg","Migros":"assets/21f8f8ebf8432a339329.jpg","MVKM Group Ltd.":"assets/db7c02f195d0a8fc8d8d.jpg","REWE Far East Ltd.":"assets/2281e043008acc051f5c.png","Schwarz Asia Pacific Sourcing Ltd.":"assets/1efd8b5da3bba48beffe.png","Schütte & Co.":"assets/5152d99a90de81938f83.jpg","Simba Dickie HK Ltd.":"assets/c94c6e7d933428f3d665.jpg","STARTEAM Global Ltd.":"assets/54aa7960f67d768d22e9.jpg","Tchibo Merchandising Hong Kong LP":"assets/dbfacc937aacb7621e3d.jpg","Techtronic Industries Co. Ltd.":"assets/3c036b6ac8d6de914b7c.png","TGI Technology Limited":"assets/45622595a6405560ecdb.png","TÜV SÜD Hong Kong Ltd.":"assets/0ce442d89648b6903a6d.png","Lufthansa Cargo AG":"assets/468290a0137af92b0444.png","Asian Tigers Group":"assets/b736583aa08a60811aab.png","Cargo Partner":"assets/2b3a65ca17b2d0db7308.jpg","Dachser":"assets/80168e5111ad4a3c18ec.jpg","GW":"assets/a3b39c21e7a9470c8891.png","GD":"assets/e4e56376dbe624b70cf1.jpg","Hellmann":"assets/3e9f3341df3f17cc38bc.jpg","Kuehne + Nagel":"assets/5c16dc84d188f30d16f3.png","Lotus Fine Arts":"assets/40ff336046f93a1158f0.jpg","Rohlig":"assets/2103260640f375d9046b.jpg","Shypple Asia Ltd.":"assets/e2615a775977fb0dc4e2.png","Woodland Group (HK) Ltd.":"assets/501d1517a3fa4c47b4e5.png","ZAMA":"assets/00a38a6c7083215c1c87.png","1291 Group":"assets/fcf4475b3c1fd5d216a0.png","ALDI":"assets/6f676b0d7f9a3da567d7.png","BASF":"assets/31ffb6aad98654c8feaf.jpg","DZ Bank":"assets/b61e2d6c09a3942e0fd1.jpg","EuroGroup":"assets/c1000c0638790ec93148.png","GIC":"assets/aaee34410219993a3c6e.jpg","Siemens Ltd.":"assets/c6b90ad710ca4bfe7927.png","TGI":"assets/45622595a6405560ecdb.png","Swiss Chamber HK":"assets/0531b61b2502f8216d31.png"};
+function createCompanyCard(name){
+  const card=document.createElement('div');
+  card.className='programme-logo-card';
+  const img=document.createElement('img');
+  img.src=companyLogos[name];
+  img.alt=name+' logo';
+  img.loading='eager';
+  img.decoding='async';
+  card.appendChild(img);
+  return card;
+}
+function enhancePathwayPages(){
+  // Keep the complete training-company logo walls in the existing dialog,
+  // but show only their opening button on the three training pathway pages.
+  document.querySelectorAll('.company-button[data-pathway]').forEach(button=>{
+    const archive=button.closest('.archive-stat');
+    if(!archive||archive.dataset.logoWallReady==='true')return;
+    archive.dataset.logoWallReady='true';
+    archive.classList.remove('archive-logo-wall');
+    button.innerHTML='Training Companies <span aria-hidden="true">↗</span>';
+    archive.replaceChildren(button);
+  });
+}
+function openCompanies(pathway){
+  const names=companyLists[pathway];
+  if(!Array.isArray(names)||turning)return;
+  companyDialogTitle.textContent=companyNames[pathway];
+  companyDialogList.className='company-grid company-logo-grid';
+  companyDialogList.replaceChildren(...names.map(name=>{
+    const item=document.createElement('li');
+    item.appendChild(createCompanyCard(name,false));
+    return item;
+  }));
+  companyDialog.showModal();
+}
+document.addEventListener('click',event=>{
+  const button=event.target.closest?.('[data-pathway]');
+  if(button){event.preventDefault();openCompanies(button.dataset.pathway);}
+});
+document.getElementById('closeCompanyDialog').addEventListener('click',()=>companyDialog.close());
+companyDialog.addEventListener('click',event=>{if(event.target===companyDialog)companyDialog.close()});
+
+const leftEl=document.getElementById('staticLeft');
+const rightEl=document.getElementById('staticRight');
+const flipLayer=document.getElementById('flipLayer');
+const book=document.getElementById('book');
+const previous=document.getElementById('leftHit');
+const next=document.getElementById('rightHit');
+const counter={set textContent(value){book.dataset.spread=value;}};
+const chapterLabel={set textContent(value){book.setAttribute('aria-label','German Business School yearbook: '+value);}};
+const chapterDots=null;
+const chapterTrackFill={style:{}};
+const trackTram=null;
+const backToStart={disabled:false,addEventListener(){}};
+const chapterButtons=[];
+let index=0, turning=false, wheelLock=false;
+function updateTrackTram(idx){
+  if(!trackTram||!chapterButtons[idx])return;
+  const stop=chapterButtons[idx];
+  const ring=stop.querySelector('.stop-ring')||stop;
+  const center=stop.offsetLeft + ring.offsetLeft + ring.offsetWidth/2;
+  const x=center-trackTram.offsetWidth/2;
+  trackTram.style.transform=`translateX(${x}px)`;
+}
+function renderStatic(idx){
+  leftEl.innerHTML=spreads[idx].left;
+  rightEl.innerHTML=spreads[idx].right;
+  index=idx;
+  counter.textContent=`${String(idx+1).padStart(2,'0')} / ${String(spreads.length).padStart(2,'0')}`;
+  chapterLabel.textContent=spreads[idx].name;
+  chapterTrackFill.style.transform=`scaleX(${spreads.length>1?idx/(spreads.length-1):0})`;
+  chapterButtons.forEach((button,i)=>{
+    button.classList.toggle('active',i===idx);
+    button.classList.toggle('visited',i<idx);
+    if(i===idx)button.setAttribute('aria-current','page');
+    else button.removeAttribute('aria-current');
+  });
+  if(window.innerWidth<=650){
+    const windowEl=document.querySelector('.chapter-track-window');
+    const activeDot=chapterButtons[idx];
+    if(windowEl&&activeDot){
+      const desired=activeDot.offsetLeft+activeDot.offsetWidth/2-windowEl.clientWidth/2;
+      windowEl.scrollTo({left:Math.max(0,desired),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+    }
+  }
+  backToStart.disabled=idx===0;
+  previous.disabled=idx===0;
+  next.disabled=false;next.setAttribute('aria-label',idx===spreads.length-1?'Return to first double-spread':'Next double-spread');
+  animatePageNumbers();
+  prewarmNearbyImages(idx);
+  enhancePathwayPages();
+  requestAnimationFrame(()=>updateTrackTram(idx));
+}
+function buildChapterNavigation(){
+  spreads.forEach((spread,i)=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='chapter-stop';
+    button.title=`Page ${String(i+1).padStart(2,'0')} · ${spread.name}`;
+    button.setAttribute('aria-label',`Jump to page ${i+1} of ${spreads.length}: ${spread.name}`);
+    const ring=document.createElement('span');
+    ring.className='stop-ring';
+    ring.setAttribute('aria-hidden','true');
+    const page=document.createElement('span');
+    page.className='stop-page';
+    page.textContent=String(i+1).padStart(2,'0');
+    button.append(ring,page);
+    button.addEventListener('click',()=>{updateTrackTram(i);turnTo(i)});
+    chapterDots.appendChild(button);
+    chapterButtons.push(button);
+  });
+}
+let renderToken=0;
+function animatePageNumbers(){
+  const token=++renderToken;
+  const items=index===spreads.length-1 ? [...rightEl.querySelectorAll('.outlook-numbers b')] : [];
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  items.forEach((el,sequence)=>{
+    const original=el.textContent.trim();
+    if(!/^\d[\d,]*$/.test(original))return;
+    const target=Number(original.replaceAll(',',''));
+    if(!Number.isSafeInteger(target)||reduced)return;
+    const formatter=new Intl.NumberFormat('en-GB');
+    const delay=120+sequence*115;
+    const duration=target>=1000?1350:1050;
+    el.textContent='0';
+    let start;
+    function frame(now){
+      if(token!==renderToken||!el.isConnected)return;
+      if(start===undefined)start=now+delay;
+      const t=Math.min(1,Math.max(0,(now-start)/duration));
+      const ease=1-Math.pow(1-t,3);
+      el.textContent=formatter.format(Math.round(ease*target));
+      if(t<1)requestAnimationFrame(frame);
+      else el.classList.add('number-done');
+    }
+    requestAnimationFrame(frame);
+  });
+}
+function flip(dir){const target=dir>0&&index===spreads.length-1?0:index+dir;turnTo(target);}
+function turnTo(target){
+ if(window.yearbookIsReady===false)return;
+ if(turning||companyDialog.open) return;
+ if(!Number.isInteger(target)||target===index||target<0||target>=spreads.length)return;
+ const dir=target>index?1:-1;
+ turning=true;book.classList.add('flipping');previous.disabled=true;next.disabled=true;
+ const current=spreads[index], nextData=spreads[target];
+ const forward=dir>0;
+ // The moving leaf carries the old right page on its front and
+ // the next left page on the reverse: a real book-like page turn.
+ if(forward){leftEl.innerHTML=current.left;rightEl.innerHTML=nextData.right;}
+ else {leftEl.innerHTML=nextData.left;rightEl.innerHTML=current.right;}
+ const sheet=document.createElement('div');
+ sheet.className=`flip-sheet ${forward?'forward':'reverse'}`;
+ sheet.innerHTML=`<div class="flip-face front">${forward?current.right:current.left}</div><div class="flip-face back">${forward?nextData.left:nextData.right}</div>`;
+ flipLayer.appendChild(sheet);
+ enhancePathwayPages();
+ let finished=false;
+ function complete(){
+   if(finished)return;finished=true;sheet.remove();renderStatic(target);turning=false;book.classList.remove('flipping');
+ }
+ sheet.addEventListener('transitionend',e=>{if(e.target===sheet && e.propertyName==='transform')complete()},{once:true});
+ requestAnimationFrame(()=>requestAnimationFrame(()=>sheet.classList.add('turn')));
+ setTimeout(complete,1250);
+}
+
+document.addEventListener('click',event=>{
+  const button=event.target.closest?.('[data-play-instagram]');
+  if(!button||turning)return;
+  const box=button.closest('.instagram-frame');
+  const frame=box?.querySelector('iframe[data-embed-url]');
+  if(!frame)return;
+  frame.hidden=false;
+  frame.src=frame.dataset.embedUrl;
+  box.querySelector('.instagram-cover')?.remove();
+});
+
+
+// The Contents page uses the same smooth book turn as the existing navigation.
+document.addEventListener('click',event=>{
+  const entry=event.target.closest?.('[data-toc-spread]');
+  if(!entry)return;
+  event.preventDefault();
+  const target=Number(entry.dataset.tocSpread);
+  if(turning||companyDialog.open||!Number.isInteger(target))return;
+  updateTrackTram(target);
+  turnTo(target);
+});
+backToStart.addEventListener('click',()=>{updateTrackTram(0);turnTo(0)});
+
+
+document.getElementById('rightHit').addEventListener('click',()=>flip(1));
+document.getElementById('leftHit').addEventListener('click',()=>flip(-1));
+document.addEventListener('keydown',e=>{if(companyDialog.open)return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();flip(1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();flip(-1)}});
+let sx=null;
+book.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+book.addEventListener('touchend',e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>55)flip(dx<0?1:-1);sx=null},{passive:true});
+window.addEventListener('wheel',e=>{
+ if(companyDialog.open)return;
+ if(e.ctrlKey||Math.abs(e.deltaY)<18) return;
+ if(window.innerWidth<=650)return;
+ e.preventDefault();
+ if(turning||wheelLock) return;
+ wheelLock=true;flip(e.deltaY>0?1:-1);
+ setTimeout(()=>wheelLock=false,950);
+},{passive:false});
+window.addEventListener('resize',()=>updateTrackTram(index));
+
+renderStatic(0);
+requestAnimationFrame(()=>updateTrackTram(0));
+</script>
+<script>(()=>{'use strict';
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)');let active=false,openTimer=0,finishTimer=0;
+ window.yearbookIsReady=false;
+ function reset(){clearTimeout(openTimer);clearTimeout(finishTimer);window.yearbookIsReady=false;document.body.classList.remove('book-opening','book-open','book-closed');}
+ function activate(value){if(active===value)return;active=value;reset();if(!value)return;renderStatic(0);document.body.classList.add('book-closed');
+  if(reduced.matches){document.body.classList.replace('book-closed','book-open');window.yearbookIsReady=true;return;}
+  openTimer=setTimeout(()=>{document.body.classList.replace('book-closed','book-opening');finishTimer=setTimeout(()=>{document.body.classList.replace('book-opening','book-open');window.yearbookIsReady=true;},1800);},2000);
+ }
+ addEventListener('message',event=>{if(event.source===parent&&event.data?.type==='yearbook:active')activate(!!event.data.active);});
+ document.addEventListener('visibilitychange',()=>document.body.classList.toggle('yearbook-hidden',document.hidden));
+ parent.postMessage({type:'yearbook:ready'},'*');if(parent===window)activate(true);
+})();
+
+(()=>{'use strict';
+let frame=0;
+function fitContents(){frame=0;document.querySelectorAll('.toc-content').forEach(host=>{
+ if(!host.clientHeight)return;
+ let inner=host.querySelector(':scope > .toc-fit');
+ if(!inner){inner=document.createElement('div');inner.className='toc-fit';while(host.firstChild)inner.appendChild(host.firstChild);host.appendChild(inner);}
+ inner.style.transform='none';inner.style.width='100%';
+ const scale=Math.min(1,(host.clientHeight-2)/Math.max(1,inner.scrollHeight));
+ if(scale<.999){inner.style.width=(100/scale)+'%';inner.style.transform='scale('+scale+')';}
+ host.scrollTop=0;
+});}
+function schedule(){if(!frame)frame=requestAnimationFrame(fitContents);}
+const book=document.getElementById('book');if(book){new MutationObserver(schedule).observe(book,{childList:true,subtree:true});new ResizeObserver(schedule).observe(book);}
+addEventListener('resize',schedule);document.fonts?.ready.then(schedule);schedule();
+})();
+</script></body></html>

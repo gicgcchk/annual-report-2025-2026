@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Committees &amp; Working Groups</title>
+<style>
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("assets/66f0b4eb66784cad1997.woff") format("woff")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("assets/fd1c19a1d503b92e44d5.woff") format("woff")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:700;font-display:swap;src:url("assets/cc9844bb32e844f6665a.woff") format("woff")}
+@font-face{font-family:"Source Serif 4";font-style:normal;font-weight:400;font-display:swap;src:url("assets/e3084fbb676df7efb23a.woff") format("woff")}
+
+:root{--navy:#003366;--paper:#fffdf7;--ink:#24384b;--line:rgba(28,48,66,.16);--shadow:0 18px 48px rgba(29,35,39,.18)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;color:var(--ink);font-family:"Source Sans 3",Arial,Helvetica,sans-serif}
+body{display:block;overflow:hidden}
+.stage{position:relative;width:100vw;height:100vh;overflow:hidden;background:#000;perspective:1600px}
+.scene{position:absolute;inset:0;overflow:hidden;background:var(--street-image) 50.6% 50%/104% 104% no-repeat}
+.shop-layer{position:absolute;inset:0;z-index:4;pointer-events:none}
+.shop{position:absolute;left:var(--l);top:32.7%;width:var(--w);height:36.1%;border:0;background:transparent;padding:0;cursor:pointer;outline:none;pointer-events:auto;border-radius:6px;overflow:hidden}
+.shop::after{content:"";position:absolute;inset:-8%;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 48%,rgba(255,247,210,.48) 0%,rgba(255,235,171,.34) 30%,rgba(255,213,112,.20) 56%,rgba(255,255,255,.08) 70%,transparent 88%);mix-blend-mode:screen;filter:blur(2px);transition:opacity .38s ease;-webkit-mask-image:radial-gradient(ellipse at center,#000 0%,#000 58%,rgba(0,0,0,.78) 72%,rgba(0,0,0,.34) 86%,transparent 100%);mask-image:radial-gradient(ellipse at center,#000 0%,#000 58%,rgba(0,0,0,.78) 72%,rgba(0,0,0,.34) 86%,transparent 100%)}
+@media (hover:hover) and (pointer:fine){.shop:hover::after{opacity:1}.shop:hover{z-index:7;opacity:1;filter:brightness(1.34) saturate(1.16) sepia(.08) drop-shadow(0 0 20px rgba(255,235,175,.66)) drop-shadow(0 0 48px rgba(255,196,76,.44));}}
+.shop:focus-visible::after{opacity:1}
+.shop:focus-visible{z-index:7;opacity:1;filter:brightness(1.34) saturate(1.16) sepia(.08) drop-shadow(0 0 20px rgba(255,235,175,.66)) drop-shadow(0 0 48px rgba(255,196,76,.44));}
+.shop.selected{z-index:7;opacity:1;filter:brightness(1.20) saturate(1.10) sepia(.05) drop-shadow(0 0 14px rgba(255,229,157,.40)) drop-shadow(0 0 30px rgba(255,197,82,.24));}
+.shop-prompt{position:absolute;left:50%;top:68.6%;transform:translateX(-50%);z-index:6;background:rgba(0,51,102,.94);color:#fff;border:1px solid rgba(255,255,255,.34);border-radius:999px;padding:13px 24px;font-size:clamp(14px,1.08vw,18px);line-height:1;font-weight:700;letter-spacing:.01em;box-shadow:0 10px 24px rgba(0,0,0,.18),0 0 0 3px rgba(255,255,255,.20);pointer-events:none;white-space:nowrap;opacity:1;transition:opacity .28s ease,transform .28s ease}.shop-prompt.hidden{opacity:0;transform:translateX(-50%) translateY(6px)}.shop-prompt .hand{display:inline-block;margin-right:10px;font-size:1.15em;transform:translateY(1px)}
+.page-meta{position:absolute;top:2.8%;left:2.3%;z-index:8;display:flex;align-items:center;gap:12px;color:#fff;font-size:clamp(12px,.88vw,15px);font-weight:700;letter-spacing:.16em;text-transform:uppercase;pointer-events:none;text-shadow:0 1px 10px rgba(0,0,0,.35)}.page-meta .page-no{font-size:inherit;font-weight:700;letter-spacing:.16em}.page-meta .divider{width:44px;height:4px;border-radius:99px;background:#d8ab38;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+/* Corrected street details */
+.street-sign-fix{position:absolute;left:77.45%;top:28.45%;z-index:5;width:8.7%;height:5.9%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#f7f7f2 0%,#ecece6 100%);border:2px solid #2c3135;border-radius:3px;box-shadow:0 2px 0 rgba(255,255,255,.55) inset,0 3px 7px rgba(0,0,0,.22);transform:perspective(500px) rotateY(-4deg) rotateZ(-.25deg);pointer-events:none;color:#15181b;font-family:Arial,"Helvetica Neue",sans-serif;text-align:center;padding:3px 5px}.street-sign-fix .cn{font-size:clamp(8px,.64vw,12px);font-weight:700;line-height:1;letter-spacing:.08em;margin-bottom:2px}.street-sign-fix .en{font-size:clamp(8px,.62vw,11px);font-weight:700;line-height:1;letter-spacing:.005em}.street-sign-fix:before{content:"";position:absolute;left:4px;right:4px;top:4px;bottom:4px;border:1px solid rgba(0,0,0,.14);border-radius:1px;pointer-events:none}.street-sign-fix:after{content:"";position:absolute;right:-3px;top:8%;width:3px;height:84%;background:#252b2f;box-shadow:0 0 0 1px rgba(255,255,255,.12)}
+.poster-fix{position:absolute;right:2.55%;top:11.9%;z-index:5;width:4.05%;height:27.8%;border-radius:1px;background:linear-gradient(180deg,rgba(24,77,117,.98) 0%,rgba(54,117,153,.97) 46%,rgba(158,182,176,.96) 72%,rgba(207,174,117,.96) 100%);border:1px solid rgba(255,255,255,.18);box-shadow:0 3px 10px rgba(0,0,0,.18),inset 0 0 18px rgba(255,255,255,.05);transform:perspective(600px) rotateY(2.5deg) rotateZ(.35deg);pointer-events:none;overflow:hidden}.poster-fix:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 5px),linear-gradient(180deg,transparent 0 62%,rgba(21,60,82,.08) 62% 63%,transparent 63%);mix-blend-mode:screen;opacity:.55}.poster-fix:after{content:"";position:absolute;left:10%;right:10%;bottom:7%;height:27%;background:linear-gradient(165deg,transparent 0 41%,rgba(21,62,91,.52) 42% 49%,transparent 50%),linear-gradient(195deg,transparent 0 50%,rgba(241,219,174,.42) 51% 57%,transparent 58%);opacity:.58;filter:blur(.15px)}
+.next-page{position:absolute;right:2.35%;bottom:3.1%;z-index:9;display:inline-flex;align-items:center;gap:12px;padding:12px 18px;border-radius:999px;background:rgba(0,51,102,.94);color:#fff;text-decoration:none;font-size:clamp(12px,.86vw,15px);font-weight:700;letter-spacing:.02em;box-shadow:0 8px 22px rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.24);transition:transform .35s cubic-bezier(.16,1,.3,1),background .25s ease,box-shadow .35s ease}.next-page .arrow{font-size:1.25em;line-height:1;transition:transform .35s cubic-bezier(.16,1,.3,1)}@media (hover:hover) and (pointer:fine){.next-page:hover{transform:translateY(-2px);background:#064c82;box-shadow:0 12px 28px rgba(0,0,0,.22)}.next-page:hover .arrow{transform:translateX(4px)}}.next-page:focus-visible{outline:3px solid rgba(216,171,56,.9);outline-offset:3px}
+.panel{position:absolute;z-index:10;background:rgba(255,253,247,.99);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:12px;opacity:0;pointer-events:none;transform:translateY(12px) scale(.965);transition:opacity .28s ease,transform .34s cubic-bezier(.2,.85,.25,1);overflow:hidden}
+.panel.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.panel.left{left:1.2%;top:10.5%;width:31%;height:80.5%}
+.panel.right{right:1.2%;top:10.5%;width:31%;height:80.5%}
+.panel.single-left{left:1.2%;top:10.5%;width:48%;height:80.5%}
+.panel.single-right{right:1.2%;top:10.5%;width:48%;height:80.5%}
+.panel-scroll{height:100%;overflow-y:auto;overscroll-behavior:contain;padding:clamp(18px,1.8vw,30px);scrollbar-width:thin;scrollbar-color:rgba(0,51,102,.34) transparent}
+.panel-scroll::-webkit-scrollbar{width:8px}.panel-scroll::-webkit-scrollbar-thumb{background:rgba(0,51,102,.25);border-radius:99px}.panel-scroll::-webkit-scrollbar-track{background:transparent}
+.close{position:sticky;top:0;float:right;z-index:2;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,253,247,.96);color:#35516b;font-size:26px;line-height:1;cursor:pointer;margin:-4px -4px 8px 12px}
+.panel h2{font-family:"Source Serif 4",Georgia,serif;font-size:clamp(28px,2.8vw,46px);line-height:1.04;color:var(--navy);margin:0 0 16px}
+.panel p{font-size:clamp(14px,1.12vw,18px);line-height:1.65;margin:0 0 18px;color:#30465a}
+.chairs{margin:18px 0 18px;padding-top:14px;border-top:1px solid #ddd6c9}
+.chairs strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#6b7280;margin-bottom:8px}
+.chairs div{white-space:pre-line;font-size:clamp(13px,1vw,16px);line-height:1.58;color:#33495d}
+.photo{display:block;width:100%;height:auto;max-width:none;border-radius:8px;margin:14px 0 18px;object-fit:contain;background:#eee8dc}
+.main-photo{margin-top:18px}
+.committee-media{display:grid;gap:16px;margin-top:4px}
+.article{padding:0 0 24px;margin:0 0 24px;border-bottom:1px solid #ded8cc}
+.article:last-child{border-bottom:0;margin-bottom:0;padding-bottom:4px}
+.article p{margin:0 0 14px}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.gallery .photo{margin:0;aspect-ratio:4/3}
+.committee-gallery .photo:first-child{grid-column:auto}
+.single-content{display:grid;align-items:start;gap:28px}
+.single-content.has-highlights{grid-template-columns:1fr}
+.single-content.no-highlights{grid-template-columns:1fr}
+.highlights-stack .article{break-inside:avoid}.committee-media .photo{margin:0;width:100%;height:auto;aspect-ratio:auto;object-fit:contain}.highlights-stack .photo{width:100%;height:auto;aspect-ratio:auto;object-fit:contain}.split-text .article{padding:18px 0 0;margin:18px 0 0;border-top:1px solid #ded8cc}.split-text .article p{margin:0}.split-photo-stack{display:grid;gap:18px}.split-photo-stack .photo{width:100%;height:auto;object-fit:contain;margin:0;border-radius:8px;background:#eee8dc}
+.photo-grid-one .photo{margin:0}
+.photo-grid-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.photo-grid-two .photo{margin:0;aspect-ratio:4/3}
+.photo-grid-three{display:grid;grid-template-columns:1.12fr .88fr;grid-template-rows:auto auto;gap:16px;align-items:stretch}
+.photo-grid-three .photo{margin:0;height:100%;aspect-ratio:4/3}
+.photo-grid-three .main-span{grid-row:1 / span 2;aspect-ratio:auto;min-height:100%}
+@media(max-width:760px){.stage{width:100vw;height:56.25vw;min-height:420px;overflow-x:auto}.scene{min-width:760px}.shop-layer{min-width:720px}.panel.left,.panel.right{width:40%;height:81%;top:9.5%}.panel.single-left,.panel.single-right{width:62%;height:81%;top:9.5%}.single-content.has-highlights,.single-content.no-highlights{grid-template-columns:1fr}.gallery,.photo-grid-two,.photo-grid-three{grid-template-columns:1fr}.photo-grid-three .main-span{grid-row:auto}.shop-prompt{left:46%;top:71%}}
+@media(prefers-reduced-motion:reduce){.scene,.shop,.panel,.shop-prompt,.next-page,.next-page .arrow{transition:none!important}}
+
+/* Fit the existing composition into the chapter; preserve shop hit areas. */
+html,body{background:#fffdf7}.stage{width:100%;height:100dvh;min-height:0}.page-meta{display:none}
+@media(max-width:760px){body{overflow:auto}.stage{width:100vw;height:600px;min-height:0;overflow:hidden}.scene{min-width:0;background-size:180% 100%;background-position:50% 50%}.shop-layer{min-width:0}.shop{top:32.7%;height:36.1%;left:calc((var(--l) - 50%) * 1.73077 + 50%);width:calc(var(--w) * 1.73077)}.shop-prompt{left:50%;top:auto;bottom:18px;font-size:12px;padding:12px 14px;white-space:normal;text-align:center;width:calc(100% - 32px);line-height:1.4}.street-sign-fix,.poster-fix{display:none}.panel.left,.panel.right,.panel.single-left,.panel.single-right{left:10px;right:10px;top:18px;width:auto;height:calc(100% - 36px)}.panel.right{display:none}.panel h2{font-size:30px}.panel p{font-size:16px}.chairs div{font-size:15px}.committee-mobile-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:16px;background:#fffdf7}.committee-mobile-nav button{border:1px solid #CCD7E6;border-radius:5px;background:white;color:#003366;font:600 15px/1.25 'Source Sans 3',sans-serif;padding:13px 9px;text-align:left}.panel-scroll{padding:22px}.shop-prompt{display:none}}
+@media(min-width:761px){.committee-mobile-nav{display:none}}
+.street-world{--street-image:url("assets/381eb681bac23a279b6b.webp")}
+.street-world .shop:nth-child(1)::before{background-size:966.183575% 781.250000%;background-position:8.700502% 38.990826%}
+.street-world .shop:nth-child(2)::before{background-size:904.977376% 781.250000%;background-position:20.404722% 38.990826%}
+.street-world .shop:nth-child(3)::before{background-size:900.900901% 781.250000%;background-position:32.845894% 38.990826%}
+.street-world .shop:nth-child(4)::before{background-size:913.242009% 781.250000%;background-position:45.255474% 38.990826%}
+.street-world .shop:nth-child(5)::before{background-size:925.925926% 781.250000%;background-position:57.455157% 38.990826%}
+.street-world .shop:nth-child(6)::before{background-size:934.579439% 781.250000%;background-position:69.484882% 38.990826%}
+.street-world .shop:nth-child(7)::before{background-size:913.242009% 781.250000%;background-position:81.695677% 38.990826%}
+.street-world .shop:nth-child(8)::before{background-size:925.925926% 781.250000%;background-position:93.834081% 38.990826%}
+/* Render the street at its natural photographic proportions. */
+.street-world{position:absolute;left:0;top:-8%;width:100%;height:126%;transform:none;pointer-events:none}
+.street-world .scene{background-size:100% 100%;background-position:center}
+.street-world .shop-layer{pointer-events:none}.street-world .shop{pointer-events:auto;top:34%;height:34.5%}
+.shop-prompt,.page-meta,.street-sign-fix,.poster-fix{display:none!important}
+.street-actors{position:absolute;inset:0;z-index:8;overflow:hidden;pointer-events:none}
+.street-taxi{position:absolute;left:0;bottom:0;width:49%;height:auto;max-height:65%;object-fit:contain;filter:blur(3px) drop-shadow(2px 12px 10px #312a2550);opacity:0;will-change:transform}
+/* One centred viewer extends across the whole street, for every committee. */
+.panel.left,.panel.right{display:none!important}
+.panel.single-left,.panel.single-right{z-index:12;left:3%;right:3%;top:50%;width:94%;height:88%;transform:translateY(calc(-50% + 12px)) scale(.985);border-radius:8px;background:#fffefb}
+.panel.open{transform:translateY(-50%) scale(1)}
+.panel-scroll{padding:30px 34px;display:flex;flex-direction:column;overflow:hidden}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:25px;flex:none;margin-bottom:24px;border-bottom:1px solid #CCD7E6;padding-bottom:18px}.panel-heading h2{margin:0;font-size:42px}.panel-heading .close{position:static;float:none;flex:none;margin:0;background:#EAF0F6}
+.committee-popup-columns{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:38px;flex:1;min-height:0}
+.committee-popup-copy,.committee-popup-photos{overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:#9EB5CF transparent;padding-right:10px;overscroll-behavior:contain}
+.committee-popup-copy p{font-size:19px;line-height:1.55}.committee-popup-copy .chairs div{font-size:17px}.committee-popup-copy .article{padding:17px 0 0;margin:20px 0 0;border-top:1px solid #CCD7E6;border-bottom:0}
+.committee-popup-photos{display:flex;flex-direction:column;gap:20px}.committee-popup-photos figure{margin:0}.committee-popup-photos .photo{margin:0;max-height:430px;object-fit:contain;width:100%;height:auto;background:#EAF0F6}.committee-popup-photos figcaption{font-size:13px;line-height:1.4;margin-top:6px;color:#526479}
+@media(max-width:760px){.street-world{top:-1%;height:100%;width:180%;left:-40%}.street-world .scene{background-size:100% 100%}.street-world .shop{left:var(--l);width:var(--w)}.street-taxi{width:105%;filter:blur(2px)}.panel.single-left,.panel.single-right{left:3%;right:3%;width:94%;top:50%;height:92%}.panel-scroll{padding:20px}.panel-heading{margin-bottom:15px;padding-bottom:14px}.panel-heading h2{font-size:30px}.committee-popup-columns{display:block;overflow:auto}.committee-popup-copy,.committee-popup-photos{overflow:visible}.committee-popup-copy p{font-size:16px}.committee-popup-copy .chairs div{font-size:15px}.committee-popup-photos{margin-top:20px}.committee-popup-photos .photo{max-height:none}}
+@media(prefers-reduced-motion:reduce){.street-actors{display:none}.street-taxi{will-change:auto}}
+.committee-popup-photos{display:flex;flex-direction:column;overflow:hidden;padding-right:0;justify-content:center}
+.committee-photo-carousel{display:flex;flex-direction:column;height:100%;max-height:560px;min-height:0}
+.committee-photo-carousel .report-photo-frame{flex:1;min-height:0;height:auto}
+.committee-photo-carousel .report-photo-caption{flex:none}
+@media(max-width:760px){.committee-popup-photos{overflow:visible}.committee-photo-carousel{height:auto;max-height:none}.committee-photo-carousel .report-photo-frame{height:300px;min-height:300px;flex:none}}
+
+/* Shared manual photo viewer used by committee, event and people galleries. */
+.report-photo-carousel{width:100%;min-width:0;min-height:0;color:#003366}
+.report-photo-frame{position:relative;display:block;width:100%;height:100%;min-height:0;overflow:hidden;border-radius:5px;background:#EAF0F6;isolation:isolate}
+.report-photo-frame>[data-photo-image]{display:block;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:50% 35%;margin:0;aspect-ratio:auto;border-radius:0;background:none}
+.report-photo-prev,.report-photo-next{position:absolute;top:50%;transform:translateY(-50%);z-index:2;display:grid;place-items:center;width:34px;height:38px;border:0;border-radius:7px;background:#ffffffe8;color:#073a70;font:400 27px/1 'Source Sans 3',sans-serif;box-shadow:0 2px 10px #00336615;cursor:pointer}
+.report-photo-prev{left:10px}.report-photo-next{right:10px}.report-photo-prev:hover,.report-photo-next:hover{background:white}
+.report-photo-count{position:absolute;right:10px;bottom:10px;z-index:2;display:block;background:#ffffffe8;color:#234863;padding:5px 8px;border-radius:6px;font:600 13px/1.25 'Source Sans 3',sans-serif;font-variant-numeric:tabular-nums;box-shadow:0 1px 6px #00336612;pointer-events:none}
+.report-photo-prev[hidden],.report-photo-next[hidden]{display:none!important}
+.report-photo-caption{display:block;margin:8px 0 0;color:#526479;font:400 14px/1.35 'Source Sans 3',sans-serif;min-height:19px}
+.report-photo-caption:empty{display:none}
+@media(max-width:760px){.report-photo-prev,.report-photo-next{width:31px;height:35px}.report-photo-count{font-size:12px}.report-photo-caption{font-size:12px}}
+
+/* Standard 3:2 photo format; the controller fits it inside each available pane. */
+.report-photo-carousel .report-photo-frame{width:var(--gallery-photo-width,100%)!important;height:var(--gallery-photo-height,auto)!important;aspect-ratio:3/2!important;flex:none!important;min-height:0!important;max-height:none!important;max-width:100%;margin-left:auto;margin-right:auto}
+.report-photo-frame>[data-photo-image]{object-fit:contain!important;object-position:center!important;background:#F2F5F8}
+
+.report-photo-count[hidden]{display:none!important}
+
+/* The raster awning is isolated as a native CSS layer for a small lift. */
+.street-world .shop{overflow:visible;border-radius:0}
+.street-world .shop::before{content:'';position:absolute;left:0;top:0;width:100%;height:37.101449%;background-image:var(--street-image);background-repeat:no-repeat;opacity:0;transform-origin:50% 100%;transform:translateY(0) scale(1);transition:transform .32s cubic-bezier(.2,.7,.25,1),filter .32s,opacity .2s;pointer-events:none;z-index:2}
+@media(hover:hover) and (pointer:fine){.street-world .shop:hover{filter:none;z-index:7}.street-world .shop:hover::before{opacity:1;transform:translateY(-5px) scale(1.035);filter:brightness(1.05) drop-shadow(0 8px 6px #142b4540)}.street-world .shop:hover::after{opacity:.4}}
+.street-world .shop:focus-visible{filter:none;outline:3px solid #00A6E3;outline-offset:5px;z-index:7}
+.street-world .shop:focus-visible::before{opacity:1;transform:translateY(-5px) scale(1.035);filter:brightness(1.05) drop-shadow(0 8px 6px #142b4540)}
+@media(prefers-reduced-motion:reduce){.street-world .shop::before{transition:none}}
+@media print{.street-world .shop::before{display:none}}
+
+.panel-scroll{padding:26px 32px}.panel-heading{margin-bottom:14px;padding-bottom:12px}
+.committee-cochairs{flex:none;padding:16px 20px 18px;margin-bottom:20px;background:#EAF0F6;border-left:5px solid #003366;border-radius:2px}
+.committee-cochairs>h3{margin:0 0 12px;font:600 14px/1.2 'Source Sans 3',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#003366}
+.cochair-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}.cochair-card h3{font:600 23px/1.2 'Source Sans 3',sans-serif;color:#003366;margin:0 0 5px}.cochair-card p{font:400 16px/1.35 'Source Sans 3',sans-serif;margin:0;color:#003366}
+.committee-popup-copy p{font-size:19px;line-height:1.5;margin:0 0 22px}.committee-popup-columns{gap:30px;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.committee-photo-credit{position:absolute;z-index:3;right:12px;bottom:10px;background:rgba(0,30,60,.7);color:white;font:400 12px/1.2 'Source Sans 3',sans-serif;padding:4px 7px;border-radius:3px;pointer-events:none}
+.committee-photo-carousel .report-photo-count{bottom:40px}.committee-hub-link{display:inline-block;padding:10px 16px;color:white;background:#003366;text-decoration:none;font-weight:600;border-radius:3px}
+@media(max-width:760px){.panel-scroll{padding:16px}.committee-cochairs{padding:12px;max-height:200px;overflow:auto}.cochair-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cochair-card h3{font-size:19px}.cochair-card p{font-size:14px}.committee-popup-columns{overflow:auto}.committee-photo-credit{font-size:10px}}
+
+.committee-popup-columns{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:stretch;gap:30px;min-height:0;flex:1}
+.committee-popup-left{display:flex;flex-direction:column;min-width:0;min-height:0;height:100%;overflow:hidden}
+.committee-popup-left .committee-cochairs{flex:0 0 auto;margin:0 0 18px;padding:15px 18px;max-height:48%;overflow:auto}
+.cochair-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}.cochair-card h3{font-size:21px}.cochair-card p{font-size:15px;line-height:1.35}
+.committee-popup-left .committee-popup-copy{flex:1;min-height:0;overflow:auto;padding-right:10px}.committee-popup-copy p{font-size:18px;line-height:1.5}
+.committee-popup-photos{min-height:0;height:100%;overflow:hidden;justify-content:stretch}.committee-photo-carousel{height:100%;max-height:none;width:100%}.committee-photo-carousel .report-photo-frame{flex:1;min-height:0}.committee-photo-carousel .report-photo-caption{flex:none;min-height:20px;margin:8px 0 0}.report-photo-count[hidden]{display:none!important}
+@media(max-width:760px){.committee-popup-columns{display:flex;flex-direction:column;overflow:auto;gap:20px}.committee-popup-left{height:auto;min-height:220px;overflow:visible;flex:none}.committee-popup-left .committee-cochairs{max-height:none;overflow:visible}.committee-popup-left .committee-popup-copy{overflow:visible;flex:none}.committee-popup-photos{height:350px;min-height:350px;flex:none}.committee-photo-carousel{height:100%}.committee-photo-carousel .report-photo-frame{height:auto;min-height:0;flex:1}}
+
+</style>
+</head>
+<body>
+<div class="stage" id="stage" aria-label="Interactive Committees and Working Groups street scene">
+  <div class="street-world"><div class="scene" aria-hidden="true"></div>
+  <div class="shop-layer" aria-label="Select a committee or working group">
+    <button class="shop" style="--l:7.8%;--w:10.35%;--awning:#0c5a92" type="button" aria-label="AI Committee"></button>
+    <button class="shop" style="--l:18.15%;--w:11.05%;--awning:#c86749" type="button" aria-label="Sourcing Committee"></button>
+    <button class="shop" style="--l:29.2%;--w:11.1%;--awning:#3b8054" type="button" aria-label="ESG Committee"></button>
+    <button class="shop" style="--l:40.3%;--w:10.95%;--awning:#287D82;--label:#1b2430" type="button" aria-label="Women in Business"></button>
+    <button class="shop" style="--l:51.25%;--w:10.8%;--awning:#16598c" type="button" aria-label="Mittelstand Committee"></button>
+    <button class="shop" style="--l:62.05%;--w:10.7%;--awning:#dda32d;--label:#1f2630" type="button" aria-label="Logistics Committee"></button>
+    <button class="shop" style="--l:72.75%;--w:10.95%;--awning:#596477" type="button" aria-label="CFO Committee"></button>
+    <button class="shop" style="--l:83.7%;--w:10.8%;--awning:#e8ddc9;--label:#252b34" type="button" aria-label="HR Working Group"></button>
+  </div>
+  </div><div class="street-actors" aria-hidden="true"><img class="street-taxi" src="assets/292d2b77947ba7091214.webp" alt=""></div>
+  <div class="shop-prompt" aria-hidden="true"><span class="hand">☞</span>Click on the shopfronts to explore each committee</div>
+  <div class="page-meta" aria-hidden="true"><span class="page-no">06</span><span class="divider"></span><span>GCC</span></div>
+  <section class="panel left" id="leftPanel" aria-live="polite"></section>
+  <section class="panel right" id="rightPanel" aria-live="polite"></section>
+  <section class="panel" id="singlePanel" aria-live="polite"></section>
+</div>
+<script>
+const DATA=[{"name": "AI Committee", "coChairs": ["Karena Belin\nFounder & CEO\nKaiBM Ltd.", "Michael Keppe\nCo-Founder & CEO\nImpala Services Ltd. / Pergamon Labs Ltd."], "paragraphs": ["With the publication of the AI Transformation Blueprint in November 2025, GCC became the first and only chamber in Hong Kong to develop and publish a comprehensive guide of this kind, designed by members for members. This joint achievement established the AI Committee as one of the leading expert groups on AI strategy for business in Hong Kong.", "The AI Blueprint – Phase One of GCC’s overall AI strategy – provides a framework for organisations to assess their AI readiness across seven pillars, underpinned by practical AI use cases from leading companies across various industries.", "In 2026, the Committee moved from framework to research, joining forces with the HKU Centre for AI, Management and Organization (CAMO) for Phase Two: the joint AI Maturity Assessment combined 35 targeted questions with diagnostic interviews to identify adoption barriers and develop company-specific action roadmaps.", "As of November 2026, the Committee is preparing to launch Phase Three: the interactive GCC AI Hub. The platform is designed to support knowledge exchange and business matchmaking between GCC members.", "Explore the GCC AI Hub: https://gcchk-ai.com/ [button]"], "photos": [{"file": "committee-selected-20250826_aiwg_meeting_01.jpg", "caption": "26 August 2025 · AI Committee", "source": "11-20250826_AIWG_Meeting_01.jpg", "source_sha256": "775f2ad52498c74d4bcd45b21f98eaa05697a173566320b3c08f21e2bba96ace", "src": "assets/d86aee51784e9d9e218f.jpg", "alt": "26 August 2025 · AI Committee"}, {"file": "committee-selected-20251103_ai_01.jpg", "caption": "3 November 2025 · AI Committee", "source": "12-20251103_AI_01.jpg", "source_sha256": "1af49d509eeebb23c241d0e3f503c941e459040525dd7c8d9e332c8f5babaf59", "src": "assets/29aea0fe94d6c41a82ab.jpg", "alt": "3 November 2025 · AI Committee"}, {"file": "committee-selected-20251103_ai_02.jpg", "caption": "3 November 2025 · AI Committee", "source": "13-20251103_AI_02.jpg", "source_sha256": "59741e2594697ab55ce75c3cc856d0a98eff9c0577c6bccb2a1fa50e205e0dc8", "src": "assets/a5722b4c7a9614e64211.jpg", "alt": "3 November 2025 · AI Committee"}, {"file": "committee-selected-20251210_aiwg.jpg", "caption": "10 December 2025 · AI Committee", "source": "14-20251210_AIWG.jpg", "source_sha256": "ef094475992dde94c1037348751f84828c9db9f0ca3a38035ed6c2df10c921f3", "src": "assets/045536cd6f18ee179f2b.jpg", "alt": "10 December 2025 · AI Committee"}, {"file": "committee-selected-20260309_ai.jpg", "caption": "9 March 2026 · AI Committee", "source": "15-20260309_AI.jpg", "source_sha256": "8053d269c4547ddf2dffe1c1a1d9ecb5f83ef202843da001dc7c5d53a464eee5", "src": "assets/5971ea2c051cb844a79f.jpg", "alt": "9 March 2026 · AI Committee"}, {"file": "committee-selected-20260312_ai.jpg", "caption": "12 March 2026 · AI Committee", "source": "16-20260312_AI.jpg", "source_sha256": "8eecf12b23cfdfdabda702b21857a856fb20a3851aeeda7616b007de6fbc3fc8", "src": "assets/951320525241e8d61c00.jpg", "alt": "12 March 2026 · AI Committee"}], "explanation": "", "chairs": "Karena Belin\nFounder & CEO\nKaiBM Ltd.\n\nMichael Keppe\nCo-Founder & CEO\nImpala Services Ltd. / Pergamon Labs Ltd.", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}, {"name": "Sourcing Committee", "coChairs": ["Markus Hasse-Pratje \nManaging Director\nREWE Far East Ltd.", "Filippo Monti \nManaging Director\nTGI Technology Ltd."], "paragraphs": ["The Sourcing Committee brings together expertise from major multinational retail and wholesale groups as well as long-established family-owned trading companies, reflecting Hong Kong’s important role as a sourcing and supply chain hub for German companies in Asia.", "Discussions throughout 2025-2026 addressed global trade and market developments, regional shifts in sourcing and supply chains, regulatory requirements, and the implications of AI and workforce transformation for the sector. Sustainability and decarbonisation in global value chains were also part of the exchange, as members considered how these developments are affecting sourcing strategies, business operations and longer-term decision-making across Asia.", "The Committee also extended this exchange beyond its membership through joint activities with other international business chambers, providing a broader platform for discussing trade risks, supply chain developments and changes in the global business environment."], "photos": [{"file": "committee-selected-20260121_sourcing.jpg", "caption": "21 January 2026 · Sourcing Committee", "source": "26-20260121_Sourcing.jpg", "source_sha256": "ddb54f4c845ce163f48c6c7103a3048ed14f0f328a42b001f24f59a4de259fa0", "src": "assets/24257801bef3531c514d.jpg", "alt": "21 January 2026 · Sourcing Committee"}, {"file": "committee-selected-20251203_sourcing.jpg", "caption": "3 December 2025 · Sourcing Committee", "source": "27-20251203_Sourcing.jpg", "source_sha256": "548a0941f1130d75eba53b1e0c4cf08d5a8c4ad10ca61cda17e7c31fe340b175", "src": "assets/d947c902fd702911823f.jpg", "alt": "3 December 2025 · Sourcing Committee"}], "explanation": "", "chairs": "Markus Hasse-Pratje \nManaging Director\nREWE Far East Ltd.\n\nFilippo Monti \nManaging Director\nTGI Technology Ltd.", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}, {"name": "ESG Committee", "coChairs": ["Jill Dessel\nProject Manager, Compliance & Regulatory Processes\nREWE Far East Ltd.\n(since September 2026)", "Michael Keppe\nCo-Founder & CEO\nImpala Services Ltd. / Pergamon Labs Ltd.", "Anna Lakotta\nQuality Team Lead\nSimba Dickie HK Ltd.\n(until September 2026)"], "paragraphs": ["Throughout 2025-2026, the ESG Committee met on a monthly schedule to examine how European sustainability requirements are reshaping product development, supply chains and market access.", "Discussions covered the EU Battery Regulation, Packaging and Packaging Waste Regulation (PPWR), Carbon Border Adjustment Mechanism (CBAM), Digital Product Passports (DPP) and Right to Repair requirements, among other developments. Members explored the shared challenges of traceability, supplier data, documentation and compliance planning, connecting regulatory developments with practical business experience.", "We brought these business perspectives to ReThink HK 2025 with a panel on European market expectations. The discussion connected regulatory developments with retailers’ documentation needs and manufacturers’ challenges in gathering consistent data across supply chain tiers. At the 2026 edition, the ESG Committee once again contributed to the programme as a session partner.", "Another important focus of the Committee in 2026 was the development of the ESG Sourcing Hub, which provides timely information on the international regulatory landscape and connects GCC members with relevant ESG-related service providers in our network.", "Explore the ESG Sourcing Hub: https://gcchk-esg.com/"], "photos": [{"file": "committee-selected-20260303_esg.jpg", "caption": "3 March 2026 · ESG Committee", "source": "21-20260303_ESG.jpg", "source_sha256": "8fcb27b1fb8731d674b0cfeae62b8708bb6fbc617fcd1bf6c67af7c1b0b976e9", "src": "assets/ef79cc3f398428f9b8db.jpg", "alt": "3 March 2026 · ESG Committee"}, {"file": "committee-selected-20250911_esg_02.jpg", "caption": "11 September 2025 · ESG Committee", "source": "32-20250911_ESG_02.JPG", "source_sha256": "d6d04389c65a2c2ab6e6c67c121114eb75e9233d36ef6c0484367007e9103bc9", "src": "assets/e523806d233c267ea60a.jpg", "alt": "11 September 2025 · ESG Committee"}, {"file": "committee-selected-20250911_esg_01.jpg", "caption": "11 September 2025 · ESG Committee", "source": "33-20250911_ESG_01.JPG", "source_sha256": "7054b5f70a57790f13e823c3308251f2ed30b2d70e284db263d71d81d618a569", "src": "assets/8f577a6d0b4d537d45fa.jpg", "alt": "11 September 2025 · ESG Committee"}], "explanation": "", "chairs": "Jill Dessel\nProject Manager, Compliance & Regulatory Processes\nREWE Far East Ltd.\n(since September 2026)\n\nMichael Keppe\nCo-Founder & CEO\nImpala Services Ltd. / Pergamon Labs Ltd.\n\nAnna Lakotta\nQuality Team Lead\nSimba Dickie HK Ltd.\n(until September 2026)", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}, {"name": "Women in Business", "coChairs": ["Karena Belin \nFounder & CEO \nKaiBM Ltd.", "Andrea Lorenz \nGeneral Manager Greater China & Southeast Asia\nRichard Wolf Hong Kong Ltd.", "Bing Yan\nHead of Asia LGBS, Lufthansa Group\n(until March 2026)"], "paragraphs": ["Building on its establishment in 2025, the Women in Business Committee continued to develop as a platform for exchange on the opportunities and challenges women encounter throughout their professional careers over the past year.", "Leadership emerged as a central theme, ranging from executive readiness and the development of leadership potential to the influence of cultural context on leadership, communication and career experiences. Members exchanged perspectives on perceptions of women in leadership, bias and changing expectations across different professional and cultural environments. Women’s health and workplace benefits added another dimension, including gaps in health insurance coverage, women-specific healthcare needs and the importance of more flexible and inclusive employee benefits.", "Through these exchanges, the Committee continues to provide an open forum for members to share experiences and perspectives across industries and career stages, while addressing both individual career development and broader workplace conditions affecting women."], "photos": [{"file": "committee-selected-20260528_wib.jpg", "caption": "28 May 2026 · Women in Business", "source": "20-20260528_WiB.JPG", "source_sha256": "23b45550afcd26857549a23c83af76c87d3b240936be65577a74b0ce6d9619d8", "src": "assets/b5274c1d61dbca38f3d2.jpg", "alt": "28 May 2026 · Women in Business"}, {"file": "committee-selected-20260127_wib.jpg", "caption": "27 January 2026 · Women in Business", "source": "23-20260127_WiB.png", "source_sha256": "a929c1d200766543e4d8bc1de4cdae3bdaa4e8bf05fb952f55d5799c8c9de327", "src": "assets/ae68f71ccde6baf24e38.jpg", "alt": "27 January 2026 · Women in Business"}, {"file": "committee-selected-20251112_wib.jpg", "caption": "12 November 2025 · Women in Business", "source": "28-20251112_WIB.jpg", "source_sha256": "df9876171d6ee847e5d30099f38ee857ed97912bedaa2aed98a962df35fc71ed", "src": "assets/979d0e65a295472174b9.jpg", "alt": "12 November 2025 · Women in Business"}], "explanation": "", "chairs": "Karena Belin \nFounder & CEO \nKaiBM Ltd.\n\nAndrea Lorenz \nGeneral Manager Greater China & Southeast Asia\nRichard Wolf Hong Kong Ltd.\n\nBing Yan\nHead of Asia LGBS, Lufthansa Group\n(until March 2026)", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}, {"name": "Mittelstand Committee", "coChairs": ["Stefan Klindwort \nManaging Director\nKK Food Trading Co. Ltd.", "Stefan Kracht \nPartner & Group Integration Director\nAcclime"], "paragraphs": ["The Mittelstand Committee provides family-run small and medium-sized enterprises with a platform to exchange perspectives on economic developments, operational challenges and the impact of AI transformation on their businesses.", "Discussions throughout 2025-2026 covered regional manufacturing and supply chain strategies, including the characteristics, complexities and strategic advantages of different production locations across Asia. Talent and leadership were another recurring focus, particularly changing workforce expectations, attracting and retaining talent, and the evolving leadership capabilities required in a changing business environment. Digitalisation and AI were increasingly reflected across these discussions as companies considered how technology is changing their operations, workforce and competitiveness.", "The Committee thus continues to offer a valuable forum for practical exchange, enabling members to share experiences and approaches to common challenges facing Mittelstand companies in Hong Kong and the wider region."], "photos": [{"file": "committee-selected-sme_meeting.jpg", "caption": "Mittelstand Committee", "source": "34-SME_Meeting.JPG", "source_sha256": "54a2691fa884f72e7a0ffd89dc706fb466d17ed81238338202e6577f1bcdb422", "src": "assets/4389f54831fb38eb5b5d.jpg", "alt": "Mittelstand Committee"}], "explanation": "", "chairs": "Stefan Klindwort \nManaging Director\nKK Food Trading Co. Ltd.\n\nStefan Kracht \nPartner & Group Integration Director\nAcclime", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}, {"name": "Logistics Committee", "coChairs": ["Eric Reuter\nCEO Asia Pacific\nWoodland Group (HK) Ltd.", "Helen Tse\nDirector South China, Hong Kong, Taiwan\nLufthansa Cargo"], "paragraphs": ["The Logistics Committee is aimed at representatives from freight forwarders, carriers, and logistics service providers. Key topics include digitalisation, sustainability and new cargo infrastructure developments in the Greater Bay Area.", "In 2025-2026, the Committee moved beyond regular boardroom meetings to bring members closer to the operations shaping regional supply chains. Following an insightful exchange with IATA on air cargo market developments, the Committee set the direction for more interactive site visits in 2026.", "In January, we an Executive Greater Bay Area tour with the German Chamber of Commerce in China | South & Southwest brought members to the International Cargo Centre Shenzhen (ICCS) at Shenzhen Bao’an International Airport. The visit offered a first-hand view of cross-border cargo connectivity, followed by further exchange at a networking cocktail in Shekou.", "A visit to Modern Terminals in June connected Hong Kong’s role as a transshipment hub with the operational coordination and decarbonisation shaping modern port strategy. A shipside visit to a 366-metre container vessel brought the scale of these operations into focus.", "We greatly appreciate our hosts, partners and active members for making these excursions possible and contributing their experience to the exchanges. More to come in 2027!"], "photos": [{"file": "committee-selected-20260609_logistics.jpg", "caption": "9 June 2026 · Logistics Committee", "source": "19-20260609_Logistics.jpg", "source_sha256": "c7021da78c03e511173eb457e412bf160ce7cae3d42f0fa86ee374b43c2a88d5", "src": "assets/2ca26a3a40b33cbaaa66.jpg", "alt": "9 June 2026 · Logistics Committee"}, {"file": "committee-selected-20260127_logistics_02.jpg", "caption": "27 January 2026 · Logistics Committee", "source": "24-20260127_Logistics_02.jpg", "source_sha256": "e7ab9301078356275db6a53306f640e261d46f9bb396dcf81000b766b151899a", "src": "assets/8faa5bd064a032bd3da2.jpg", "alt": "27 January 2026 · Logistics Committee"}, {"file": "committee-selected-20260127_logistics_01.jpg", "caption": "27 January 2026 · Logistics Committee", "source": "25-20260127_Logistics_01.jpg", "source_sha256": "5c5c1104559c63d2425cb4a0114ceb96c19c780fb88a361a8693c74a7a566a0d", "src": "assets/f18f1532088d07a671ac.jpg", "alt": "27 January 2026 · Logistics Committee"}, {"file": "committee-selected-20250917_logistics.jpg", "caption": "17 September 2025 · Logistics Committee", "source": "31-20250917_Logistics.jpg", "source_sha256": "7df0e6a3bf571c5d9d2c7276435d3d2ee13d8897dc7f8dd95e5e73345b7ca3ba", "src": "assets/842043784cffbb0b49b3.jpg", "alt": "17 September 2025 · Logistics Committee"}], "explanation": "", "chairs": "Eric Reuter\nCEO Asia Pacific\nWoodland Group (HK) Ltd.\n\nHelen Tse\nDirector South China, Hong Kong, Taiwan\nLufthansa Cargo", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}, {"name": "CFO Committee", "coChairs": ["Hauke Otten\nFounder\nFINNTER Consulting and Advisory Services", "Christoph Panschog\nHead of Corporate Finance\nRieckermann (Hong Kong) Ltd.\n(since October 2026)", "Bing Yan\nHead of Asia LGBS\nLufthansa Group\n(until October 2026)"], "paragraphs": ["The CFO Committee brings together senior executives from finance and controlling departments and provides a platform for discussion on regulatory developments, digital transformation and sustainability trends.", "Over the past year, the CFO Committee focused on practical responses to financial risk and the growing complexity of international business. Together with Deloitte, members explored the customs and tax implications of rising tariffs, shifting trade barriers, and complex global supply chains, as well as measures companies could consider in response to regulatory, technological and market pressures.", "During a session with Dr. John Wong and Douglas Chan of ai-CapSupremo Capital, the Committee examined commodity and currency exposure through AI-driven hedging tools and quantitative models. Discussions covered how data and automation could support more disciplined, responsive hedging and the practical adoption of these tools by treasury and finance teams.", "We greatly appreciate the insights and contributions from all members and guest speakers that help make these regular high-level exchanges so meaningful."], "photos": [{"file": "committee-selected-20260210_cfo.jpg", "caption": "10 February 2026 · CFO Committee", "source": "22-20260210_CFO.jpg", "source_sha256": "5168088f8e78d3eeb09b7c09c2d9e60ab298ba418173738851857e5a26a60100", "src": "assets/8be807a35294b2191bff.jpg", "alt": "10 February 2026 · CFO Committee"}, {"file": "committee-selected-20251024_cfo.jpg", "caption": "24 October 2025 · CFO Committee", "source": "29-20251024_CFO.jpg", "source_sha256": "aa175bb2e94439b87e0b22451af2c741a7ba7fe7dc6acd32f47d3f4898285d39", "src": "assets/236c287b9e2715e08b5a.jpg", "alt": "24 October 2025 · CFO Committee"}], "explanation": "", "chairs": "Hauke Otten\nFounder\nFINNTER Consulting and Advisory Services\n\nChristoph Panschog\nHead of Corporate Finance\nRieckermann (Hong Kong) Ltd.\n(since October 2026)\n\nBing Yan\nHead of Asia LGBS\nLufthansa Group\n(until October 2026)", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}, {"name": "HR Working Group", "coChairs": ["Kitt Chan \nDirector HR & Administration\nALDI Sourcing Asia Ltd.", "Steve Ott\nDirector, Operations & IT\nTGI Technology Ltd."], "paragraphs": ["Attracting and retaining talent remains at the heart of the HR Working Group’s regular exchanges, alongside employer branding for German companies in Hong Kong and opportunities to strengthen links with local education and training institutions.", "A key initiative in the first half of 2026 was the second annual GCC Employment Survey for Hong Kong, conducted and analysed by the Working Group and published for GCC members. The survey complemented the group’s ongoing exchange on workforce and employment developments by providing members with insights into the local employment landscape.", "Changing employee expectations and rising healthcare costs were another focus. Members explored developments in group medical insurance and more flexible benefit schemes, including how companies can balance cost pressures with their efforts to attract, retain and support talent.", "By combining its own research with external expertise and practical peer exchange, the Working Group provides HR professionals with a forum to better understand employment developments in Hong Kong and compare approaches to common workforce challenges."], "photos": [{"file": "committee-selected-20260616_hr.jpg", "caption": "16 June 2026 · HR Working Group", "source": "18-20260616_HR.jpg", "source_sha256": "b7b49b07d60b5acd0e0726ada3727f102f561c0671c1c001f1d1879e431a047c", "src": "assets/24d92dbb785df8336b93.jpg", "alt": "16 June 2026 · HR Working Group"}, {"file": "committee-selected-20251014_hr.jpg", "caption": "14 October 2025 · HR Working Group", "source": "30-20251014_HR.jpeg", "source_sha256": "84eaac90c134bec9e2e3d2b6b417545b600e73699eab01e6c61782e2519e9751", "src": "assets/cd76340395fc9d8521ea.jpg", "alt": "14 October 2025 · HR Working Group"}], "explanation": "", "chairs": "Kitt Chan \nDirector HR & Administration\nALDI Sourcing Asia Ltd.\n\nSteve Ott\nDirector, Operations & IT\nTGI Technology Ltd.", "h1": "", "h2": "", "main": "", "h1img": "", "h2img": ""}];
+const stage=document.getElementById('stage');
+const scene=stage.querySelector('.scene');
+const shops=[...stage.querySelectorAll('.shop')];
+const mobileNav=document.createElement('nav');mobileNav.className='committee-mobile-nav';mobileNav.setAttribute('aria-label','Committees and working groups');
+shops.forEach((shop,i)=>{const b=document.createElement('button');b.type='button';b.textContent=shop.getAttribute('aria-label');b.addEventListener('click',()=>{openShop(i);stage.scrollIntoView({block:'start'});});mobileNav.appendChild(b);});stage.after(mobileNav);
+const leftPanel=document.getElementById('leftPanel');
+const rightPanel=document.getElementById('rightPanel');
+const singlePanel=document.getElementById('singlePanel');
+const shopPrompt=document.querySelector('.shop-prompt');
+let active=-1;
+const SPLIT_INDICES=new Set([3,4]);
+const clean=t=>(t||'').trim();
+const photoOnly=t=>{const x=clean(t).toLowerCase();return !x||x==='no highlight'||x==='another photo of the committee';};
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const img=(src,cls='photo',alt='Committee photograph')=>src?`<img class="${cls}" src="${src}" alt="${esc(alt)}">`:'';
+function closeBtn(){return '<button class="close" type="button" aria-label="Close information">×</button>';}
+function closePanels(){active=-1;shops.forEach(s=>s.classList.remove('selected'));[leftPanel,rightPanel,singlePanel].forEach(p=>{p.classList.remove('open','single-left','single-right');p.innerHTML='';});if(shopPrompt) shopPrompt.classList.remove('hidden');}
+function parseContent(c){
+  const items=[{text:c.h1,src:c.h1img},{text:c.h2,src:c.h2img}];
+  const highlights=[]; const extras=[];
+  items.forEach(item=>{if(photoOnly(item.text)){if(item.src) extras.push(item.src);}else{highlights.push(item);}});
+  return {highlights,extras};
+}
+function committeeMedia(c,includeExtras=true){
+  const {extras}=parseContent(c);
+  const photos=[];
+  if(c.main) photos.push({src:c.main,alt:c.name+' group photo'});
+  if(includeExtras) extras.forEach((src,i)=>photos.push({src,alt:c.name+' additional committee photo '+(i+1)}));
+  if(!photos.length) return '';
+  return `<div class="committee-media">${photos.map((p,i)=>img(p.src,(i===0?'photo main-photo':'photo'),p.alt)).join('')}</div>`;
+}
+function extraPhotosMarkup(c){
+  const {extras}=parseContent(c);
+  if(!extras.length) return '';
+  return `<div class="committee-media">${extras.map((src,i)=>img(src,'photo',c.name+' additional committee photo '+(i+1))).join('')}</div>`;
+}
+function highlightMarkup(c){
+  const {highlights}=parseContent(c);
+  return highlights.map((h,i)=>`<article class="article"><p>${esc(h.text)}</p>${img(h.src,'photo',c.name+' highlight photograph '+(i+1))}</article>`).join('');
+}
+function splitTextMarkup(c){
+  const {highlights}=parseContent(c);
+  const highlightText=highlights.map(h=>`<article class="article"><p>${esc(h.text)}</p></article>`).join('');
+  return `<div class="panel-scroll split-text">${closeBtn()}<h2>${esc(c.name)}</h2><p>${esc(c.explanation)}</p><div class="chairs"><strong>Group Leads / Chairs</strong><div>${esc(c.chairs)}</div></div>${highlightText}</div>`;
+}
+function splitPhotoMarkup(c){
+  const {highlights,extras}=parseContent(c);
+  const photos=[];
+  if(c.main) photos.push({src:c.main,alt:c.name+' group photo'});
+  highlights.forEach((h,i)=>{if(h.src) photos.push({src:h.src,alt:c.name+' highlight photograph '+(i+1)});});
+  extras.forEach((src,i)=>photos.push({src,alt:c.name+' additional committee photo '+(i+1)}));
+  return `<div class="panel-scroll">${closeBtn()}<div class="split-photo-stack">${photos.map(p=>img(p.src,'photo',p.alt)).join('')}</div></div>`;
+}
+function singleMarkup(c){
+ const photos=c.photos||[];
+ const chairs=(c.coChairs||[]).map(text=>{const lines=text.split('\n').map(s=>s.trim()).filter(Boolean);return `<article class="cochair-card"><h3>${esc(lines.shift()||'')}</h3><p>${lines.map(esc).join('<br>')}</p></article>`;}).join('');
+ const copy=(c.paragraphs||[]).map(text=>{
+   const link=text.match(/https:\/\/[^\s]+/);
+   if(link)return `<p><a class="committee-hub-link" href="${esc(link[0])}" target="_blank" rel="noopener noreferrer">${esc(text.split('https:')[0].replace(/:\s*$/,''))} ↗</a></p>`;
+   return `<p>${esc(text)}</p>`;
+ }).join('');
+ const gallery=photos.length?`<div class="report-photo-carousel committee-photo-carousel" tabindex="0" role="region" aria-roledescription="carousel" aria-label="${esc(c.name)} photographs"><div class="report-photo-frame"><img data-photo-image src="${photos[0].src}" alt="${esc(photos[0].alt)}"><button class="report-photo-prev" data-photo-prev type="button" aria-label="Previous photograph">‹</button><button class="report-photo-next" data-photo-next type="button" aria-label="Next photograph">›</button><span class="report-photo-count" data-photo-count aria-live="polite" ${photos.length===1?'hidden':''}>1 / ${photos.length}</span><small class="committee-photo-credit">© GIC/GCC</small></div><p class="report-photo-caption" data-photo-caption></p><script type="application/json" data-photo-items>${JSON.stringify(photos).replace(/</g,'\\u003c')}<\/script></div>`:'';
+ return `<div class="panel-scroll"><header class="panel-heading"><h2 id="committee-popup-title">${esc(c.name)}</h2>${closeBtn()}</header><div class="committee-popup-columns"><div class="committee-popup-left"><section class="committee-cochairs" aria-label="Committee Co-Chairs"><h3>Committee Co-Chairs</h3><div class="cochair-grid">${chairs}</div></section><div class="committee-popup-copy" tabindex="0" role="region" aria-label="Committee review">${copy}</div></div><div class="committee-popup-photos">${gallery}</div></div></div>`;
+}
+
+function bindClose(panel){const b=panel.querySelector('.close');if(b)b.addEventListener('click',e=>{e.stopPropagation();closePanels();});}
+function openShop(i){
+  if(active===i){closePanels();return;}
+  closePanels();active=i;shops[i].classList.add('selected');if(shopPrompt) shopPrompt.classList.add('hidden');const c=DATA[i];const split=false;
+  if(split){leftPanel.innerHTML=splitTextMarkup(c);rightPanel.innerHTML=splitPhotoMarkup(c);leftPanel.classList.add('open');rightPanel.classList.add('open');bindClose(leftPanel);bindClose(rightPanel);}
+  else{singlePanel.innerHTML=singleMarkup(c);const panelSide=(i===2||i<=1)?'single-right':'single-left';/* Sustainability on the right, Logistics on the left, Women in Business + Mittelstand split only */singlePanel.classList.add(panelSide,'open');bindClose(singlePanel);}
+}
+shops.forEach((s,i)=>{
+  s.addEventListener('click',e=>{e.stopPropagation();openShop(i);});
+});
+stage.addEventListener('click',e=>{if(active>=0&&!e.target.closest('.panel')&&!e.target.closest('.shop'))closePanels();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&active>=0){const i=active;closePanels();shops[i].focus();}});
+const originalOpenShop=openShop;openShop=function(i){originalOpenShop(i);const panel=document.querySelector('.panel.open');if(panel){requestAnimationFrame(()=>panel.querySelector('.close')?.focus({preventScroll:true}));}};
+</script>
+<script>
+(()=>{let previousHeight=0;const sendHeight=()=>{const height=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);if(height!==previousHeight){previousHeight=height;parent.postMessage({type:'gcc-committees:height',height},'*');}};new ResizeObserver(sendHeight).observe(document.body);addEventListener('resize',sendHeight);addEventListener('load',sendHeight);sendHeight();})();
+</script><script>(()=>{'use strict';
+window.ReportPhotoGallery=function(element,options={}){
+ if(!element)return null;
+ if(element.reportPhotoGallery){if(options.items)element.reportPhotoGallery.setItems(options.items,options.index||0);return element.reportPhotoGallery;}
+ const image=element.querySelector('[data-photo-image]'),counter=element.querySelector('[data-photo-count]'),previous=element.querySelector('[data-photo-prev]'),next=element.querySelector('[data-photo-next]'),caption=element.querySelector('[data-photo-caption]');let items=[],index=0;
+ function show(value){if(!items.length)return;index=(value+items.length)%items.length;const item=items[index];image.src=item.src;image.alt=item.alt||'Report photograph';image.style.objectPosition=item.position||'50% 35%';counter.textContent=(index+1)+' / '+items.length;counter.hidden=items.length<2;if(caption)caption.textContent=item.caption||'';element.dataset.photoIndex=String(index);previous.hidden=next.hidden=items.length<2;options.onChange?.(item,index);requestAnimationFrame(fitPhotoFrame);}
+ function fitPhotoFrame(){
+  const frame=element.querySelector('.report-photo-frame');if(!frame||element.hidden||!element.clientWidth)return;
+  const cap=caption&&!caption.hidden&&!options.overlayCaption?caption.offsetHeight+parseFloat(getComputedStyle(caption).marginTop||0)+parseFloat(getComputedStyle(caption).marginBottom||0):0;
+  const availableHeight=Math.max(0,element.clientHeight-cap);const width=Math.min(element.clientWidth,availableHeight>0?availableHeight*1.5:element.clientWidth);
+  frame.style.setProperty('--gallery-photo-width',width+'px');frame.style.setProperty('--gallery-photo-height',(width/1.5)+'px');
+ }
+ const sizeObserver=new ResizeObserver(()=>requestAnimationFrame(fitPhotoFrame));sizeObserver.observe(element);
+ function setItems(value,start=0){items=Array.isArray(value)?value:[];element.hidden=!items.length;if(items.length)show(start);}
+ previous.addEventListener('click',()=>show(index-1));next.addEventListener('click',()=>show(index+1));
+ element.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();event.stopPropagation();show(index+(event.key==='ArrowRight'?1:-1));}});
+ const api={show,setItems,get index(){return index;},get count(){return items.length;}};element.reportPhotoGallery=api;
+ let initial=options.items;if(!initial){const node=element.querySelector('[data-photo-items]');initial=node?JSON.parse(node.textContent):[];}
+ setItems(initial,options.index||0);return api;
+};
+})();
+
+(()=>{'use strict';
+const taxi=document.querySelector('.street-taxi');if(!taxi)return;
+const stage=document.getElementById('stage'),reduced=matchMedia('(prefers-reduced-motion:reduce)');let active=false,clock=0,last=0,frame=0;
+function draw(){const phase=clock<30?-1:(clock-30)%30,visible=phase>=0&&phase<8.5;taxi.style.opacity=visible?'.96':'0';if(visible)taxi.style.transform='translate3d('+((-0.62+1.85*phase/8.5)*stage.clientWidth).toFixed(2)+'px,33.333%,0)';}
+function tick(now){frame=0;if(!active||document.hidden||reduced.matches){last=0;return;}if(last)clock+=Math.min(.12,(now-last)/1000);last=now;draw();frame=requestAnimationFrame(tick);}
+function sync(){if(frame){cancelAnimationFrame(frame);frame=0;}last=0;if(active&&!document.hidden&&!reduced.matches)frame=requestAnimationFrame(tick);}
+addEventListener('message',event=>{if(event.source===parent&&event.data?.type==='gcc-committees:active'){active=!!event.data.active;sync();}});document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',sync);addEventListener('resize',draw);
+})();
+// Keep the live chapter heading outside the iframe clear of the centred viewer.
+(()=>{
+ const viewer=document.getElementById('singlePanel');viewer.setAttribute('role','dialog');viewer.setAttribute('aria-modal','true');viewer.setAttribute('aria-labelledby','committee-popup-title');
+ const close=closePanels;closePanels=function(){close();viewer.inert=true;parent.postMessage({type:'gcc-committees:popup',open:false},'*');};
+ const open=openShop;openShop=function(i){open(i);const visible=viewer.classList.contains('open');viewer.inert=!visible;parent.postMessage({type:'gcc-committees:popup',open:visible},'*');};viewer.inert=true;
+ document.addEventListener('keydown',event=>{if(event.key!=='Tab'||!viewer.classList.contains('open'))return;const focusables=[...viewer.querySelectorAll('button,a[href],[tabindex="0"]')];if(!focusables.length)return;const first=focusables[0],last=focusables.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}});
+ addEventListener('message',event=>{if(event.source===parent&&event.data?.type==='gcc-committees:active'&&!event.data.active)closePanels();});
+})();
+(()=>{const original=openShop;openShop=function(i){original(i);const el=document.querySelector('.committee-photo-carousel');if(el)ReportPhotoGallery(el);};})();
+</script></body>
+</html>

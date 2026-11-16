@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>GCC Events | Annual Report 2025–2026</title>
+<style>
+:root{
+  --navy:#073a70; --navy-deep:#062750; --blue:#0867ae; --ink:#153150;
+  --muted:#5c7087; --fog:rgba(248,251,255,.91);
+  --shadow:0 19px 55px rgba(9,32,54,.18);
+}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overscroll-behavior:none}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#71899c;overflow:hidden}
+button,input,a{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.bg-photo{position:fixed;inset:0;z-index:-2;background:url('assets/6c56d62089bec4f386f9.jpg') center center/cover no-repeat}
+.bg-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(232,245,253,.14),rgba(9,46,88,.10) 58%,rgba(231,226,213,.1));}
+.app{height:100dvh;min-height:500px;max-width:2100px;margin:0 auto;padding:19px 25px 56px;display:flex;flex-direction:column;gap:16px}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;flex:0 0 auto;min-height:95px}
+.heading-card{background:rgba(255,252,251,.85);border:1px solid rgba(255,255,255,.85);border-radius:21px;padding:14px 23px 14px 22px;box-shadow:0 6px 23px rgba(9,45,77,.09);backdrop-filter:blur(12px)}
+.heading-card h1{font-size:clamp(35px,3.5vw,60px);letter-spacing:-.055em;color:#003b80;line-height:1;margin:0;font-weight:800}
+.heading-card p{margin:8px 0 0;font-size:11px;letter-spacing:.24em;color:#075582;font-weight:800}
+.top-actions{display:flex;align-items:center;gap:8px;margin-top:20px}
+.top-actions button{border:1px solid rgba(3,55,101,.10);border-radius:24px;background:rgba(253,254,255,.91);color:var(--navy);padding:10px 13px;font-size:12px;font-weight:700;box-shadow:0 3px 11px rgba(0,30,50,.08);white-space:nowrap}
+.top-actions button:hover{background:#fff;transform:translateY(-1px)}
+.layout{min-height:0;flex:1;display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;align-items:stretch}
+.sidebar,.map-card{border:1px solid rgba(255,255,255,.83);border-radius:23px;box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.sidebar{background:rgba(250,252,254,.91);padding:18px 13px 13px;overflow-y:auto;min-height:0;scrollbar-width:thin}
+.panel-eyebrow{color:#55728e;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.sidebar-head{padding:0 8px 14px}
+.sidebar-head h2{font-size:19px;color:var(--navy-deep);letter-spacing:-.035em;margin:7px 0 4px}
+.sidebar-head p{font-size:11px;line-height:1.55;color:var(--muted);margin:0}
+.search-box{margin:0 7px 14px;position:relative}
+.search-box svg{position:absolute;left:11px;top:12px;width:16px;height:16px;stroke:#7390a8;fill:none;stroke-width:2}
+.search-box input{width:100%;height:40px;border:1px solid #d8e3ec;border-radius:12px;background:rgba(255,255,255,.96);padding:0 10px 0 34px;outline:none;color:#0b416e;font-size:12px}
+.search-box input:focus{border-color:#5185b1;box-shadow:0 0 0 3px rgba(44,122,181,.12)}
+.route-list{display:grid;gap:5px}
+.route-item{border:1px solid transparent;display:flex;align-items:center;gap:11px;text-align:left;width:100%;background:transparent;border-radius:13px;padding:9px 8px;color:var(--ink);transition:background .17s,transform .17s,border .17s}
+.route-item:hover,.route-item.active{background:rgba(230,239,248,.94);border-color:rgba(8,58,112,.09)}
+.route-item:hover{transform:translateX(2px)}
+.route-item .line-swatch{width:7px;height:39px;border-radius:6px;background:var(--route-color);flex:0 0 7px;box-shadow:0 0 0 2px #fff}
+.route-item .line-label{min-width:0;flex:1}
+.route-item .line-label strong{display:block;color:#122f50;font-size:11.5px;line-height:1.25;letter-spacing:-.012em}
+.route-item .line-label small{display:block;color:#6b8095;margin-top:3px;font-size:10px;line-height:1.24}
+.route-item .count{font-weight:800;font-size:10px;min-width:25px;text-align:center;border-radius:10px;background:#f0f5f8;color:#48708e;padding:4px}
+.all-routes{margin:2px 6px 12px;width:calc(100% - 12px);border:1px solid #c7d8e6;border-radius:11px;background:#fff;font-weight:800;color:#0c5286;font-size:11px;padding:10px}
+.all-routes:hover,.all-routes.active{background:#e9f3fa}
+.legend-foot{margin:14px 8px 3px;font-size:10px;line-height:1.5;color:#71849a}
+.map-card{position:relative;background:rgba(249,252,254,.87);overflow:hidden;min-width:0;display:flex;flex-direction:column;min-height:0}
+.map-head,.map-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:0 0 auto}
+.map-head{min-height:51px;padding:12px 20px 11px;border-bottom:1px solid rgba(24,72,107,.09);background:rgba(255,255,255,.35)}
+.map-head strong{font-size:11px;color:#0b5586;letter-spacing:.14em;text-transform:uppercase}
+.map-head span{font-size:10px;font-weight:700;color:#7690a5;letter-spacing:.08em;text-transform:uppercase}
+.map-viewport{position:relative;flex:1;min-height:0;overflow:hidden;touch-action:none;cursor:grab;background:linear-gradient(150deg,rgba(233,246,251,.46),rgba(255,255,255,.33) 55%,rgba(228,242,247,.52))}
+.map-viewport.grabbing{cursor:grabbing}
+.map-world{position:absolute;top:0;left:0;width:1720px;height:800px;transform-origin:top left;will-change:transform}
+.map-illustration{position:absolute;inset:0;width:1720px;height:800px;overflow:visible;pointer-events:none}
+.landform{fill:#e4eff0;opacity:.48}
+.landform.pale{fill:#f5f1e9;opacity:.57}
+.region-name{font-size:26px;fill:#b9cdd4;letter-spacing:.18em;font-weight:800;opacity:.58}
+.water-name{display:none}
+.hk-silhouette{fill:#b4d3da;stroke:#9dc2ce;stroke-width:2.2;stroke-linejoin:round;opacity:.25;pointer-events:none}
+.hk-silhouette path{vector-effect:non-scaling-stroke}
+
+.track-shadow{fill:none;stroke:rgba(255,255,255,.97);stroke-width:15;stroke-linecap:round;stroke-linejoin:round}
+.track{fill:none;stroke:var(--route-color);stroke-width:8.5;stroke-linecap:round;stroke-linejoin:round;transition:opacity .2s ease,filter .2s ease}
+.track.dim{opacity:.15}
+.track.focused{stroke-width:10;filter:drop-shadow(0 2px 3px rgba(0,0,0,.14))}
+.interchange>circle:first-child{fill:#fff;stroke:#57758f;stroke-width:2.4}
+.interchange>circle:last-child{fill:#e0ecf3;stroke:none}
+.interchange{pointer-events:none}
+.interchange.dim{opacity:.2}
+.station{position:absolute;width:30px;height:30px;padding:0;transform:translate(-50%,-50%);border:0;background:transparent;display:block;cursor:pointer;color:#1e4563;z-index:5;overflow:visible;transition:opacity .18s ease}
+.station-marker{position:absolute;width:20px;height:20px;left:5px;top:5px;border:4px solid var(--route-color);background:#fff;border-radius:50%;box-shadow:0 0 0 3px #fff,0 3px 7px rgba(6,46,74,.15);transition:transform .16s ease,box-shadow .16s ease}
+.station:hover,.station:focus-visible,.station.selected{z-index:9}
+.station:hover .station-marker,.station:focus-visible .station-marker{transform:scale(1.24);box-shadow:0 0 0 4px #fff,0 0 0 8px color-mix(in srgb,var(--route-color) 30%,transparent),0 3px 8px rgba(6,46,74,.18)}
+.station.selected .station-marker{transform:scale(1.24);box-shadow:0 0 0 4px #fff,0 0 0 8px var(--route-color),0 0 0 13px rgba(255,255,255,.45)}
+.station:focus-visible{outline:none}
+.station .station-label{position:absolute;display:block;min-width:0;max-width:165px;width:max-content;padding:4px 7px;border-radius:6px;background:rgba(255,255,255,.69);color:#204768;font-weight:700;font-size:16px;line-height:1.12;box-shadow:0 1px 5px rgba(12,53,82,.06);text-align:center;white-space:normal;overflow-wrap:normal;transition:opacity .18s,background .18s}
+.station .station-label strong{font-weight:800}
+.station .station-label small{display:block;font-size:12px;color:#5d7a93;font-weight:700;margin-top:2px}
+.station[data-side="above"] .station-label{left:15px;bottom:38px;transform:translateX(-50%)}
+.station[data-side="below"] .station-label{left:15px;top:38px;transform:translateX(-50%)}
+.station[data-side="left"] .station-label{right:38px;top:15px;transform:translateY(-50%);text-align:right}
+.station[data-side="right"] .station-label{left:38px;top:15px;transform:translateY(-50%);text-align:left}
+.station:hover .station-label,.station:focus-visible .station-label,.station.selected .station-label{background:#fff;color:#073c71;box-shadow:0 3px 15px rgba(8,48,88,.18)}
+.station.dim{opacity:.20;z-index:1}
+.station.dim .station-label{opacity:.10;pointer-events:none}
+.station-label.crowded{opacity:0!important;pointer-events:none!important}
+.station:hover .station-label.crowded,.station:focus-visible .station-label.crowded,.station.selected .station-label.crowded{opacity:1!important}
+.terminal-pill{font-size:14px;fill:#fff;font-weight:900;letter-spacing:.02em;pointer-events:none}
+.terminal-label{fill:#607e92;font-size:12px;letter-spacing:.08em;font-weight:800;pointer-events:none}
+.map-tooltip{position:absolute;display:none;z-index:30;pointer-events:none;max-width:270px;background:#fff;border:1px solid #dae6ef;border-left:5px solid var(--tooltip-color,#237aa6);border-radius:12px;box-shadow:0 11px 30px rgba(4,35,69,.22);padding:10px 12px 11px}
+.map-tooltip.show{display:block}
+.map-tooltip small{display:block;font-weight:800;color:#6286a1;font-size:10px;margin-bottom:4px;letter-spacing:.04em}
+.map-tooltip strong{display:block;font-size:13px;line-height:1.28;color:#0a355c}
+.map-foot{min-height:44px;background:rgba(255,255,255,.56);border-top:1px solid rgba(20,74,111,.09);padding:6px 13px 6px 18px}
+.map-foot .hint{font-size:10.5px;color:#506e88;line-height:1.35}
+.map-foot .hint strong{color:#0f5286}
+.zoom-controls{display:flex;gap:4px;align-items:center}
+.zoom-controls button{border:1px solid #d1dfe9;background:#fff;color:#0f5385;border-radius:8px;width:30px;height:29px;font-weight:800;font-size:17px;box-shadow:0 2px 6px rgba(5,43,79,.04)}
+.zoom-controls button.fit{width:auto;padding:0 10px;font-size:11px}
+.zoom-controls button:hover{background:#eaf4fb}
+.detail-drawer{display:flex;flex-direction:column;position:absolute;top:9px;right:10px;bottom:9px;width:min(405px,45%);z-index:26;min-width:300px;background:rgba(255,255,255,.98);border:1px solid rgba(224,234,241,.94);border-radius:18px;box-shadow:0 15px 50px rgba(5,33,61,.24);overflow:hidden;transform:translateX(calc(100% + 25px));opacity:0;pointer-events:none;transition:transform .27s ease,opacity .22s ease}
+.detail-drawer.open{transform:translateX(0);opacity:1;pointer-events:auto}
+.drawer-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 15px 13px 18px;border-bottom:1px solid #e7edf2;flex:0 0 auto}
+.drawer-route{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#3d617d;font-weight:850}
+.drawer-route:before{content:"";background:var(--detail-color,#237bac);height:19px;width:5px;border-radius:4px}
+.drawer-close{width:32px;height:32px;border:1px solid #d9e4ec;border-radius:50%;background:#fff;color:#355d7e;font-size:21px;line-height:1}
+.drawer-scroll{overflow-y:auto;padding:16px 19px 20px;scrollbar-width:thin;overscroll-behavior:contain}
+.drawer-date{font-size:11px;color:#70849a;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.drawer-title{font-size:clamp(21px,1.7vw,28px);letter-spacing:-.027em;line-height:1.12;color:#073a70;margin:10px 0 13px}
+.drawer-qualifier{display:inline-block;padding:5px 10px;background:#eef4f7;border-radius:8px;color:#4a677b;font-size:11px;font-weight:700;margin-bottom:13px}
+.drawer-gallery{margin:2px 0 17px;position:relative;border-radius:11px;overflow:hidden;background:#e6edf1}
+.drawer-gallery img{display:block;object-fit:cover;width:100%;height:auto;max-height:230px;aspect-ratio:16/10}
+.drawer-gallery .gallery-prev,.drawer-gallery .gallery-next{position:absolute;top:50%;transform:translateY(-50%);border:0;background:rgba(255,255,255,.91);color:#073a70;width:28px;height:30px;border-radius:8px;font-size:21px}
+.drawer-gallery .gallery-prev{left:8px}.drawer-gallery .gallery-next{right:8px}
+.drawer-gallery .gallery-count{position:absolute;bottom:9px;right:9px;background:rgba(255,255,255,.9);padding:4px 6px;border-radius:6px;font-size:10px;color:#234863;font-weight:800}
+.drawer-section{margin:17px 0 0}
+.drawer-section h3{margin:0 0 7px;text-transform:uppercase;letter-spacing:.09em;font-size:10px;color:#0e6194;font-weight:850}
+.drawer-section p{white-space:pre-line;font-size:13px;color:#354e63;line-height:1.65;margin:0}
+.drawer-speakers{list-style:none;padding:0;margin:0;font-size:11.5px;line-height:1.47;color:#45627a}
+.drawer-speakers li{margin:0 0 6px;padding-left:11px;border-left:2px solid #d4e5f1}
+.drawer-link{display:flex;align-items:center;justify-content:space-between;background:#073f78;color:#fff;text-decoration:none;border-radius:10px;margin-top:20px;padding:12px 13px;font-weight:800;font-size:12px}
+.drawer-link:hover{background:#0e5d9e}
+.drawer-link[hidden],.drawer-gallery[hidden],.drawer-section[hidden],.drawer-qualifier[hidden]{display:none!important}
+.page-next{position:fixed;z-index:65;right:25px;bottom:13px;display:inline-flex;gap:11px;align-items:center;padding:12px 18px;border-radius:24px;background:#074b8c;color:#fff;border:1px solid rgba(255,255,255,.32);font-size:12px;font-weight:800;text-decoration:none;box-shadow:0 9px 19px rgba(0,41,88,.23);transition:transform .2s,background .2s}
+.page-next:hover{transform:translateY(-2px);background:#06346b}
+.page-next .arrow{font-size:16px}
+.search-message{margin:7px 8px;padding:9px;background:#eff7fa;border-radius:9px;font-size:11px;line-height:1.35;color:#47718b;display:none}
+.search-message.show{display:block}
+@media(max-width:1180px){.layout{grid-template-columns:225px minmax(0,1fr);gap:12px}.sidebar{padding:13px 9px}.heading-card h1{font-size:44px}.route-item .line-label strong{font-size:10.5px}.route-item{padding:8px 5px}.detail-drawer{width:min(390px,53%)}.app{padding:13px 14px 52px;gap:10px}}
+@media(max-width:760px){html,body{height:auto;min-height:100%;overflow:auto}.app{height:auto;min-height:100dvh;padding:10px 10px 55px;gap:10px}.topbar{min-height:0;align-items:center;flex-wrap:wrap}.heading-card{padding:11px 17px}.heading-card h1{font-size:35px}.heading-card p{font-size:9px}.top-actions{margin-top:0}.top-actions button{font-size:10px;padding:9px}.layout{display:flex;flex-direction:column}.sidebar{overflow:visible;max-height:none}.sidebar-head{padding-bottom:5px}.sidebar-head p{display:none}.route-list{display:flex;overflow-x:auto;gap:5px;padding:2px 0}.route-item{flex:0 0 190px;min-height:54px}.route-item .line-swatch{height:31px}.all-routes{margin-bottom:7px}.search-box{margin-bottom:6px}.map-card{height:min(70vh,690px);min-height:510px;flex:0 0 auto}.map-head{padding:10px}.map-head strong{font-size:10px}.map-head span{font-size:9px}.map-foot .hint{font-size:9px}.detail-drawer{left:7px;right:7px;width:auto;min-width:0}.page-next{bottom:9px;right:12px}.legend-foot{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* Map station naming hierarchy: a featured event stands out on each coloured route. */
+.station .station-label{max-width:178px;font-size:15px;line-height:1.13;font-weight:750;padding:5px 8px;background:rgba(255,255,255,.84)}
+.station.featured{z-index:7}
+.station.featured .station-marker{width:22px;height:22px;left:4px;top:4px;box-shadow:0 0 0 3px #fff,0 0 0 5px color-mix(in srgb,var(--route-color) 28%,transparent)}
+.station.featured .station-label{max-width:252px;font-size:20px;font-weight:900;line-height:1.17;color:#07375a;background:rgba(255,255,255,.96);padding:8px 12px;border-left:5px solid var(--route-color);box-shadow:0 5px 16px rgba(14,56,83,.11)}
+.station.featured .station-label strong{font-weight:900}
+.route-item .line-swatch{height:34px}
+
+
+/* Stand-alone full-directory PDF download; no changes to the map or its interactions. */
+.top-actions .pdf-download-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(255,255,255,.6);background:#073f7b;color:#fff;box-shadow:0 5px 15px rgba(3,50,94,.2);transition:transform .17s ease,background .17s ease,box-shadow .17s ease}
+.top-actions .pdf-download-btn:hover{background:#07579c;color:#fff;transform:translateY(-2px);box-shadow:0 8px 18px rgba(3,50,94,.25)}
+.top-actions .pdf-download-btn:focus-visible{outline:3px solid #67b8ea;outline-offset:3px}
+.top-actions .pdf-download-btn svg{width:15px;height:15px;stroke:currentColor;stroke-width:2.1;fill:none;flex:none}
+@media(max-width:950px){.top-actions{flex-wrap:wrap;justify-content:flex-end}}
+
+
+/* Annual Report host: keep the original map and event interactions. */
+.app{height:100dvh;padding-bottom:18px}
+@media(max-width:760px){.app{height:auto;min-height:0;padding-bottom:14px}}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("assets/986a99f0bf2bee1a3470.woff") format("woff")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("assets/d41635be27077edd35e6.woff") format("woff")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:700;font-display:swap;src:url("assets/be24fed157dccb74c668.woff") format("woff")}
+
+/* Shared chapter title, partner footer and download belong to the report host. */
+body{font-family:'Source Sans 3',sans-serif}
+.sidebar,.map-card{border-radius:7px}
+.app{height:100dvh;min-height:0;padding:22px 86px 18px;gap:0;max-width:none}
+.layout{grid-template-columns:260px minmax(0,1fr)}
+.map-foot{padding:8px 14px;min-height:48px}
+.route-controls{display:flex;gap:8px;align-items:center}
+.route-controls button{border:1px solid #d1dfe9;background:#fff;color:#003366;border-radius:8px;font-size:13px;font-weight:600;padding:7px 12px;white-space:nowrap}
+.route-controls button:hover{background:#eaf4fb}
+@media(max-width:1180px) and (min-width:761px){.app{padding:22px 28px 18px}.layout{grid-template-columns:225px minmax(0,1fr)}}
+@media(max-width:760px){.app{height:auto;min-height:0;padding:18px 28px 22px}.map-foot{flex-wrap:wrap;gap:10px;padding:10px}.route-controls{gap:5px}.route-controls button{font-size:11px;padding:6px 8px}.map-card{height:min(70vh,690px);min-height:510px}}
+@media(max-width:520px){.app{padding-left:22px;padding-right:22px}}
+
+/* v0.19: shared full-page photograph, with a quarter-width route legend. */
+html,body{background:transparent}.bg-photo{display:none}
+.layout{grid-template-columns:minmax(0,1fr) minmax(0,3fr);gap:20px}
+.sidebar{padding:20px 19px 16px}.sidebar-head h2{font-size:25px}.panel-eyebrow{font-size:12px}
+.sidebar-head p{font-size:14px;line-height:1.45}.search-box input{font-size:15px;height:43px}
+.route-list{gap:4px}.route-item{padding:8px;gap:12px}.route-item .line-label strong{font-size:16px;line-height:1.2}.route-item .line-label small{font-size:13px}.route-item .count{font-size:13px;min-width:29px}.all-routes{font-size:14px}.legend-foot{font-size:12px}
+@media(max-width:1180px) and (min-width:761px){.layout{grid-template-columns:minmax(0,1fr) minmax(0,3fr);gap:14px}.sidebar{padding:15px 12px}.route-item .line-label strong{font-size:14px}.route-item .line-label small{font-size:12px}.sidebar-head h2{font-size:22px}}
+@media(max-width:760px){.layout{display:flex;gap:14px}.route-item{flex-basis:225px}.route-item .line-label strong{font-size:15px}.route-item .line-label small{font-size:12px}.sidebar{padding:14px}.sidebar-head h2{font-size:23px}}
+/* Shared event viewer in the map and the Germany events column. */
+.event-viewer{display:flex;flex-direction:column;background:#fff;border:1px solid #CCD7E6;border-radius:7px;color:#003366;box-shadow:0 14px 38px #00336640;overflow:hidden;font-family:'Source Sans 3',sans-serif}
+.event-viewer .event-viewer__header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex:none;min-height:52px;padding:10px 18px;border-bottom:1px solid #CCD7E6;background:#F5F8FC;color:#003366;font-size:13px;font-weight:600}
+.event-viewer .event-viewer__close{display:grid;place-items:center;width:34px;height:34px;flex:none;border:1px solid #CCD7E6;border-radius:50%;background:white;color:#003366;font:400 25px/1 'Source Sans 3',sans-serif;cursor:pointer}
+.event-viewer .event-viewer__layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:22px;flex:1;min-height:0;padding:22px;overflow:hidden}
+.event-viewer .event-viewer__media{min-width:0;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.event-viewer .event-viewer__copy{min-width:0;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#CCD7E6 transparent;padding-right:3px}
+.event-viewer .event-viewer__title{font:600 28px/1.14 'Source Sans 3',sans-serif;letter-spacing:-.025em;margin:10px 0 14px;color:#003366}
+.event-viewer .event-viewer__date{font:600 13px/1.3 'Source Sans 3',sans-serif;color:#526479;letter-spacing:.06em;text-transform:uppercase;margin:0}
+.event-viewer .event-viewer__copy p{font-size:16px;line-height:1.55}
+@media(max-width:760px){.event-viewer .event-viewer__layout{grid-template-columns:1fr;gap:16px;padding:16px;overflow:auto;display:block}.event-viewer .event-viewer__media{height:auto;margin-bottom:18px}.event-viewer .event-viewer__copy{overflow:visible}.event-viewer .event-viewer__title{font-size:24px}.event-viewer .event-viewer__copy p{font-size:15px}}
+
+/* Expand within the complete map column, preserving the original event handlers. */
+.detail-drawer{left:10px;right:10px;top:9px;bottom:9px;width:auto;max-width:none;min-width:0;transform:translateX(calc(100% + 25px))}
+.detail-drawer.open{transform:translateX(0)}
+.detail-drawer .drawer-gallery{display:flex;align-items:center;justify-content:center;flex:1;min-height:0;margin:0;background:#F2F5F8;border-radius:5px;overflow:hidden;width:100%;height:100%}
+.detail-drawer .drawer-gallery img{display:block;width:100%;height:100%;max-height:none;aspect-ratio:auto;object-fit:contain}
+.detail-drawer .drawer-section p{font-size:16px;line-height:1.55}
+.detail-drawer .drawer-section h3{font-size:12px}.detail-drawer .drawer-speakers{font-size:14px;line-height:1.5}
+.detail-drawer .drawer-link{font-size:15px;border-radius:4px;padding:12px 15px}
+.detail-drawer .event-viewer__media:has(.drawer-gallery[hidden]){display:none}
+.detail-drawer .event-viewer__layout:has(.drawer-gallery[hidden]){grid-template-columns:1fr}
+@media(max-width:760px){.detail-drawer{left:7px;right:7px;width:auto}.detail-drawer .drawer-gallery{height:235px;min-height:235px;flex:none}.detail-drawer .event-viewer__media:has(.drawer-gallery[hidden]){margin:0}}
+
+/* One large map occupies the former chapter-title space on the right. */
+.map-head{display:none!important}
+.app{padding-top:22px}
+.sidebar{display:flex;flex-direction:column;padding:205px 19px 16px;overflow:hidden}
+.sidebar-head{display:none}
+.route-list{min-height:0;overflow:auto;flex:1;scrollbar-width:thin}
+.search-box,.all-routes,.legend-foot{flex:none}.search-box{margin-bottom:10px}.all-routes{margin-bottom:9px}
+.route-item .line-label strong{font-size:17px;line-height:1.2}.route-item{padding:7px 8px}.route-item .line-swatch{height:30px}
+.map-foot .hint{font-size:13px}.zoom-controls button{width:36px;height:34px;font-size:20px}.zoom-controls button.fit{font-size:14px}
+.station .station-label{max-width:260px;font-size:23px;line-height:1.2;padding:7px 10px}
+.station.featured .station-label{max-width:320px;font-size:28px;line-height:1.2;padding:10px 13px;font-weight:700}
+.station.featured .station-label strong{font-weight:700}
+.station .station-label.overview-hidden{opacity:0;pointer-events:none}
+.station:hover .station-label.overview-hidden,.station:focus-visible .station-label.overview-hidden,.station.selected .station-label.overview-hidden{opacity:1}
+.station.is-inert{cursor:default}.station.is-inert .station-marker{opacity:.46;border-width:2px;background:#F2F5F8;box-shadow:0 0 0 2px white;transform:none}
+.station.is-inert:hover .station-marker{transform:none;box-shadow:0 0 0 2px white}
+.station.is-inert.featured .station-marker{opacity:.65}
+.legend-foot{font-size:12px;line-height:1.35;margin-top:10px}
+@media(max-width:760px){.sidebar{padding:14px;overflow:visible}.route-list{overflow-x:auto;overflow-y:hidden;flex:none}.app{padding-top:18px}.station.featured .station-label{font-size:26px}.station .station-label{font-size:22px}.map-card{min-height:620px;height:75vh}.map-foot .hint{font-size:11px}}
+
+.station .station-label,.station:hover .station-label,.station:focus-visible .station-label,.station.selected .station-label{display:none!important}
+.map-tooltip{max-width:360px;padding:13px 16px;box-shadow:0 8px 24px #00336626}
+.map-tooltip strong{font-size:21px;line-height:1.22;font-weight:600}
+.map-tooltip small{font-size:12px;line-height:1.25;font-weight:600;margin-bottom:7px}
+
+
+/* White station protection halo; geometry also guarantees 60-unit centre clearance. */
+.station::before{content:"";position:absolute;inset:-4px;border-radius:50%;background:#FFFFFFB0;z-index:-1;pointer-events:none}.station-marker{box-shadow:0 0 0 4px #FFFFFF,0 0 0 7px #FFFFFF80}.station.featured .station-marker{box-shadow:0 0 0 4px #FFFFFF,0 0 0 8px #FFFFFF80}
+
+#galleryCount[hidden]{display:none!important}
+</style>
+<style>
+/* v0.43 — one consistent 3:2 event-photo frame at every viewport size. */
+.detail-drawer .event-viewer__media{align-items:center;justify-content:center;overflow:hidden}
+.detail-drawer .drawer-gallery{aspect-ratio:3/2;flex:none;min-height:0;max-width:100%;align-self:center}
+.detail-drawer .drawer-gallery img{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:3/2;object-fit:contain}
+@media(max-width:760px){.detail-drawer .event-viewer__media{overflow:visible}.detail-drawer .drawer-gallery{min-height:0;max-height:none;height:auto;aspect-ratio:3/2}}
+</style></head>
+<body>
+<div class="bg-photo" aria-hidden="true"></div>
+<div class="app" id="app">
+  <main class="layout">
+    <aside class="sidebar" aria-label="Event category routes">
+      <div class="sidebar-head">
+        <div class="panel-eyebrow">The GCC network</div>
+        <h2>Explore by category</h2>
+        <p>Each coloured line represents an event category. Select a line to focus, then choose a station to explore an event.</p>
+      </div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.3"></circle><path d="m15.5 15.5 5 5"></path></svg>
+        <input id="eventSearch" type="search" placeholder="Find an event or speaker" aria-label="Search events">
+      </div>
+      <button class="all-routes active" id="allRoutes" type="button">● View all eight categories</button>
+      <div id="routeList" class="route-list"></div>
+      <div id="searchMessage" class="search-message" aria-live="polite"></div>
+      <p class="legend-foot">48 event stations · 8 category routes. Inspired by Hong Kong’s MTR route-map design.</p>
+    </aside>
+    <section class="map-card" aria-label="Interactive GCC events network map">
+      
+      <div class="map-viewport" id="mapViewport">
+        <div class="map-world" id="mapWorld">
+          <svg id="networkSvg" viewBox="0 0 1720 800" class="map-illustration" aria-hidden="true">
+            <defs><pattern id="dotPattern" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7" fill="#b9d1db" opacity=".4"/></pattern></defs>
+            <rect width="1720" height="800" fill="url(#dotPattern)"/>
+            <g id="hkSilhouette" class="hk-silhouette" aria-hidden="true">
+ <path d="M126 159 L162 126 L225 129 L257 91 L333 104 L382 81 L444 98 L475 68 L536 101 L597 87 L637 119 L705 112 L735 151 L799 139 L842 174 L900 157 L941 189 L1002 174 L1033 206 L1106 195 L1142 237 L1205 222 L1246 250 L1320 244 L1387 281 L1425 301 L1451 357 L1404 382 L1362 372 L1350 408 L1301 397 L1265 440 L1205 429 L1164 469 L1122 450 L1081 480 L1031 465 L1000 497 L943 481 L916 522 L855 503 L821 540 L752 523 L704 542 L660 505 L614 519 L584 485 L538 490 L496 457 L443 470 L393 428 L339 433 L308 386 L266 390 L245 350 L204 346 L204 302 L161 284 L161 243 L132 223 Z"/>
+ <path d="M245 518 L296 491 L337 507 L371 493 L402 514 L448 504 L495 527 L526 570 L513 603 L474 608 L455 642 L410 652 L391 680 L341 670 L299 684 L271 659 L218 645 L207 608 L229 574 L206 558 Z"/>
+ <path d="M625 613 L685 599 L740 611 L781 601 L816 625 L877 610 L911 626 L965 616 L1014 641 L1069 632 L1131 658 L1188 663 L1228 690 L1200 722 L1154 714 L1124 736 L1060 731 L1037 747 L986 735 L924 741 L879 721 L824 720 L777 699 L717 709 L680 689 L638 685 Z"/>
+ <path d="M520 659 L555 643 L578 665 L566 696 L535 703 L517 684 Z"/>
+ <path d="M1450 397 L1472 381 L1493 394 L1511 420 L1494 449 L1465 441 Z"/>
+ <path d="M1544 495 L1572 475 L1597 491 L1609 525 L1583 539 L1554 524 Z"/>
+ <path d="M1408 581 L1444 557 L1467 574 L1464 600 L1439 610 Z"/>
+ <path d="M170 678 L190 662 L215 672 L229 702 L201 712 L177 704 Z"/>
+ <path d="M109 578 L131 559 L153 572 L149 601 L120 606 Z"/>
+ <path d="M584 735 L605 720 L624 741 L610 753 L590 755 Z"/>
+</g>
+            <g id="routeSvgGroup"></g>
+            <g id="interchangeGroup"></g>
+          </svg>
+          <div id="stationsGroup"></div>
+        </div>
+        <div class="map-tooltip" id="mapTooltip" role="status"></div>
+        <aside class="detail-drawer event-viewer" role="dialog" aria-modal="false" aria-labelledby="detailTitle" id="detailDrawer" aria-hidden="true">
+          <div class="drawer-top event-viewer__header"><div id="detailRoute" class="drawer-route"></div><button id="detailClose" class="drawer-close event-viewer__close" type="button" aria-label="Close event details">×</button></div>
+          <div class="drawer-scroll event-viewer__layout" id="drawerScroll"><div class="event-viewer__media">            <div id="detailGallery" class="drawer-gallery" tabindex="0" aria-label="Event photographs" aria-roledescription="carousel" hidden>
+              <img id="detailPhoto" alt="Event photograph">
+              <button class="gallery-prev" id="galleryPrev" aria-label="Previous photograph">‹</button>
+              <button class="gallery-next" id="galleryNext" aria-label="Next photograph">›</button>
+              <div id="galleryCount" class="gallery-count"></div>
+            </div></div><div class="event-viewer__copy">
+            <div id="detailDate" class="drawer-date event-viewer__date"></div>
+            <h2 id="detailTitle" class="drawer-title event-viewer__title"></h2>
+            <div id="detailQualifier" class="drawer-qualifier"></div>
+
+            <section class="drawer-section" id="descSection" hidden><h3>Event highlight</h3><p id="detailDescription"></p></section>
+            <section class="drawer-section" id="speakersSection" hidden><h3>Featured speakers</h3><ul class="drawer-speakers" id="detailSpeakers"></ul></section>
+            <a class="drawer-link" id="detailLink" target="_blank" rel="noopener noreferrer" hidden>View event page <span>↗</span></a></div>
+          </div>
+        </aside>
+      </div>
+      <div class="map-foot"><div class="route-controls"><button type="button" id="prevLine">← Previous line</button><button type="button" id="nextLine">Next line →</button></div><div class="zoom-controls"><button type="button" id="zoomOut" aria-label="Zoom out">−</button><button type="button" id="zoomIn" aria-label="Zoom in">+</button><button type="button" id="fitMap" class="fit" aria-label="Fit entire map">Fit map</button></div></div>
+    </section>
+  </main>
+</div>
+<script id="eventData" type="application/json">[{"id":"e01","section":"AI & DIGITAL INNOVATION","line":"ai","date":"3 November 2025","dateIso":"2025-11-03","title":"Beyond the Hype: The AI Blueprint Every Business Needs","qualifier":"GCC AI Series","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/beyond-the-hype-the-ai-blueprint-every-business-needs","description":"Developed by the Chamber’s AI Working Group, the German Chamber AI Blueprint is a strategic tool designed to help companies assess their AI readiness and move from awareness to action. Built over 12 months by more than 20 member companies from sectors including manufacturing, logistics, trading and tech, it offers a practical framework, self-assessment tool and case studies to support responsible, scalable transformation.\n\nThe launch featured a keynote presentation by Michael Keppe (Impala Services Ltd. & Pergamon Labs), followed by a government perspective from Jayne Chan (InvestHK), who emphasised the importance of cross-sector collaboration to support responsible AI growth. Before the event concluded with a networking session, Karena Belin (WHub) moderated an engaging panel discussion on AI in action, featuring Jonas Hug (BASF) and Prof Matthias Fahn (HKU Business School). Together, they explored how AI can help organisations navigate complexity, challenge persistent myths in business and academia, and support smarter, more scalable decisions.\n\nWe are grateful to all speakers, participants, and especially to the members of the AI Working Group, whose dedication, insight and collaboration made this Blueprint possible and sparked meaningful dialogue and innovation within our community. A special thank you goes to our Blueprint Sponsors Pergamon Labs, WHub, Atrellus Business Services, CyberMonx, TecPal, TGI Technology, and INC Innovation Center for their generous support, to all supporting organisations.","speakers":["Karena Belin, Founder & CEO, WHub","Michael Keppe, CEO, Impala Services & Pergamon Labs","Prof Matthias Fahn, Associate Professor of Management and Strategy, HKU Business School"],"photos":["assets/3c1007d81c34d5bfe433.webp","assets/c6bbc8c68c6cec4f3a7e.webp","assets/10a62584fea2bb516a51.webp","assets/37e3b5f0e32b998d8509.webp","assets/c4dd81c06e9008ab523f.webp","assets/02d7b921e25944801c68.webp","assets/82de51342a784a1464b1.webp","assets/f4fcecffb01996eeba9f.webp","assets/001fc7c156be3b2ac604.webp","assets/1bdfe4a65558f199bd14.webp","assets/eeb260bf9e500fad821a.webp","assets/ab9ff20782413cdef9ef.webp","assets/0c1200c94025216c91f8.webp","assets/c1e8d3a58f0c27509ea5.webp","assets/fcfdeee3b18e3c15663c.webp"],"stationName":"Beyond the Hype: AI Blueprint Launch","featured":true,"photoAlts":["Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 1","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 2","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 3","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 4","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 5","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 6","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 7","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 8","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 9","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 10","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 11","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 12","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 13","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 14","Photograph from Beyond the Hype: The AI Blueprint Every Business Needs — 15"]},{"id":"e02","section":"AI & DIGITAL INNOVATION","line":"ai","date":"5 November 2025","dateIso":"2025-11-05","title":"Data Security – First Steps into Cybersecurity Awareness","qualifier":"Workshop (Re-Run Edition)","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/data-security-first-steps-into-cybersecurity-awareness","description":"Following the strong interest in our June 2025 session, this edition offered new scenarios and extended content, addressing the growing risks of data breaches, ransomware, and other cyber threats in an increasingly digital business environment. An interactive tabletop simulation guided participants through practical steps to strengthen cybersecurity awareness and resilience within their organisations.","speakers":["Ms. Alessandra Lombardi, Founder, CyberMonx","Mr. Nhan Phat Chu, Senior Account Manager, CyberMonx","Mr. Knut Fournier, Barrister at Pantheon Chambers"],"photos":["assets/3789806cf42a81f0ccb9.webp"],"stationName":"Workshop: Cybersecurity Awareness","featured":false,"photoAlts":["Photograph from Data Security – First Steps into Cybersecurity Awareness"]},{"id":"e03","section":"AI & DIGITAL INNOVATION","line":"ai","date":"19 November 2025","dateIso":"2025-11-19","title":"An Evening with Microsoft","qualifier":"GCC AI Series","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/gcc-ai-series-an-evening-with-microsoft","description":"Hosted in collaboration with Microsoft, this edition of the GCC AI Series explored how agentic AI is reshaping the way businesses work and make decisions. Members gained practical insights into the opportunities, challenges, and strategic potential of the next generation of AI.","speakers":["Martin Schmidt, Senior Global Account Executive, Microsoft","Dr Susana Alcalde, Strategic Client Technology Lead, Microsoft"],"photos":["assets/42f0af85fddde4909a93.webp"],"stationName":"AI Series: An Evening with Microsoft","featured":false,"photoAlts":["Group photograph from GCC AI Series: An Evening with Microsoft"]},{"id":"e04","section":"AI & DIGITAL INNOVATION","line":"ai","date":"11 March 2026","dateIso":"2026-03-11","title":"AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working","qualifier":"GCC AI Series","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/ai-in-the-room-a-diplomatic-executive-dialogue-on-what-s-really-working","description":"Diplomats, industry leaders and AI practitioners joined us for an open exchange on how organisations approach AI adoption in their day to day work – and what it takes to achieve meaningful results. Key aspects included providing confidence and clarity across teams, identifying relevant use cases, and investing in building the right skills among staff to successfully integrate AI into complex organisations and workflows.\n\nThe event was organised in partnership with the French Foreign Trade Advisors, supported by the Spanish Chamber of Commerce in Hong Kong, and generously hosted by our member Acclime. A big thank you to all speakers, partners, and participants!","speakers":["Ms. Christile Drulhe, Consul General, Consulate General of France in Hong Kong and Macau","Dr. Annika Bolten-Drutschmann, Consul General, Consulate General of the Federal Republic of Germany","Ms. Pascaline Hayoun, CEO, Saint-Gobain Hong Kong, Macau, Taiwan"],"photos":["assets/de05aa40ed70c4224e87.webp","assets/e8d0f4f281e7083266db.webp","assets/7c38bf494458d330587c.webp","assets/aaa955c0835506fd70f6.webp","assets/4abfec45ee68f8801869.webp","assets/92cacb02649b905a0523.webp","assets/3950f15da2b9e9f620b4.webp","assets/8ae9a8e4fd26574b2f75.webp","assets/f7cbbffd3f1dbfeed41c.webp"],"stationName":"AI Dialogue: What’s Really Working","featured":false,"photoAlts":["Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 1","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 2","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 3","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 4","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 5","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 6","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 7","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 8","Photograph from AI in the Room: A Diplomatic & Executive Dialogue on What’s Really Working — 9"]},{"id":"e05","section":"AI & DIGITAL INNOVATION","line":"ai","date":"25 March 2026","dateIso":"2026-03-25","title":"A China-Aligned Digital Strategy That Delivers","qualifier":"Workshop","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/a-china-aligned-digital-strategy-that-delivers","description":"This hands-on workshop explored what it takes to succeed in China’s unique digital ecosystem, from AI-driven engagement to the dominance of super apps. Participants gained practical insights into how businesses can adapt their strategies to unlock opportunities in one of the world’s most dynamic markets.","speakers":["Daniel Sarosi, CEO, Great Wall Connect Ltd.","Ali Farooqi, CTO, Great Wall Connect Ltd."],"photos":["assets/a6528566222177709413.webp","assets/ec2549cfeca84e995482.webp"],"stationName":"Workshop: China-Aligned Digital Strategy","featured":false,"photoAlts":["Photograph from A China-Aligned Digital Strategy That Delivers — 1","Photograph from A China-Aligned Digital Strategy That Delivers — 2"]},{"id":"e06","section":"AI & DIGITAL INNOVATION","line":"ai","date":"15 April 2026","dateIso":"2026-04-15","title":"AI Adoption That Sticks: From Executive Ambition to Practical Implementation","qualifier":"GCC AI Series","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/ai-adoption-that-sticks-from-executive-ambition-to-practical-implementation","description":"In this breakfast seminar, Jan‑Eric Kloth offered a refreshingly practical perspective on why most AI initiatives struggle to gain traction. Moving beyond technology and tools, he highlighted that the real challenge of AI adoption lies in people, leadership alignment, and organisational behaviour.","speakers":["Jan-Eric Kloth, Co-Founder, Adaptig"],"photos":["assets/a1a6dd81a8210d8c7b32.webp","assets/b99b854da9f910bc2c6c.webp","assets/1bfedf73f44e48c42fc6.webp","assets/9d2f6d838d0f1e980f0d.webp"],"stationName":"AI Series: Adoption That Sticks","featured":false,"photoAlts":["Photograph from AI Adoption That Sticks: From Executive Ambition to Practical Implementation — 1","Photograph from AI Adoption That Sticks: From Executive Ambition to Practical Implementation — 2","Photograph from AI Adoption That Sticks: From Executive Ambition to Practical Implementation — 3","Photograph from AI Adoption That Sticks: From Executive Ambition to Practical Implementation — 4"]},{"id":"e07","section":"SEMINARS & WORKSHOPS","line":"seminars","date":"26 January 2026","dateIso":"2026-01-26","title":"Your Expat Insurance Needs – Fully Covered","qualifier":"Workshop","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/your-expat-insurance-needs-fully-covered","description":"From health coverage to long-term financial planning, this practical workshop helped expats navigate the complexities of living abroad with confidence. Led by insurance expert Peter Nestmann, the session offered clear guidance on protecting oneself and one’s family while planning for the future.","speakers":["Peter Nestmann, CEO, Nestmann Consulting GmbH"],"photos":["assets/c39249cb2cd451eb8015.webp","assets/63c58922d6258b2c461e.webp"],"stationName":"Workshop: Expat Insurance Needs","featured":false,"photoAlts":["Photograph from Your Expat Insurance Needs – Fully Covered — 1","Photograph from Your Expat Insurance Needs – Fully Covered — 2"]},{"id":"e08","section":"SEMINARS & WORKSHOPS","line":"seminars","date":"30 January 2026","dateIso":"2026-01-30","title":"Hong Kong and China Economic Outlook 2026","qualifier":"Seminar","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/hong-kong-and-china-economic-outlook-2026","description":"We kicked off the year with an insightful economic outlook breakfast featuring Deutsche Bank’s Chief China Economist, Dr Yi Xiong. Hosted at Heimat together with the Austrian and Belgium-Luxembourg Chambers, the session explored key trends shaping Hong Kong and China, from changing consumer behaviour to the forces driving growth, innovation, and talent development.","speakers":["Dr. Yi Xiong, Chief China Economist, Deutsche Bank"],"photos":["assets/7eb8a18163b3b7926b13.webp","assets/3e1dc295a328b8ba9347.webp","assets/1bc33594536846fc000a.webp","assets/3c9e3dfc687700a9418b.webp","assets/808d9ce3b2a194277d58.webp","assets/95d9df672311a83ad65c.webp"],"stationName":"Hong Kong and China Economic Outlook 2026","featured":true,"photoAlts":["Photograph from Hong Kong and China Economic Outlook 2026 — 1","Photograph from Hong Kong and China Economic Outlook 2026 — 2","Photograph from Hong Kong and China Economic Outlook 2026 — 3","Photograph from Hong Kong and China Economic Outlook 2026 — 4","Photograph from Hong Kong and China Economic Outlook 2026 — 5","Photograph from Hong Kong and China Economic Outlook 2026 — 6"]},{"id":"e09","section":"SEMINARS & WORKSHOPS","line":"seminars","date":"6 May 2026","dateIso":"2026-05-06","title":"Hong Kong Relocation & Settlement Masterclass: Insights from Finance, Education & Property","qualifier":"Panel Discussion","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/hong-kong-relocation-settlement-masterclass-insights-from-finance-education-property","description":"Relocating to Hong Kong involves more than just moving house. This practical panel discussion brought together experts from education, finance, and property to share insights on helping international families settle in smoothly and make informed decisions for their new chapter in Hong Kong.","speakers":["Stefan Tueger, Executive Director, Lion Rock Education","Michael Purvis, Partner, Eight Wealth International","Rosa McCann, Manager - Luxury Residential & Leasing, OKAY.com"],"photos":["assets/e1cb3c7b5cb9b8ee3ab4.webp","assets/6a2b1d9867445d1338d0.webp"],"stationName":"Panel: Hong Kong Relocation Masterclass","featured":false,"photoAlts":["Photograph from Hong Kong Relocation & Settlement Masterclass: Insights from Finance, Education & Property — 1","Photograph from Hong Kong Relocation & Settlement Masterclass: Insights from Finance, Education & Property — 2"]},{"id":"e10","section":"NETWORKING & SOCIAL EVENTS","line":"networking","date":"17 September 2025","dateIso":"2025-09-17","title":"GCNetwork @ WHISK, The Mira Hong Kong","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/gcnetwork-whisk-the-mira-hong-kong","description":"","speakers":[],"photos":["assets/0c863932d0dfae1d48ec.webp","assets/ef3f6abdc84b0988907d.webp","assets/8d6c50d7ea28dbccf54c.webp","assets/29f4ec81462bad241cc2.webp","assets/b7ff8cf64a2c5890cab4.webp","assets/8ed2a1ee42fb4e53b1df.webp","assets/042858569f689d0c9f67.webp","assets/f561451216b4038843df.webp","assets/dd94965ca73116d9ccf1.webp"],"stationName":"GCNetwork: WHISK at The Mira","featured":false,"photoAlts":["Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 1","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 2","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 3","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 4","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 5","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 6","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 7","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 8","Photograph from GCNetwork @ WHISK, The Mira Hong Kong — 9"]},{"id":"e11","section":"NETWORKING & SOCIAL EVENTS","line":"networking","date":"27 November 2025","dateIso":"2025-11-27","title":"Annual General Meeting & Post-AGM Networking","qualifier":"AGM","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/gcc-annual-general-meeting-2025","description":"Members gathered for the GCC Annual General Meeting, hosted by GCC Premium Partner BMW, where the Board of Directors was re-elected and the Chamber reflected on a year of activities and achievements. The evening continued with a post-AGM briefing by the German Consul General, offering perspectives on Germany-China relations and the evolving business landscape.","speakers":[],"photos":["assets/ef74673f35f1c2c938e2.webp","assets/642f0aead886b8c29ab6.webp","assets/82dbe12f90c2490398b5.webp","assets/ab8c9945eaf36ece9eb1.webp","assets/a49bf550c637ca8cf56f.webp"],"stationName":"AGM: Annual General Meeting & Networking","featured":false,"photoAlts":["Photograph from Annual General Meeting & Post-AGM Networking — 1","Photograph from Annual General Meeting & Post-AGM Networking — 2","Photograph from Annual General Meeting & Post-AGM Networking — 3","Photograph from Annual General Meeting & Post-AGM Networking — 4","Photograph from Annual General Meeting & Post-AGM Networking — 5"]},{"id":"e12","section":"NETWORKING & SOCIAL EVENTS","line":"networking","date":"4 December 2025","dateIso":"2025-12-04","title":"German Chamber Christmas Party 2025","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/german-chamber-christmas-party-2025","description":"Around 300 members, partners, and friends came together at the Hong Kong Country Club to celebrate the festive season with an evening of networking and community spirit. In solidarity with those affected by the devastating Tai Po fire days earlier, half of the event’s proceeds were donated to the Tai Po Fire Emergency Appeal by the Hong Kong Red Cross.","speakers":[],"photos":["assets/f58fa689d68a18555138.webp","assets/ebdb02a08aaaffd313d1.webp","assets/0c992f7ee487d5f747ac.webp","assets/e75e5b6e01a853c2644e.webp","assets/8fc35faec8c07104b12e.webp","assets/ce816c776787c17120fd.webp","assets/fb706804a2252eb12a07.webp","assets/2e71582acb7944208f7d.webp","assets/6bf039a814aa52060a3d.webp"],"stationName":"German Chamber Christmas Party 2025","featured":true,"photoAlts":["Photograph from German Chamber Christmas Party 2025 — 1","Photograph from German Chamber Christmas Party 2025 — 2","Photograph from German Chamber Christmas Party 2025 — 3","Photograph from German Chamber Christmas Party 2025 — 4","Photograph from German Chamber Christmas Party 2025 — 5","Photograph from German Chamber Christmas Party 2025 — 6","Photograph from German Chamber Christmas Party 2025 — 7","Photograph from German Chamber Christmas Party 2025 — 8","Photograph from German Chamber Christmas Party 2025 — 9"]},{"id":"e13","section":"NETWORKING & SOCIAL EVENTS","line":"networking","date":"4 February 2026","dateIso":"2026-02-04","title":"GCNetwork @ CLP Group","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/gcnetwork-clp-group","description":"","speakers":[],"photos":["assets/5b8a70fcc7f5fe2ec326.webp","assets/7cf02a7638935bba2f50.webp","assets/c45ef8a2a1bcd6751b35.webp","assets/32600e7a6cc0384f2d22.webp","assets/3af17da44481e8f08da9.webp","assets/daedb90206675b94f37b.webp","assets/f3d7d615ad577319622a.webp","assets/334baea2e5e344358584.webp"],"stationName":"GCNetwork: CLP Group","featured":false,"photoAlts":["Photograph from GCNetwork @ CLP Group — 1","Photograph from GCNetwork @ CLP Group — 2","Photograph from GCNetwork @ CLP Group — 3","Photograph from GCNetwork @ CLP Group — 4","Photograph from GCNetwork @ CLP Group — 5","Photograph from GCNetwork @ CLP Group — 6","Photograph from GCNetwork @ CLP Group — 7","Photograph from GCNetwork @ CLP Group — 8"]},{"id":"e14","section":"NETWORKING & SOCIAL EVENTS","line":"networking","date":"28 April 2026","dateIso":"2026-04-28","title":"GCNetwork Special Edition @ Mein Schiff 6 – TUI Hotels & Resorts & TUI Cruises","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/special-edition-gcnetwork-mein-schiff-6-tui-hotels-resorts-tui-cruises","description":"This special edition of GCNetwork took place in a distinctive setting on board the premium cruise ship Mein Schiff 6 at the Kai Tak Cruise Terminal. Hosted in partnership with TUI Hotels & Resorts and TUI Cruises, this unique edition combined business exchange, a guided behind-the-scenes tour, and stunning harbour scenery, making it one of the most memorable GCNetworks of the year.","speakers":[],"photos":["assets/94f5fe52706d040eaac5.webp","assets/414d62ddaafa3dc093f7.webp","assets/5d4834d0e5b7497bccfe.webp","assets/eb4f47f15355daadc6e3.webp","assets/2764d80f51c21884834f.webp"],"stationName":"GCNetwork: TUI Cruises","featured":false,"photoAlts":["Photograph from GCNetwork Special Edition @ Mein Schiff 6 – TUI Hotels & Resorts & TUI Cruises — 1","Photograph from GCNetwork Special Edition @ Mein Schiff 6 – TUI Hotels & Resorts & TUI Cruises — 2","Photograph from GCNetwork Special Edition @ Mein Schiff 6 – TUI Hotels & Resorts & TUI Cruises — 3","Photograph from GCNetwork Special Edition @ Mein Schiff 6 – TUI Hotels & Resorts & TUI Cruises — 4","Photograph from GCNetwork Special Edition @ Mein Schiff 6 – TUI Hotels & Resorts & TUI Cruises — 5"]},{"id":"e15","section":"NETWORKING & SOCIAL EVENTS","line":"networking","date":"15 May 2026","dateIso":"2026-05-15","title":"German White Asparagus Wine Dinner 2026","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/german-white-asparagus-wine-dinner-2026","description":"A highlight of the Chamber’s social calendar, the annual White Asparagus Wine Dinner brought members together for an evening of exceptional cuisine, outstanding German wines, and great company. Hosted at Brasserie on the Eighth at Conrad Hong Kong, the event celebrated one of Germany’s most cherished culinary traditions in an elegant and welcoming atmosphere.","speakers":[],"photos":["assets/b384386dc29a96ec5c16.webp","assets/18e4a36f9a9814c6529e.webp","assets/f56b5e480e360d744c51.webp"],"stationName":"Wine Dinner: White Asparagus 2026","featured":false,"photoAlts":["Photograph from German White Asparagus Wine Dinner 2026 — 1","Photograph from German White Asparagus Wine Dinner 2026 — 2","Photograph from German White Asparagus Wine Dinner 2026 — 3"]},{"id":"e16","section":"D-A-CH EVENTS","line":"dach","date":"15 October 2025","dateIso":"2025-10-15","title":"D-A-CH Networking Cocktail @ Heimat","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/d-a-ch-networking-cocktail-heimat","description":"The D-A-CH Networking Cocktail in collaboration with Heimat brought together 120 members and friends of the German-speaking community for an evening of networking, great conversations, and new connections. Co-hosted by the Austrian, Swiss, and German Chambers, the cocktail highlighted the strong ties between the German-speaking business communities in Hong Kong while providing a relaxed setting for professionals to connect.","speakers":[],"photos":["assets/9e18bb070c6348ce9fed.webp","assets/adf546de2d971b0c5d26.webp","assets/4a32213296623e42ab29.webp","assets/f8ca3c43a5385a00c1cc.webp","assets/4cf085724a49bbc50f59.webp","assets/d358714dd057e7a6155a.webp","assets/1f13262c2d365dc1980d.webp","assets/c2260337b96dc025c063.webp"],"stationName":"D-A-CH Networking Cocktail @ Heimat","featured":true,"photoAlts":["Photograph from D-A-CH Networking Cocktail @ Heimat — 1","Photograph from D-A-CH Networking Cocktail @ Heimat — 2","Photograph from D-A-CH Networking Cocktail @ Heimat — 3","Photograph from D-A-CH Networking Cocktail @ Heimat — 4","Photograph from D-A-CH Networking Cocktail @ Heimat — 5","Photograph from D-A-CH Networking Cocktail @ Heimat — 6","Photograph from D-A-CH Networking Cocktail @ Heimat — 7","Photograph from D-A-CH Networking Cocktail @ Heimat — 8"]},{"id":"e17","section":"D-A-CH EVENTS","line":"dach","date":"10 March 2026","dateIso":"2026-03-10","title":"Austrian Business Comedian Otmar Kastner Live in Hong Kong","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/dach-event-austrian-business-comedian-otmar-kastner-live-in-hong-kong","description":"Business and comedy came together at this special evening with Austrian entrepreneur and comedian Otmar Kastner, who entertained and inspired the audience with his unique blend of storytelling and business insights. The evening offered a refreshing reminder that corporate success and joy can – and should – go hand in hand.","speakers":[],"photos":["assets/5fbd6e6f4c9a1b5acfde.webp"],"stationName":"D-A-CH Event: Otmar Kastner Live","featured":false,"photoAlts":["Group photograph on stage at the Otmar Kastner event"]},{"id":"e18","section":"D-A-CH EVENTS","line":"dach","date":"20 May 2026","dateIso":"2026-05-20","title":"D-A-CH Networking Cocktail @ Eaton Club","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/d-a-ch-networking-cocktail","description":"The 6th edition of the D-A-CH Networking Cocktail brought together members and friends of the German-speaking business community for an engaging evening in the heart of the city.","speakers":[],"photos":["assets/bc5370e8ee168df15093.webp","assets/0b6950f0c34313f7581b.webp","assets/6ead28e50d69f7ac7512.webp"],"stationName":"D-A-CH Networking Cocktail: Eaton Club","featured":false,"photoAlts":["Photograph from D-A-CH Networking Cocktail @ Eaton Club — 1","Photograph from D-A-CH Networking Cocktail @ Eaton Club — 2","Photograph from D-A-CH Networking Cocktail @ Eaton Club — 3"]},{"id":"e19","section":"MEMBERS INVITE MEMBERS","line":"members","date":"19 January 2026","dateIso":"2026-01-19","title":"Private Preview of the All-New BMW iX3","qualifier":"BMW","url":"","description":"Members enjoyed an exclusive first look at the all-new BMW iX3, combining innovation, design, and networking in a unique setting. Hosted as part of the Members Invite Members series, the event offered guests the opportunity to experience BMW’s latest electric mobility vision while connecting with fellow Chamber members.","speakers":[],"photos":[],"stationName":"Member Preview: All-New BMW iX3","featured":false},{"id":"e20","section":"MEMBERS INVITE MEMBERS","line":"members","date":"7 May 2026","dateIso":"2026-05-07","title":"German Business in the Greater Bay Area","qualifier":"KPMG","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/german-business-in-the-greater-bay-area","description":"What makes the Greater Bay Area such an attractive business destination? This seminar in partnership with KPMG brought together experts from the German business community to discuss investment trends, regional opportunities, and the GBA’s growing importance for international companies.","speakers":["Andreas Glunz, Managing Partner, KPMG Germany","Thomas Kagermeier, Partner Attestation FS, KPMG China","Niclas Püschel, Chief Development Officer, GSN Group"],"photos":["assets/3d98e84821f76f5cd5bd.webp","assets/36d8e5ea3238164bfc5b.webp","assets/348ee3c812670ee3364e.webp"],"stationName":"German Business in the GBA","featured":true,"photoAlts":["Photograph from German Business in the Greater Bay Area — 1","Photograph from German Business in the Greater Bay Area — 2","Photograph from German Business in the Greater Bay Area — 3"]},{"id":"e21","section":"MEMBERS INVITE MEMBERS","line":"members","date":"11 June 2026","dateIso":"2026-06-11","title":"DECODE 2026: A Decade of Navigation – The Great Remapping of Kowloon’s Office Universe","qualifier":"Knight Frank","url":"","description":"Around 200 senior executives gathered to explore the trends reshaping Kowloon’s office market. Hosted by Knight Frank, the session offered practical insights into location strategy, workplace transformation, and the factors influencing business decisions in a rapidly evolving commercial landscape.","speakers":[],"photos":["assets/d9a306f8ba948a4ae356.webp","assets/07d5003c23014ea4bac7.webp","assets/5367d794b78cde17b949.webp"],"stationName":"Member Event: DECODE 2026","featured":false,"photoAlts":["Photograph from DECODE 2026: A Decade of Navigation – The Great Remapping of Kowloon’s Office Universe — 1","Photograph from DECODE 2026: A Decade of Navigation – The Great Remapping of Kowloon’s Office Universe — 2","Photograph from DECODE 2026: A Decade of Navigation – The Great Remapping of Kowloon’s Office Universe — 3"]},{"id":"e22","section":"MEMBERS INVITE MEMBERS","line":"members","date":"16 June 2026","dateIso":"2026-06-16","title":"EU Market Access: Navigating Digital Product Passport (DPP) Compliance","qualifier":"GS1 Hong Kong","url":"","description":"As Digital Product Passport requirements move closer to reality, this seminar explored what businesses need to do to stay ahead. Co-hosted with GS1 Hong Kong and the British Chamber, the session offered practical insights into compliance, supply chain transparency, and the future of sustainable trade with Europe.","speakers":[],"photos":["assets/dfa61878788f19d3730b.webp","assets/89663a250807fc82f3ba.webp","assets/cb92c05f2511025536a2.webp"],"stationName":"Seminar: Digital Product Passport","featured":false,"photoAlts":["Photograph from EU Market Access: Navigating Digital Product Passport (DPP) Compliance — 1","Photograph from EU Market Access: Navigating Digital Product Passport (DPP) Compliance — 2","Photograph from EU Market Access: Navigating Digital Product Passport (DPP) Compliance — 3"]},{"id":"e23","section":"MEMBERS INVITE MEMBERS","line":"members","date":"26 June 2026","dateIso":"2026-06-26","title":"Discover the Future of HKIA & Lufthansa Allegris","qualifier":"Lufthansa","url":"","description":"At the kind invitation of Lufthansa Group, participants enjoyed an exclusive behind-the-scenes look at Hong Kong International Airport’s future development plans and Lufthansa’s new Allegris cabin experience. The visit offered unique insights into the future of aviation, connectivity, and passenger travel in the region.","speakers":[],"photos":["assets/b5392af5ec0347e9d4ac.webp","assets/37b0e40851a82504c121.webp","assets/af35342495b03ff16ac1.webp","assets/b1021136ec7858fbc918.webp"],"stationName":"Member Visit: Lufthansa Allegris","featured":false,"photoAlts":["Photograph from Discover the Future of HKIA & Lufthansa Allegris — 1","Photograph from Discover the Future of HKIA & Lufthansa Allegris — 2","Photograph from Discover the Future of HKIA & Lufthansa Allegris — 3","Photograph from Discover the Future of HKIA & Lufthansa Allegris — 4"]},{"id":"e24","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"9 July 2025","dateIso":"2025-07-09","title":"Networking Mixer: Italian-German Edition","qualifier":"Italian Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/joint-chamber-networking-mixer-italian-german-edition","description":"","speakers":[],"photos":["assets/718a78d0675824de6b6a.webp","assets/11a49bbdc6a544f3391c.webp","assets/7c5cebf20d441a9dfe46.webp","assets/cc6b846e6f182bdf23a0.webp","assets/7796671167efafb3e158.webp","assets/46280e0c3724dfc6a1e9.webp","assets/338bb9ae8ce28fe4d51c.webp"],"stationName":"Networking Mixer: Italian-German Edition","featured":false,"photoAlts":["Photograph from Networking Mixer: Italian-German Edition — 1","Photograph from Networking Mixer: Italian-German Edition — 2","Photograph from Networking Mixer: Italian-German Edition — 3","Photograph from Networking Mixer: Italian-German Edition — 4","Photograph from Networking Mixer: Italian-German Edition — 5","Photograph from Networking Mixer: Italian-German Edition — 6","Photograph from Networking Mixer: Italian-German Edition — 7"]},{"id":"e25","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"25 August 2025","dateIso":"2025-08-25","title":"Lunch Seminar: Munch (Mingle + Lunch) with Waste-Wise","qualifier":"Dutch Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/munch-mingle-lunch-with-waste-wise","description":"","speakers":[],"photos":["assets/de0790bb202aeaefb6fc.webp"],"stationName":"Lunch Seminar: Munch with Waste-Wise","featured":false,"photoAlts":["Photograph from Lunch Seminar: Munch (Mingle + Lunch) with Waste-Wise"]},{"id":"e26","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"27 August 2025","dateIso":"2025-08-27","title":"From Payment to Platform: Your End-to-End Guide to Cross-Border E-Commerce","qualifier":"Irish Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/from-payment-to-platform-your-end-to-end-guide-to-cross-border-e-commerce","description":"","speakers":[],"photos":["assets/3bee8c9aa4f43cc16cff.webp","assets/4d221b494f49200c1387.webp","assets/d35d233424f7d02a7e48.webp"],"stationName":"Seminar: Cross-Border E-Commerce","featured":false,"photoAlts":["Photograph from From Payment to Platform: Your End-to-End Guide to Cross-Border E-Commerce — 1","Photograph from From Payment to Platform: Your End-to-End Guide to Cross-Border E-Commerce — 2","Photograph from From Payment to Platform: Your End-to-End Guide to Cross-Border E-Commerce — 3"]},{"id":"e27","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"30 September 2025","dateIso":"2025-09-30","title":"Hong Kong Horizon 2050 and Beyond","qualifier":"Swiss Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/hong-kong-horizon-2050-and-beyond","description":"","speakers":[],"photos":["assets/f769019ecd3844974b89.webp","assets/b6242b3a3c1e7fed4433.webp"],"stationName":"Seminar: Hong Kong Horizon 2050","featured":false,"photoAlts":["Photograph from Hong Kong Horizon 2050 and Beyond — 1","Photograph from Hong Kong Horizon 2050 and Beyond — 2"]},{"id":"e28","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"10 October 2025","dateIso":"2025-10-10","title":"Joint Business Community Luncheon with The Honourable John KC Lee, the Chief Executive of the HKSAR","qualifier":"InterCham","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/members-only-joint-business-community-luncheon-with-the-honourable-john-kc-lee-the-chief-executive-of-the-hksar","description":"The annual InterCham Luncheon brought together business leaders, diplomats, and chamber representatives for an exchange with Chief Executive John Lee. The event provided insights into Hong Kong’s latest policy priorities, economic development plans, and support measures aimed at strengthening the city’s competitiveness and international connectivity.","speakers":[],"photos":["assets/051152d7db6113208fcb.webp","assets/5867875ef868c8ab4782.webp","assets/fe49f0a056eb1cdf9782.webp"],"stationName":"Joint Business Community Luncheon with the Chief Executive","featured":true,"photoAlts":["Photograph from Joint Business Community Luncheon with The Honourable John KC Lee, the Chief Executive of the HKSAR — 1","Photograph from Joint Business Community Luncheon with The Honourable John KC Lee, the Chief Executive of the HKSAR — 2","Photograph from Joint Business Community Luncheon with The Honourable John KC Lee, the Chief Executive of the HKSAR — 3"]},{"id":"e29","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"6 November 2025","dateIso":"2025-11-06","title":"Navigating the Current Macro-Environment: Market Access, Scaling, and Political Risk","qualifier":"EU Chamber in China & EuroCham HK","url":"https://gicgcchk.glueup.com/organization/822/campaign/a4I8s%2FscXpxbj4zJaUhR%2FA%3D%3D","description":"","speakers":[],"photos":["assets/9686df788933e06db9d3.webp","assets/cbef15484060b799942e.webp","assets/3b851bb45fe4a0d7ad09.webp"],"stationName":"Seminar: Market Access & Political Risk","featured":false},{"id":"e30","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"26 November 2025","dateIso":"2025-11-26","title":"Plastic to Product: Transforming Waste Into Value","qualifier":"Swiss Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2025/plastic-to-product-transforming-waste-into-value","description":"","speakers":[],"photos":["assets/16df98fdf16028da97c9.webp"],"stationName":"Seminar: Plastic to Product","featured":false,"photoAlts":["Photograph from Plastic to Product: Transforming Waste Into Value"]},{"id":"e31","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"11 February 2026","dateIso":"2026-02-11","title":"Cross-Chamber Networking Event: Construction, Infrastructure & Sustainability","qualifier":"Spanish Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/cross-chamber-networking-event-construction-infrastructure-sustainability","description":"","speakers":[],"photos":["assets/4acc538f58cc305c499b.webp"],"stationName":"Networking: Infrastructure & Sustainability","featured":false,"photoAlts":["Photograph from Cross-Chamber Networking Event: Construction, Infrastructure & Sustainability"]},{"id":"e32","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"13 March 2026","dateIso":"2026-03-13","title":"Joint Business Community Luncheon with the Hon Paul CHAN Mo-po, Financial Secretary of the HKSAR","qualifier":"InterCham","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/joint-business-community-luncheon-with-the-hon-paul-chan-mo-po-financial-secretary-of-the-hksar","description":"Business leaders gathered for an exchange with Financial Secretary Paul Chan on Hong Kong’s economic outlook, policy priorities, and innovation agenda. The luncheon offered valuable insights into the city’s future development and opportunities for the business community.","speakers":[],"photos":["assets/c349ecce194af58b6038.webp","assets/d8f7e128490ff822ae43.webp","assets/f8daa99f046c6e313bec.webp"],"stationName":"Luncheon: Hong Kong Financial Secretary","featured":false,"photoAlts":["Photograph from Joint Business Community Luncheon with the Hon Paul CHAN Mo-po, Financial Secretary of the HKSAR — 1","Photograph from Joint Business Community Luncheon with the Hon Paul CHAN Mo-po, Financial Secretary of the HKSAR — 2","Photograph from Joint Business Community Luncheon with the Hon Paul CHAN Mo-po, Financial Secretary of the HKSAR — 3"]},{"id":"e33","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"19 March 2026","dateIso":"2026-03-19","title":"China Seminar 2026: China Outbound","qualifier":"Dutch Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/china-seminar-2026-china-outbound","description":"What does it take for Chinese companies to succeed abroad? Organised by the Dutch Chamber, this annual flagship seminar brought together business leaders and experts to discuss outbound investment, international expansion, and the opportunities shaping China’s global business footprint.","speakers":[],"photos":["assets/31d05f03193b8f461e2b.webp","assets/932757d5e24aa2b9a9b5.webp","assets/422a2bd60dc15fd2e770.webp","assets/2e1e49bdf17108a0ea0e.webp"],"stationName":"China Seminar: China Outbound 2026","featured":false,"photoAlts":["Photograph from China Seminar 2026: China Outbound — 1","Photograph from China Seminar 2026: China Outbound — 2","Photograph from China Seminar 2026: China Outbound — 3","Photograph from China Seminar 2026: China Outbound — 4"]},{"id":"e34","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"26 March 2026","dateIso":"2026-03-26","title":"20th Connecting People Cocktail","qualifier":"InterCham","url":"","description":"","speakers":[],"photos":["assets/973c99047670fe03aff5.webp","assets/1fb419bd13792fe0dba9.webp"],"stationName":"Networking: Connecting People Cocktail","featured":false},{"id":"e35","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"26 March 2026","dateIso":"2026-03-26","title":"Cross Chambers Sourcing Committee: Trade Risk Insights and Networking Cocktail","qualifier":"French Chamber","url":"https://gicgcchk.glueup.com/event/cross-chambers-sourcing-committee-trade-risk-insights-and-networking-cocktail-171217/","description":"Organised by the French Chamber, this cross-chamber event combined expert insights on trade risk from Hassan Omaish, CEO Hong Kong at Allianz Trade, with valuable networking opportunities for the sourcing community.","speakers":[],"photos":["assets/4bbf31fb3abd6e6b4226.webp","assets/1706e30605ebc681cba0.webp"],"stationName":"Networking: Trade Risk & Sourcing","featured":false},{"id":"e36","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"14 May 2026","dateIso":"2026-05-14","title":"AI in Practice: How Companies Are Actually Implementing AI – Real Use Cases, Challenges and Lessons Learned From Strategy to Execution","qualifier":"Spanish Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/ai-in-practice-how-companies-are-actually-implementing-ai-real-use-cases-challenges-and-lessons-learned-from-strategy-to-execution","description":"This session offered a comprehensive look at how organisations are navigating the transition from AI ambition to tangible business outcomes, together with experts from strategy, corporate innovation, implementation, and law.","speakers":[],"photos":["assets/f34952bb763925720148.webp","assets/3e57b18d331f92240344.webp"],"stationName":"Seminar: AI in Practice","featured":false,"photoAlts":["Photograph from AI in Practice: How Companies Are Actually Implementing AI – Real Use Cases, Challenges and Lessons Learned From Strategy to Execution — 1","Photograph from AI in Practice: How Companies Are Actually Implementing AI – Real Use Cases, Challenges and Lessons Learned From Strategy to Execution — 2"]},{"id":"e37","section":"CROSS-CHAMBER EVENTS","line":"crosschamber","date":"17 June 2026","dateIso":"2026-06-17","title":"Networking Mixer: Italian-German Edition","qualifier":"Italian Chamber","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/joint-chamber-networking-mixer-italian-german-edition","description":"Italian and German business professionals came together for an evening of networking, fresh connections, and cross-chamber exchange. Following the success of the 2025 edition, the mixer once again highlighted the value of bringing international business communities together in a relaxed and engaging setting.","speakers":[],"photos":["assets/10bad6840f6713443427.webp","assets/5f10ad261cfdd004214d.webp","assets/525cccce7aa7e2cd305e.webp","assets/f3875d80e9d0449acbe9.webp"],"stationName":"Networking Mixer: Italian-German Edition","featured":false,"photoAlts":["Photograph from Networking Mixer: Italian-German Edition — 1","Photograph from Networking Mixer: Italian-German Edition — 2","Photograph from Networking Mixer: Italian-German Edition — 3","Photograph from Networking Mixer: Italian-German Edition — 4"]},{"id":"e38","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"26 August 2025","dateIso":"2025-08-26","title":"The 9th HR Forum & Labour Market and Salary Report Presentation 2025/2026","qualifier":"","url":"","description":"","speakers":[],"photos":[],"stationName":"Forum: HR & Salary Report 2025/26","featured":false},{"id":"e39","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"10 September 2025","dateIso":"2025-09-10","title":"German Companies' Localization 3.0: In China, For the World","qualifier":"","url":"","description":"","speakers":[],"photos":[],"stationName":"Seminar: German Companies’ Localization 3.0","featured":false,"photoAlts":[],"clickable":false},{"id":"e40","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"6 November 2025","dateIso":"2025-11-06","title":"2025 Shenzhen Ancerville Oktoberfest","qualifier":"","url":"","description":"","speakers":[],"photos":[],"stationName":"Social: Shenzhen Oktoberfest 2025","featured":false},{"id":"e41","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"27 January 2026","dateIso":"2026-01-27","title":"Executive GBA Tour to International Cargo Centre Shenzhen (ICCS)","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/executive-gba-tour-to-international-cargo-centre-shenzhen-iccs","description":"Organised by the Logistics Committee, this one-day excursion to Shenzhen delivered first-hand insights into the International Cargo Centre Shenzhen (ICCS) and concluded with a networking cocktail in Shekou.","speakers":[],"photos":["assets/1b6f2f1f58765b14e497.webp","assets/f4be5b3dc88a8e76d071.webp","assets/bf9c378051229bf96308.webp","assets/db98b0117ab58aed4e85.webp","assets/83bf0f3b68a723296034.webp","assets/bd9f54baa311979e55a7.webp"],"stationName":"Executive Tour: ICCS Shenzhen","featured":false,"photoAlts":["Photograph from Executive GBA Tour to International Cargo Centre Shenzhen (ICCS) — 1","Photograph from Executive GBA Tour to International Cargo Centre Shenzhen (ICCS) — 2","Photograph from Executive GBA Tour to International Cargo Centre Shenzhen (ICCS) — 3","Photograph from Executive GBA Tour to International Cargo Centre Shenzhen (ICCS) — 4","Photograph from Executive GBA Tour to International Cargo Centre Shenzhen (ICCS) — 5","Photograph from Executive GBA Tour to International Cargo Centre Shenzhen (ICCS) — 6"]},{"id":"e42","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"6 March 2026","dateIso":"2026-03-06","title":"Quick Digest: First Clues from the Government Work Report","qualifier":"Webinar","url":"","description":"","speakers":[],"photos":[],"stationName":"Webinar: Government Work Report","featured":false,"photoAlts":[],"clickable":false},{"id":"e43","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"16 March 2026","dateIso":"2026-03-16","title":"Quick Digest: First Clues from the Government Work Report & 15th Five-Year-Plan","qualifier":"Webinar","url":"","description":"","speakers":[],"photos":[],"stationName":"Webinar: China's 15th Five-Year Plan","featured":false},{"id":"e44","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"14 April 2026","dateIso":"2026-04-14","title":"GBA Executive Exchange Tour @ EF Electrical (Shenzhen): Automation and the Usage of AGVs in the Shopfloor","qualifier":"","url":"","description":"","speakers":[],"photos":[],"stationName":"GBA Tour: Automation at EF Electrical","featured":false},{"id":"e45","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"22 April 2026","dateIso":"2026-04-22","title":"AI Ready: Practical Guide From Blueprint to Action","qualifier":"Webinar","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/ai-ready-practical-guide-from-blueprint-to-action","description":"Moving from AI strategy to implementation was the focus of this webinar, which introduced the AI Business Transformation Blueprint, designed to help organisations assess readiness, identify opportunities, and turn AI ambitions into measurable action.","speakers":["Jan Roennfeld, Executive Director, German Chamber of Commerce in China · South & Southwest","Karena Belin, Founder & CEO, WHub\nCo-Chair, GCC AI Committee","Michael Keppe, CEO, Impala Services & Pergamon Labs\nCo-Chair, GCC AI Committee"],"photos":["assets/1eedbce4133190677783.webp"],"stationName":"Webinar: AI Ready – Blueprint to Action","featured":false,"photoAlts":["Photograph from AI Ready: Practical Guide From Blueprint to Action"]},{"id":"e46","section":"CROSS-BORDER EVENTS","line":"crossborder","date":"22 May 2026","dateIso":"2026-05-22","title":"GCC Insight Tour: AI & eVTOL in Qianhai","qualifier":"","url":"https://hongkong.ahk.de/en/past-events/past-events-2026/gcc-insight-tour-ai-evtol","description":"From AI-powered robotics to the future of urban air mobility, this insight tour offered members a firsthand look at innovation in Qianhai. Through company visits to RobotAnno and YIVTOLL, live demonstrations, and cross-border exchange, participants explored how emerging technologies are rapidly moving from concept to real-world application. The day concluded with a networking dinner in Shekou.","speakers":[],"photos":["assets/c72920a77031eedc10ff.webp","assets/e6813dbbce71e4e24eb2.webp","assets/f30cd1e49a6a0861da2e.webp"],"stationName":"GCC Insight Tour: Qianhai","featured":true,"photoAlts":["Photograph from GCC Insight Tour: AI & eVTOL in Qianhai — 1","Photograph from GCC Insight Tour: AI & eVTOL in Qianhai — 2","Photograph from GCC Insight Tour: AI & eVTOL in Qianhai — 3"]},{"id":"e48","section":"SPECIAL VISITS & ROUNDTABLES","line":"visits","date":"6 October 2025","dateIso":"2025-10-06","title":"Wolfgang Niedermark, Member of the Executive Board at BDI","qualifier":"Special Visits & Roundtables","url":"","description":"","speakers":[],"photos":["assets/33ea27e1aec50c49f8bb.webp"],"stationName":"Special Visit: Wolfgang Niedermark","featured":false,"photoAlts":["Photograph from Wolfgang Niedermark, Member of the Executive Board at BDI"]},{"id":"e49","section":"SPECIAL VISITS & ROUNDTABLES","line":"visits","date":"12 November 2025","dateIso":"2025-11-12","title":"Dr Michael Schleef, CEO of HSBC Germany","qualifier":"Special Visits & Roundtables","url":"","description":"","speakers":[],"photos":["assets/6fef04be931cbcb7d85e.webp"],"stationName":"Special Visit: Dr Michael Schleef, HSBC","featured":false,"photoAlts":["Photograph from Dr Michael Schleef, CEO of HSBC Germany"]}]</script>
+<script>
+'use strict';
+const events=JSON.parse(document.getElementById('eventData').textContent);
+const worldW=1720,worldH=800,scaleY=.75;
+const routeDefs=[{"id": "ai", "color": "#087fc2", "category": "AI & DIGITAL INNOVATION", "pts": [[150, 880], [355, 880], [545, 690], [940, 690], [1230, 400]], "pos": [[245, 880, "below"], [455, 780, "left"], [685, 690, "below"], [865, 690, "below"], [1080, 550, "right"], [1180, 450, "right"]], "labels": ["AI Blueprint", "Data Security", "Microsoft Evening", "AI in the Room", "China Digital Strategy", "AI Adoption"]}, {"id": "seminars", "color": "#d84d57", "category": "SEMINARS & WORKSHOPS", "pts": [[865, 85], [865, 310], [960, 405], [960, 905]], "pos": [[865, 175, "right"], [960, 520, "right"], [960, 810, "right"]], "labels": ["Expat Insurance", "Economic Outlook", "Relocation Masterclass"]}, {"id": "networking", "color": "#19a172", "category": "NETWORKING & SOCIAL EVENTS", "pts": [[175, 105], [370, 105], [590, 325], [590, 790], [750, 950]], "pos": [[235, 105, "above"], [425, 160, "above"], [550, 285, "left"], [590, 490, "left"], [590, 770, "left"], [710, 910, "left"]], "labels": ["GCNetwork WHISK", "AGM & Networking", "Christmas Party", "GCNetwork CLP", "Mein Schiff 6", "Asparagus Dinner"]}, {"id": "crossborder", "color": "#e58e32", "category": "CROSS-BORDER EVENTS", "pts": [[85, 250], [405, 250], [560, 405], [1325, 405], [1505, 225]], "pos": [[150, 250, "above"], [305, 250, "above"], [470, 315, "left"], [630, 405, "above"], [770, 405, "above"], [885, 405, "above"], [1035, 405, "above"], [1300, 405, "above"], [1420, 310, "right"]], "labels": ["HR Forum", "Localization 3.0", "Shenzhen Oktoberfest", "ICCS Shenzhen", "Work Report I", "Work Report II", "EF Electrical Tour", "AI Ready", "Qianhai Tour"]}, {"id": "crosschamber", "color": "#9a6340", "category": "CROSS-CHAMBER EVENTS", "pts": [[80, 530], [380, 530], [460, 610], [1485, 610], [1600, 495]], "pos": [[145, 530, "above"], [250, 530, "below"], [350, 530, "above"], [420, 570, "left"], [505, 610, "below"], [690, 610, "above"], [775, 610, "below"], [865, 610, "above"], [1035, 610, "below"], [1215, 610, "above"], [1300, 610, "below"], [1380, 610, "above"], [1515, 580, "right"], [1585, 510, "above"]], "labels": ["Italian-German Mixer", "Waste-Wise", "Cross-border E-Commerce", "HK Horizon 2050", "Chief Executive Luncheon", "Market Access", "Plastic to Product", "Infrastructure Mixer", "Financial Secretary", "China Outbound", "Connecting People", "Trade Risk", "AI in Practice", "Italian-German Mixer"]}, {"id": "dach", "color": "#8764af", "category": "D-A-CH EVENTS", "pts": [[1540, 850], [1450, 760], [1450, 270], [1570, 150]], "pos": [[1505, 815, "left"], [1450, 520, "left"], [1500, 220, "right"]], "labels": ["Heimat Cocktail", "Otmar Kastner", "Eaton Club Cocktail"]}, {"id": "members", "color": "#ceb129", "category": "MEMBERS INVITE MEMBERS", "pts": [[115, 765], [315, 765], [490, 940], [1320, 940], [1460, 800]], "pos": [[200, 765, "above"], [360, 810, "left"], [570, 940, "above"], [1020, 940, "above"], [1420, 840, "right"]], "labels": ["BMW iX3", "German Business GBA", "DECODE 2026", "Digital Product Passport", "Lufthansa Allegris"]}, {"id": "visits", "color": "#39a9d1", "category": "SPECIAL VISITS & ROUNDTABLES", "pts": [[1240, 105], [1140, 205], [1140, 805], [1280, 945], [1640, 945]], "pos": [[1140, 560, "right"], [1230, 895, "above"]], "labels": ["Wolfgang Niedermark", "Dr Michael Schleef"]}];
+const interchangePositions=[
+ [590,405],[590,610],[590,690],[960,405],[960,610],[960,670],[1140,405],[1140,610],[1140,490],[1450,610],[1450,280],[740,940],[1275,940]
+];
+const hasEventDetails=e=>e.clickable!==false&&Boolean((e.photos||[]).length||String(e.description||'').trim());
+const labelSideOverrides={e46:'above',e47:'left'};
+const routeById=Object.fromEntries(routeDefs.map(r=>[r.id,r]));
+const eventsByLine=Object.fromEntries(routeDefs.map(r=>[r.id,events.filter(e=>e.line===r.id).sort((a,b)=>a.dateIso.localeCompare(b.dateIso)||a.id.localeCompare(b.id))]));
+const routeList=document.getElementById('routeList');
+const stationContainer=document.getElementById('stationsGroup');
+const routeSvgGroup=document.getElementById('routeSvgGroup');
+const interchangeGroup=document.getElementById('interchangeGroup');
+const mapViewport=document.getElementById('mapViewport');
+const mapWorld=document.getElementById('mapWorld');
+const tip=document.getElementById('mapTooltip');
+const drawer=document.getElementById('detailDrawer');
+const svgNS='http://www.w3.org/2000/svg';
+let activeRoute=null,activeEvent=null,searchQuery='',galleryIndex=0,scale=1,offsetX=0,offsetY=0,drag=null,moved=false;
+function escapeText(str){return String(str??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function pathFromPts(points){return points.map((p,i)=>(i?'L':'M')+p[0]+' '+(p[1]*scaleY).toFixed(2)).join(' ');}
+function svgEl(tag,attrs){const x=document.createElementNS(svgNS,tag);for(const [k,v] of Object.entries(attrs||{}))x.setAttribute(k,v);return x;}
+function stationLabelDate(e){return e.date==='June 2026'?'JUN 2026':e.date.toUpperCase();}
+// Draw distinct coloured routes. Only event stations receive click handlers; interchange markers are inert.
+routeDefs.forEach((route,routeIndex)=>{
+ const group=svgEl('g',{'data-route':route.id});
+ const path=pathFromPts(route.pts);
+ group.appendChild(svgEl('path',{d:path,'class':'track-shadow'}));
+ const colored=svgEl('path',{d:path,'class':'track',style:`--route-color:${route.color}`});
+ group.appendChild(colored); routeSvgGroup.appendChild(group);
+ const catEvents=eventsByLine[route.id];
+ if(catEvents.length!==route.pos.length){console.warn('Route event mismatch',route.id,catEvents.length,route.pos.length)}
+ const routeButton=document.createElement('button'); routeButton.className='route-item';routeButton.type='button';routeButton.dataset.route=route.id;
+ routeButton.style.setProperty('--route-color',route.color);
+ routeButton.innerHTML=`<span class="line-swatch"></span><span class="line-label"><strong>${escapeText(route.category)}</strong></span><span class="count">${catEvents.length}</span>`;
+ routeButton.setAttribute('aria-label',`${route.category}, ${catEvents.length} events. Focus this line`);
+ routeButton.addEventListener('click',()=>setRouteFocus(route.id===activeRoute?null:route.id));
+ routeList.appendChild(routeButton);
+ catEvents.forEach((e,i)=>{
+   const [xx,yy,side]=route.pos[i];
+   const interactive=hasEventDetails(e);const node=document.createElement(interactive?'button':'div');if(interactive)node.type='button';else node.setAttribute('role','img');node.className='station'+(e.featured?' featured':'')+(!interactive?' is-inert':'');node.dataset.id=e.id;node.dataset.route=route.id;node.dataset.side=labelSideOverrides[e.id]||side;
+   node.style.left=xx+'px';node.style.top=(yy*scaleY)+'px';node.style.setProperty('--route-color',route.color);
+   node.innerHTML=`<span class="station-marker" aria-hidden="true"></span><span class="station-label"><strong>${escapeText(e.stationName)}</strong></span>`;
+   node.setAttribute('aria-label',`${stationLabelDate(e)}: ${e.stationName}${interactive?'. Open event details':''}`);
+   node.addEventListener('mouseenter',()=>showTip(node,e));node.addEventListener('mouseleave',hideTip);
+   node.addEventListener('focus',()=>showTip(node,e));node.addEventListener('blur',hideTip);
+   if(interactive)node.addEventListener('click',()=>{if(moved)return;openDetails(e)});
+   stationContainer.appendChild(node);
+ });
+});
+interchangePositions.forEach(([x,y])=>{
+ const node=svgEl('g',{'class':'interchange','aria-hidden':'true',transform:`translate(${x},${(y*scaleY).toFixed(2)})`});
+ node.appendChild(svgEl('circle',{cx:0,cy:0,r:12})); node.appendChild(svgEl('circle',{cx:0,cy:0,r:5.5}));
+ interchangeGroup.appendChild(node);
+});
+function setRouteFocus(route){
+ activeRoute=route;
+ document.getElementById('allRoutes').classList.toggle('active',!route);
+ document.querySelectorAll('.route-item').forEach(b=>b.classList.toggle('active',b.dataset.route===route));
+ updateFilters();
+ if(route)zoomToRoute(route);else fitMap();
+}
+function updateFilters(){
+ let count=0;
+ document.querySelectorAll('.station').forEach(n=>{
+  const event=events.find(e=>e.id===n.dataset.id);
+  const searched=!searchQuery||((event.stationName+' '+event.title+' '+event.description+' '+event.speakers.join(' ')).toLocaleLowerCase().includes(searchQuery));
+  const matched=(!activeRoute||n.dataset.route===activeRoute)&&searched;
+  n.classList.toggle('dim',!matched);if(matched)count++;
+ });
+ document.querySelectorAll('.track').forEach(p=>{p.classList.toggle('dim',!!activeRoute&&p.parentNode.dataset.route!==activeRoute);p.classList.toggle('focused',!!activeRoute&&p.parentNode.dataset.route===activeRoute)});
+ document.querySelectorAll('.interchange').forEach(n=>n.classList.toggle('dim',!!activeRoute));
+ const status=searchQuery ? `${count} MATCH${count===1?'':'ES'}` : activeRoute ? `${eventsByLine[activeRoute].length} STATIONS / ${routeById[activeRoute].category.toUpperCase()}` : `${events.length} STATIONS / ${routeDefs.length} LINES`;
+ const mapStatus=document.getElementById('mapStatus');if(mapStatus)mapStatus.textContent=status;
+ const msg=document.getElementById('searchMessage');
+ msg.classList.toggle('show',!!searchQuery);msg.textContent=searchQuery?`${count} matching event${count===1?'':'s'}. Select an available station to explore its photos or review.`:'';
+ hideTip();requestAnimationFrame(declutterLabels);
+}
+function paintTip(node,event){
+ const col=routeById[event.line].color;
+ tip.style.setProperty('--tooltip-color',col);
+ tip.innerHTML=`<small>${escapeText(event.date)} · ${escapeText(routeById[event.line].category)}</small><strong>${escapeText(event.stationName)}</strong>`;
+ tip.classList.add('show');
+ const r=node.getBoundingClientRect(),p=mapViewport.getBoundingClientRect();
+ const w=tip.offsetWidth,h=tip.offsetHeight;
+ let x=r.left-p.left+25,y=r.top-p.top-h-8;
+ if(x+w>p.width-10)x=r.left-p.left-w-15;
+ if(x<6)x=6;if(y<7)y=r.bottom-p.top+8;
+ tip.style.left=x+'px';tip.style.top=y+'px';
+}
+
+function setGallery(e,index){galleryIndex=index;const photos=e.photos||[];if(!photos.length)return;
+ document.getElementById('detailPhoto').src=photos[index];document.getElementById('detailPhoto').alt=e.photoAlts?.[index]||'Photo from '+e.title;document.getElementById('galleryCount').textContent=`${index+1} / ${photos.length}`;document.getElementById('galleryCount').hidden=photos.length<2;
+}
+function openDetails(e){
+ if(!hasEventDetails(e))return;
+ activeEvent=e;const def=routeById[e.line];hideTip();
+ document.querySelectorAll('.station').forEach(n=>n.classList.toggle('selected',n.dataset.id===e.id));
+ drawer.style.setProperty('--detail-color',def.color);
+ document.getElementById('detailRoute').textContent=def.category;
+ document.getElementById('detailDate').textContent=e.date;
+ document.getElementById('detailTitle').textContent=e.title;
+ const qualifier=document.getElementById('detailQualifier');
+ qualifier.hidden=!e.qualifier;qualifier.textContent=e.qualifier||'';
+ document.getElementById('detailDescription').textContent=e.description||'';
+ document.getElementById('descSection').hidden=!e.description;
+ const speakers=document.getElementById('detailSpeakers');speakers.innerHTML='';
+ for(const s of (e.speakers||[]).slice(0,3)){const li=document.createElement('li');li.textContent=s;speakers.appendChild(li)}
+ document.getElementById('speakersSection').hidden=!e.speakers?.length;
+ const gallery=document.getElementById('detailGallery');const photos=e.photos||[];
+ gallery.hidden=!photos.length;if(photos.length){setGallery(e,0);document.getElementById('galleryPrev').hidden=photos.length<2;document.getElementById('galleryNext').hidden=photos.length<2}
+ const link=document.getElementById('detailLink');link.hidden=!e.url;if(e.url)link.href=e.url;else link.removeAttribute('href');
+ drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');document.getElementById('drawerScroll').scrollTop=0;
+ requestAnimationFrame(()=>{fitEventGallery();declutterLabels();});
+}
+
+// Fit every event photograph into the same 3:2 frame without stretching or cropping.
+function eventGallerySize(width,height,stacked=false){const w=Math.max(0,Math.min(width,stacked?width:Math.max(0,height)*1.5));return [w,w/1.5];}
+function fitEventGallery(){
+ const gallery=document.getElementById('detailGallery');if(gallery.hidden)return;
+ const media=gallery.parentElement;const [w,h]=eventGallerySize(media.clientWidth,media.clientHeight,matchMedia('(max-width:760px)').matches);
+ gallery.style.width=w+'px';gallery.style.height=h+'px';
+}
+new ResizeObserver(()=>requestAnimationFrame(fitEventGallery)).observe(document.querySelector('.event-viewer__media'));
+document.getElementById('detailGallery').addEventListener('keydown',event=>{
+ if(!activeEvent?.photos.length||!['ArrowLeft','ArrowRight'].includes(event.key))return;
+ event.preventDefault();event.stopPropagation();setGallery(activeEvent,(galleryIndex+(event.key==='ArrowRight'?1:-1)+activeEvent.photos.length)%activeEvent.photos.length);
+});
+
+function closeDetails(){drawer.classList.remove('open');drawer.setAttribute('aria-hidden','true');activeEvent=null;document.querySelectorAll('.station.selected').forEach(n=>n.classList.remove('selected'));requestAnimationFrame(declutterLabels)}
+document.getElementById('detailClose').addEventListener('click',closeDetails);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDetails();document.getElementById('eventSearch').blur()}});
+document.getElementById('galleryPrev').addEventListener('click',()=>activeEvent&&setGallery(activeEvent,(galleryIndex-1+activeEvent.photos.length)%activeEvent.photos.length));
+document.getElementById('galleryNext').addEventListener('click',()=>activeEvent&&setGallery(activeEvent,(galleryIndex+1)%activeEvent.photos.length));
+document.getElementById('allRoutes').addEventListener('click',()=>{document.getElementById('eventSearch').value='';searchQuery='';setRouteFocus(null)});
+document.getElementById('eventSearch').addEventListener('input',e=>{searchQuery=e.target.value.trim().toLocaleLowerCase();updateFilters()});
+function navigateLine(delta){const next=activeRoute===null?(delta>0?0:routeDefs.length-1):(routeDefs.findIndex(r=>r.id===activeRoute)+delta+routeDefs.length)%routeDefs.length;setRouteFocus(routeDefs[next].id)}
+document.getElementById('prevLine').addEventListener('click',()=>navigateLine(-1));
+document.getElementById('nextLine').addEventListener('click',()=>navigateLine(1));
+function applyView(){mapWorld.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;hideTip();requestAnimationFrame(declutterLabels)}
+function fitMap(){const w=mapViewport.clientWidth,h=mapViewport.clientHeight;scale=Math.min((w-32)/worldW,(h-25)/worldH);scale=Math.max(.27,Math.min(1.5,scale));offsetX=(w-worldW*scale)/2;offsetY=(h-worldH*scale)/2;applyView()}
+function zoomToRoute(id){const ps=routeById[id].pts;const xs=ps.map(p=>p[0]),ys=ps.map(p=>p[1]*scaleY);
+ const minX=Math.min(...xs)-100,maxX=Math.max(...xs)+100,minY=Math.min(...ys)-85,maxY=Math.max(...ys)+85;
+ const w=mapViewport.clientWidth,h=mapViewport.clientHeight;
+ // Do not crop an entire route just to magnify the focus state.
+ scale=Math.min((w-40)/(maxX-minX),(h-35)/(maxY-minY),1.25);
+ scale=Math.max(.4,scale);offsetX=(w-(minX+maxX)*scale)/2;offsetY=(h-(minY+maxY)*scale)/2;applyView()
+}
+function zoomAt(factor,clientX,clientY){const rect=mapViewport.getBoundingClientRect();const px=clientX-rect.left,py=clientY-rect.top;const beforeX=(px-offsetX)/scale,beforeY=(py-offsetY)/scale;
+ scale=Math.max(.32,Math.min(2.4,scale*factor));offsetX=px-beforeX*scale;offsetY=py-beforeY*scale;applyView()}
+document.getElementById('fitMap').addEventListener('click',()=>activeRoute?zoomToRoute(activeRoute):fitMap());
+document.getElementById('zoomIn').addEventListener('click',()=>{const r=mapViewport.getBoundingClientRect();zoomAt(1.22,r.left+r.width/2,r.top+r.height/2)});
+document.getElementById('zoomOut').addEventListener('click',()=>{const r=mapViewport.getBoundingClientRect();zoomAt(1/1.22,r.left+r.width/2,r.top+r.height/2)});
+mapViewport.addEventListener('wheel',e=>{if(e.target.closest('.detail-drawer'))return;e.preventDefault();zoomAt(e.deltaY<0?1.13:1/1.13,e.clientX,e.clientY)},{passive:false});
+mapViewport.addEventListener('pointerdown',e=>{if(e.target.closest('.station,.detail-drawer'))return;if(e.button!==0)return;drag={x:e.clientX,y:e.clientY,ox:offsetX,oy:offsetY,id:e.pointerId};moved=false;mapViewport.setPointerCapture(e.pointerId);mapViewport.classList.add('grabbing')});
+mapViewport.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>5)moved=true;offsetX=drag.ox+dx;offsetY=drag.oy+dy;applyView()});
+mapViewport.addEventListener('pointerup',e=>{drag=null;mapViewport.classList.remove('grabbing');setTimeout(()=>moved=false,0)});
+mapViewport.addEventListener('pointercancel',()=>{drag=null;mapViewport.classList.remove('grabbing')});
+function intersects(a,b,pad){return a.left<b.right+pad&&a.right>b.left-pad&&a.top<b.bottom+pad&&a.bottom>b.top-pad}
+// One global label, weighted towards highlights, changes every two active seconds.
+let spotlightId=null,spotlightTimer=0,spotlightManual=false,spotlightHostActive=parent===window;
+const spotlightReduce=matchMedia('(prefers-reduced-motion:reduce)');
+function spotlightEligible(){
+ const vp=mapViewport.getBoundingClientRect();
+ return [...document.querySelectorAll('.station:not(.dim)')].filter(node=>{const r=node.getBoundingClientRect();return r.width>0&&r.left>=vp.left+4&&r.right<=vp.right-4&&r.top>=vp.top+4&&r.bottom<=vp.bottom-4;});
+}
+function pickSpotlight(pool,previous=spotlightId){
+ let candidates=pool.filter(n=>n.dataset.id!==previous);if(!candidates.length)candidates=pool;
+ const total=candidates.reduce((sum,n)=>sum+(n.classList.contains('featured')?5:1),0);let draw=Math.random()*total;
+ return candidates.find(n=>(draw-=n.classList.contains('featured')?5:1)<0)||candidates.at(-1);
+}
+function spotlightAllowed(){return spotlightHostActive&&!document.hidden&&!activeEvent&&!spotlightManual;}
+function scheduleSpotlight(delay=2000){clearTimeout(spotlightTimer);spotlightTimer=0;if(spotlightAllowed()&&!spotlightReduce.matches)spotlightTimer=setTimeout(rotateSpotlight,delay);}
+function rotateSpotlight(){
+ clearTimeout(spotlightTimer);spotlightTimer=0;if(!spotlightAllowed()){if(!spotlightManual)tip.classList.remove('show');return;}
+ const node=pickSpotlight(spotlightEligible());if(!node){tip.classList.remove('show');return;}
+ spotlightId=node.dataset.id;const event=events.find(e=>e.id===spotlightId);paintTip(node,event);tip.dataset.eventId=spotlightId;tip.dataset.mode='automatic';scheduleSpotlight();
+}
+function showTip(node,event){clearTimeout(spotlightTimer);spotlightTimer=0;spotlightManual=true;spotlightId=event.id;paintTip(node,event);tip.dataset.eventId=event.id;tip.dataset.mode='manual';}
+function hideTip(){spotlightManual=false;tip.classList.remove('show');scheduleSpotlight(0);}
+function declutterLabels(){
+ if(activeEvent){clearTimeout(spotlightTimer);spotlightTimer=0;tip.classList.remove('show');return;}
+ const pool=spotlightEligible(),current=pool.find(n=>n.dataset.id===spotlightId);
+ if(spotlightManual&&current){paintTip(current,events.find(e=>e.id===spotlightId));return;}
+ if(!spotlightAllowed())return;
+ if(current){paintTip(current,events.find(e=>e.id===spotlightId));if(!spotlightTimer)scheduleSpotlight();}
+ else rotateSpotlight();
+}
+addEventListener('message',event=>{if(event.source!==parent||event.data?.type!=='gcc-events:activate')return;spotlightHostActive=event.data.active!==false;clearTimeout(spotlightTimer);spotlightTimer=0;spotlightManual=false;if(spotlightHostActive)rotateSpotlight();else tip.classList.remove('show');});
+document.addEventListener('visibilitychange',()=>{clearTimeout(spotlightTimer);spotlightTimer=0;if(document.hidden)tip.classList.remove('show');else rotateSpotlight();});
+spotlightReduce.addEventListener('change',()=>{clearTimeout(spotlightTimer);spotlightTimer=0;rotateSpotlight();});
+
+window.addEventListener('resize',()=>activeRoute?zoomToRoute(activeRoute):fitMap());
+updateFilters();requestAnimationFrame(()=>{fitMap();setTimeout(declutterLabels,350)});
+</script>
+
+<!-- Embedded print-friendly report: offline-capable, all event text included. -->
+
+
+
+<script>
+(()=>{
+ function fitVisibleMap(){if(activeRoute)zoomToRoute(activeRoute);else fitMap();}
+ function reportHeight(){if(parent!==window)parent.postMessage({type:'gcc-events:height',height:Math.ceil(document.getElementById('app').scrollHeight)},'*');}
+ new ResizeObserver(reportHeight).observe(document.getElementById('app'));
+ addEventListener('message',e=>{if(e.source===parent&&e.data?.type==='gcc-events:activate'&&e.data.active!==false){fitVisibleMap();reportHeight();}});
+ document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.altKey||e.metaKey||e.target.closest('input,textarea,select,[contenteditable="true"]'))return;
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+   e.preventDefault();parent.postMessage({type:'gcc-events:navigate',direction:e.key==='ArrowRight'?1:-1},'*');
+  }
+ });
+ reportHeight();
+})();
+</script></body>
+</html>
