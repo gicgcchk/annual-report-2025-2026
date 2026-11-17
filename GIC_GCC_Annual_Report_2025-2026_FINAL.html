@@ -2477,7 +2477,30 @@ addEventListener('resize',()=>{if(!matchMedia('(max-width:900px)').matches)frame
 activate();
 })();
 
-(()=>{'use strict';const chapter=document.getElementById('team-board');if(!chapter)return;const portraits=[...chapter.querySelectorAll('.front-portrait')];portraits.forEach(button=>button.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')!=='true';portraits.forEach(b=>b.setAttribute('aria-expanded','false'));button.setAttribute('aria-expanded',String(open));}));chapter.addEventListener('keydown',event=>{if(event.key==='Escape')portraits.forEach(b=>b.setAttribute('aria-expanded','false'));});chapter.querySelectorAll('[data-team-gallery]').forEach(el=>ReportPhotoGallery(el,{overlayCaption:true}));document.addEventListener('report:chapterchange',()=>portraits.forEach(b=>b.setAttribute('aria-expanded','false')));})();
+(()=>{'use strict';
+const chapter=document.getElementById('team-board');if(!chapter)return;
+const portraits=[...chapter.querySelectorAll('.front-portrait')];
+function closePortraits(){portraits.forEach(button=>button.setAttribute('aria-expanded','false'));}
+portraits.forEach(button=>button.addEventListener('click',()=>{
+ const open=button.getAttribute('aria-expanded')!=='true';
+ closePortraits();button.setAttribute('aria-expanded',String(open));
+}));
+chapter.addEventListener('keydown',event=>{if(event.key==='Escape')closePortraits();});
+const galleries=[...chapter.querySelectorAll('[data-team-gallery]')].map(element=>ReportPhotoGallery(element,{overlayCaption:true}));
+let timer=0;
+function autoplay(){
+ clearInterval(timer);timer=0;
+ if(document.hidden||!chapter.classList.contains('is-active')||!galleries.some(gallery=>gallery&&gallery.count>1))return;
+ timer=setInterval(()=>galleries.forEach(gallery=>{if(gallery&&gallery.count>1)gallery.show(gallery.index+1);}),5000);
+}
+chapter.querySelectorAll('[data-team-gallery]').forEach(element=>{
+ element.addEventListener('click',autoplay);
+ element.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight')autoplay();});
+});
+document.addEventListener('report:chapterchange',()=>{closePortraits();autoplay();});
+document.addEventListener('visibilitychange',autoplay);
+autoplay();
+})();
 
 (()=>{'use strict';
 const chapter=document.getElementById('market-entry');if(!chapter)return;
