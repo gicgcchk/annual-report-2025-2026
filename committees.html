@@ -146,11 +146,37 @@ html,body{background:#fffdf7}.stage{width:100%;height:100dvh;min-height:0}.page-
 .committee-popup-photos{min-height:0;height:100%;overflow:hidden;justify-content:stretch}.committee-photo-carousel{height:100%;max-height:none;width:100%}.committee-photo-carousel .report-photo-frame{flex:1;min-height:0}.committee-photo-carousel .report-photo-caption{flex:none;min-height:20px;margin:8px 0 0}.report-photo-count[hidden]{display:none!important}
 @media(max-width:760px){.committee-popup-columns{display:flex;flex-direction:column;overflow:auto;gap:20px}.committee-popup-left{height:auto;min-height:220px;overflow:visible;flex:none}.committee-popup-left .committee-cochairs{max-height:none;overflow:visible}.committee-popup-left .committee-popup-copy{overflow:visible;flex:none}.committee-popup-photos{height:350px;min-height:350px;flex:none}.committee-photo-carousel{height:100%}.committee-photo-carousel .report-photo-frame{height:auto;min-height:0;flex:1}}
 
+
+/* On mobile, show the complete street above a readable committee list. */
+.committee-mobile-scene{display:none}
+@media screen and (max-width:900px){
+ html,body{height:auto;min-height:0;background:#fffdf7;overflow:visible}
+ .stage{display:flow-root;width:100%;height:auto;min-height:0;overflow:visible;background:#fffdf7;perspective:none}
+ .street-world{position:relative;inset:auto;width:100%;height:auto;transform:none}
+ .committee-mobile-scene{display:block;width:100%;height:auto}
+ .street-world .scene,.street-world .shop-layer,.street-actors{display:none}
+ .committee-mobile-nav{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;width:100%;padding:20px 0;background:#fffdf7}
+ .committee-mobile-nav button{min-width:0;min-height:50px;padding:14px 16px;border:1px solid #CCD7E6;border-radius:5px;background:white;color:#003366;font:600 16px/1.35 'Source Sans 3',sans-serif;text-align:left}
+ #singlePanel.open{position:relative;inset:auto;display:block;width:calc(100% - 16px);height:min(720px,85svh);min-height:420px;margin:16px 8px;transform:none}
+ .panel-scroll{padding:16px}
+ .panel-heading{margin-bottom:15px;padding-bottom:14px;gap:12px}
+ .panel-heading h2{font-size:28px;line-height:1.12;overflow-wrap:anywhere}
+ .committee-popup-columns{display:flex;flex-direction:column;min-width:0;overflow:auto;gap:20px}
+ .committee-popup-left{height:auto;min-height:0;overflow:visible;flex:none}
+ .committee-popup-left .committee-cochairs{max-height:none;overflow:visible;padding:12px}
+ .cochair-grid{grid-template-columns:minmax(0,1fr);gap:14px}
+ .cochair-card h3{font-size:20px}.cochair-card p{font-size:15px}
+ .committee-popup-left .committee-popup-copy{overflow:visible;flex:none;padding-right:0}
+ .committee-popup-copy p{font-size:16px;line-height:1.5}
+ .committee-popup-photos{height:auto;min-height:0;overflow:visible;flex:none}
+ .committee-photo-carousel{height:auto;max-height:none}
+ .committee-photo-carousel .report-photo-frame{height:auto;min-height:0}
+}
 </style>
 </head>
 <body>
 <div class="stage" id="stage" aria-label="Interactive Committees and Working Groups street scene">
-  <div class="street-world"><div class="scene" aria-hidden="true"></div>
+  <div class="street-world"><img class="committee-mobile-scene" src="assets/381eb681bac23a279b6b.webp" alt="Hong Kong shopfronts representing the eight GCC Committees and Working Groups"><div class="scene" aria-hidden="true"></div>
   <div class="shop-layer" aria-label="Select a committee or working group">
     <button class="shop" style="--l:7.8%;--w:10.35%;--awning:#0c5a92" type="button" aria-label="AI Committee"></button>
     <button class="shop" style="--l:18.15%;--w:11.05%;--awning:#c86749" type="button" aria-label="Sourcing Committee"></button>
@@ -250,7 +276,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&active>=0){const i=
 const originalOpenShop=openShop;openShop=function(i){originalOpenShop(i);const panel=document.querySelector('.panel.open');if(panel){requestAnimationFrame(()=>panel.querySelector('.close')?.focus({preventScroll:true}));}};
 </script>
 <script>
-(()=>{let previousHeight=0;const sendHeight=()=>{const height=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);if(height!==previousHeight){previousHeight=height;parent.postMessage({type:'gcc-committees:height',height},'*');}};new ResizeObserver(sendHeight).observe(document.body);addEventListener('resize',sendHeight);addEventListener('load',sendHeight);sendHeight();})();
+(()=>{let previousHeight=0;const sendHeight=()=>{const nav=document.querySelector('.committee-mobile-nav');const height=matchMedia('(max-width:900px)').matches?Math.ceil(nav.getBoundingClientRect().bottom+scrollY):Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);if(height!==previousHeight){previousHeight=height;parent.postMessage({type:'gcc-committees:height',height},'*');}};const observer=new ResizeObserver(sendHeight);observer.observe(document.getElementById('stage'));observer.observe(document.querySelector('.committee-mobile-nav'));addEventListener('resize',sendHeight);addEventListener('load',sendHeight);sendHeight();})();
 </script><script>(()=>{'use strict';
 window.ReportPhotoGallery=function(element,options={}){
  if(!element)return null;
